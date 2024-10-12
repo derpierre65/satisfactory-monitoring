@@ -5,6 +5,7 @@ export default configure((/* ctx */) => {
     boot: [
       'axios',
       'quasar',
+      'load-server',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -37,6 +38,7 @@ export default configure((/* ctx */) => {
       iconSet: 'fontawesome-v6',
       // lang: 'en-US', // Quasar language pack
       plugins: [
+        'Loading',
         'Notify',
         'Dialog',
       ],

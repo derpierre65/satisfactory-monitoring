@@ -1,11 +1,11 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    index page
+    dashboard
   </q-page>
 </template>
 
 <script setup lang="ts">
 defineOptions({
-  name: 'IndexPage'
+  name: 'IndexPage',
 });
 </script>
