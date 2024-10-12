@@ -38,9 +38,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Dialog, Loading } from 'quasar';
+import { Loading } from 'quasar';
 import useServerStore from 'stores/server.ts';
 import { useRouter } from 'vue-router';
+import { showCantConnectDialog } from 'src/utils/server.ts';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
@@ -80,10 +81,7 @@ async function login() {
   Loading.hide('login');
 
   if (!serverFound) {
-    return Dialog.create({
-      message: `Can't connect to ${server.value.host}:${server.value.port}`,
-      class: 'shadow-0',
-    });
+    return showCantConnectDialog();
   }
 
   const serverIndex = serverStore.add(server.value);

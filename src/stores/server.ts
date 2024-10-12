@@ -80,4 +80,7 @@ const useServerStore = defineStore('server', () => {
   };
 });
 
-export default useServerStore;
+export {
+  useServerStore as default,
+  ServerInfo,
+};
