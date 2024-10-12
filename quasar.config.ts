@@ -2,7 +2,10 @@ import { configure } from 'quasar/wrappers';
 
 export default configure((/* ctx */) => {
   return {
-    boot: [ 'axios', ],
+    boot: [
+      'axios',
+      'quasar',
+    ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: [ 'app.scss', ],
