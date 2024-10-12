@@ -4,7 +4,6 @@
   "description": "Dashboard for Satisfactory Remote Monitoring",
   "productName": "FicsIt Remote Monitoring Dashboard",
   "author": "derpierre65 <git@derpierre65.de>",
-  "type": "module",
   "private": true,
   "scripts": {
     "dev": "quasar dev",
@@ -24,6 +23,8 @@
     "@derpierre65/eslint-config": "github:derpierre65/eslint-config",
     "@quasar/app-vite": "^2.0.0-beta.12",
     "@types/node": "^20.5.9",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^8.8.1",
     "autoprefixer": "^10.4.2",
     "tailwindcss": "^3.4.13",
     "typescript": "~5.5.3"
