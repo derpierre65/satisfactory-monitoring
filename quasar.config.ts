@@ -2,28 +2,31 @@ import { configure } from 'quasar/wrappers';
 
 export default configure((/* ctx */) => {
   return {
-    boot: [
-      'axios',
-    ],
+    boot: [ 'axios', ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
-    css: [
-      'app.scss'
-    ],
+    css: [ 'app.scss', ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
-    extras: [
-       'fontawesome-v6',
-    ],
+    extras: [ 'fontawesome-v6', ],
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: [ 'es2022', 'firefox115', 'chrome115', 'safari14' ],
-        node: 'node20'
+        browser: [
+          'es2022',
+          'firefox115',
+          'chrome115',
+          'safari14',
+        ],
+        node: 'node20',
       },
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
-       vitePlugins: [],
+      vitePlugins: [],
+    },
+
+    devServer: {
+      open: false,
     },
 
     framework: {
@@ -33,7 +36,7 @@ export default configure((/* ctx */) => {
       plugins: [
         'Notify',
         'Dialog',
-      ]
+      ],
     },
 
     // animations: 'all', // --- includes all animations
@@ -51,5 +54,5 @@ export default configure((/* ctx */) => {
     //   electronPreload: 'src-electron/electron-preload'
     //   bexManifestFile: 'src-bex/manifest.json
     // },
-  }
+  };
 });
