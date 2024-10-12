@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   root: true,
   extends: [
     '@derpierre65/eslint-config/vue3',
