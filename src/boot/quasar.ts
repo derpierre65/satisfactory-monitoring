@@ -1,5 +1,5 @@
 import { boot } from 'quasar/wrappers';
-import { QBtn, QDialog, QFile, QInput, QSelect, QTab, QToggle } from 'quasar';
+import { Dark, QBtn, QDialog, QFile, QInput, QSelect, QTab, QToggle } from 'quasar';
 import type { ComponentOptions } from 'vue';
 
 function setDefault(component: ComponentOptions, key: string, value: boolean | string | number) {
@@ -22,7 +22,18 @@ function setDefault(component: ComponentOptions, key: string, value: boolean | s
   }
 }
 
+function updateDarkMode() {
+  let lightMode = false;
+  if (window.localStorage) {
+    lightMode = window.localStorage.getItem('light_mode') === 'true';
+  }
+
+  Dark.set(!lightMode);
+}
+
 export default boot(() => {
+  updateDarkMode();
+
   for (const component of [
     QInput,
     QSelect,

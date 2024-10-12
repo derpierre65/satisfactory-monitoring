@@ -3,8 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
-
 defineOptions({
   name: 'App',
 });
@@ -25,17 +23,8 @@ defineOptions({
 //#endregion
 
 //#region Methods
-function updateDarkMode() {
-  let lightMode = false;
-  if (window.localStorage) {
-    lightMode = window.localStorage.getItem('light_mode') === 'true';
-  }
-
-  useQuasar().dark.set(!lightMode);
-}
 //#endregion
 
 //#region Created
-updateDarkMode();
 //#endregion
 </script>
