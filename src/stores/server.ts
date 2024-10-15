@@ -1,18 +1,16 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import FRM from 'src/utils/FRM.ts';
-import axios from 'axios';
+import { Dialog, Loading } from 'quasar';
 
 type ServerInfo = {
-  host: string;
-  port: number;
+  name: string;
+  url: string;
 };
 
 const useServerStore = defineStore('server', () => {
   const servers = ref<ServerInfo[]>([]);
   const isConnected = ref(false);
-  const host = ref('');
-  const port = ref(0);
   const selected = ref(-1);
 
   (() => {
@@ -27,16 +25,13 @@ const useServerStore = defineStore('server', () => {
 
 
   function add(server: ServerInfo) {
-    const lcServerHost = server.host.toLowerCase();
-    let index = servers.value.findIndex(({ host, port, }) => {
-      return host.toLowerCase() === lcServerHost && port === server.port;
+    const lcServerUrl = server.url.toLowerCase();
+    let index = servers.value.findIndex(({ url, }) => {
+      return url.toLowerCase() === lcServerUrl;
     });
 
     if (index === -1) {
-      index = servers.value.push({
-        host: server.host,
-        port: server.port,
-      }) - 1;
+      index = servers.value.push(server) - 1;
     }
 
     window.localStorage.setItem('sm_servers', JSON.stringify(servers.value));
@@ -48,16 +43,29 @@ const useServerStore = defineStore('server', () => {
     if (index >= -1 && index < servers.value.length) {
       selected.value = index;
 
-      window.localStorage.setItem('sm_selected_server', selected.value);
+      window.localStorage.setItem('sm_selected_server', selected.value.toString());
     }
   }
 
   function tryConnect(server: ServerInfo) {
-    axios.defaults.baseURL = `http://${server.host}:${server.port}`;
+    Loading.show({
+      group: 'tryConnect',
+      message: 'Try to connect to the server...',
+    });
 
-    return FRM.getModList()
+    return new FRM(server).getModList()
       .then(() => true)
-      .catch(() => false);
+      .catch(() => {
+        Dialog.create({
+          message: `Can't connect to ${server.url}`,
+          class: 'shadow-0',
+        });
+
+        return false;
+      })
+      .finally(() => {
+        Loading.hide('tryConnect');
+      });
   }
 
   const currentServer = computed(() => {
@@ -77,10 +85,9 @@ const useServerStore = defineStore('server', () => {
 
   return {
     selectableServer,
+    selected,
     servers,
     currentServer,
-    host,
-    port,
     isConnected,
     add,
     select,
@@ -90,5 +97,5 @@ const useServerStore = defineStore('server', () => {
 
 export {
   useServerStore as default,
-  ServerInfo,
+  type ServerInfo,
 };

@@ -1,15 +1,14 @@
 import { boot } from 'quasar/wrappers';
 import useServerStore from 'stores/server.ts';
 import { Loading } from 'quasar';
-import { showCantConnectDialog } from 'src/utils/server.ts';
 
-export default boot(async({ router, route, }) => {
+export default boot(async({ router, }) => {
   const serverStore = useServerStore();
 
-  if (serverStore.currentServer === null && route.name !== 'login') {
+  if (serverStore.currentServer === null && router.currentRoute.value.name !== 'login') {
     return router.push({
       name: 'login',
-    });
+    }).then(() => void 0);
   }
 
   Loading.show({
@@ -17,16 +16,14 @@ export default boot(async({ router, route, }) => {
     message: 'Connecting...',
   });
 
-  const isConnected = await serverStore.tryConnect(serverStore.currentServer);
+  const isConnected = await serverStore.tryConnect(serverStore.currentServer!);
 
   Loading.hide('tryConnect');
 
   if (!isConnected) {
-    showCantConnectDialog(serverStore.currentServer);
-
     return router.push({
       name: 'login',
-    });
+    }).then(() => void 0);
   }
 
   serverStore.isConnected = true;

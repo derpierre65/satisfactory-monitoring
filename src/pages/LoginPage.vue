@@ -16,14 +16,12 @@
                 @update:model-value="selectServer"
               />
               <q-input
-                v-model="server.host"
-                label="Host"
+                v-model="server.name"
+                label="Server Name"
               />
               <q-input
-                v-model="server.port"
-                min="1"
-                max="65535"
-                label="Port"
+                v-model="server.url"
+                label="API Url"
               />
             </q-card-section>
             <q-card-actions align="right">
@@ -38,10 +36,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Loading } from 'quasar';
 import useServerStore from 'stores/server.ts';
 import { useRouter } from 'vue-router';
-import { showCantConnectDialog } from 'src/utils/server.ts';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
@@ -50,8 +46,8 @@ const router = useRouter();
 
 //#region Data
 const server = ref({
-  host: '127.0.0.1',
-  port: 8081,
+  name: 'Local',
+  url: 'http://127.0.0.1:8081',
 });
 //#endregion
 
@@ -59,7 +55,7 @@ const server = ref({
 const servers = computed(() => {
   return serverStore.servers.map((server, index) => ({
     value: index,
-    label: `${server.host}:${server.port}`,
+    label: `${server.name} (${server.url})`,
   }));
 });
 //#endregion
@@ -72,16 +68,9 @@ const servers = computed(() => {
 
 //#region Methods
 async function login() {
-  Loading.show({
-    group: 'login',
-    message: 'Loading...',
-  });
-
   const serverFound = await serverStore.tryConnect(server.value);
-  Loading.hide('login');
-
   if (!serverFound) {
-    return showCantConnectDialog();
+    return;
   }
 
   const serverIndex = serverStore.add(server.value);
@@ -92,7 +81,7 @@ async function login() {
   });
 }
 
-function selectServer(option) {
+function selectServer(option: { value: number; }) {
   server.value = serverStore.servers[option.value];
 }
 //#endregion
