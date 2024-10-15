@@ -15,9 +15,24 @@
           FicsIt Remote Monitoring
         </q-toolbar-title>
 
-        <q-icon :name="$q.dark.isActive ? 'fas fa-moon' : 'fas fa-sun'" class="cursor-pointer" @click="toggleDarkMode">
-          <q-tooltip>Toggle Dark Mode</q-tooltip>
-        </q-icon>
+        <div class="flex items-center tw-space-x-2">
+          <q-icon
+            :name="$q.dark.isActive ? 'fas fa-moon' : 'fas fa-sun'"
+            class="cursor-pointer"
+            size="sm"
+            @click="toggleDarkMode"
+          >
+            <q-tooltip>Toggle Dark Mode</q-tooltip>
+          </q-icon>
+
+          <q-select
+            :model-value="serverStore.selected"
+            :options="serverStore.selectableServer"
+            emit-value
+            map-options
+            @update:model-value="selectServer"
+          />
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -64,6 +79,13 @@ function toggleLeftDrawer() {
 
 function toggleDarkMode() {
   q.dark.toggle();
-  window.localStorage.setItem('light_mode', !q.dark.isActive);
+  window.localStorage.setItem('light_mode', (!q.dark.isActive).toString());
+}
+
+async function selectServer(serverIndex: number) {
+  const server = serverStore.servers[serverIndex];
+  if (await serverStore.tryConnect(server)) {
+    serverStore.select(serverIndex);
+  }
 }
 </script>

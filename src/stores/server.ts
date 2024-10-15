@@ -68,7 +68,15 @@ const useServerStore = defineStore('server', () => {
     return servers.value[selected.value];
   });
 
+  const selectableServer = computed(() => {
+    return servers.value.map((server, index) => ({
+      value: index,
+      label: `${server.name}`,
+    }));
+  });
+
   return {
+    selectableServer,
     servers,
     currentServer,
     host,
