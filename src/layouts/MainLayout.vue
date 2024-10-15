@@ -32,6 +32,15 @@
             map-options
             @update:model-value="selectServer"
           />
+
+          <q-btn
+            icon="fas fa-power-off"
+            flat
+            round
+            @click="logout"
+          >
+            <q-tooltip>Logout</q-tooltip>
+          </q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -69,10 +78,25 @@ defineOptions({
   name: 'MainLayout',
 });
 
+//#region Composable & Prepare
 const serverStore = useServerStore();
 const q = useQuasar();
-const leftDrawerOpen = ref(false);
+//#endregion
 
+//#region Data
+const leftDrawerOpen = ref(false);
+//#endregion
+
+//#region Computed
+//#endregion
+
+//#region Watch
+//#endregion
+
+//#region Lifecycle Events
+//#endregion
+
+//#region Methods
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
@@ -85,7 +109,15 @@ function toggleDarkMode() {
 async function selectServer(serverIndex: number) {
   const server = serverStore.servers[serverIndex];
   if (await serverStore.tryConnect(server)) {
-    serverStore.select(serverIndex);
+    await serverStore.select(serverIndex);
   }
 }
+
+function logout() {
+  serverStore.select(-1);
+}
+//#endregion
+
+//#region Created
+//#endregion
 </script>

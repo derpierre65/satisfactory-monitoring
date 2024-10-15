@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import FRM from 'src/utils/FRM.ts';
 import { Dialog, Loading } from 'quasar';
+import router from 'src/router';
 
 type ServerInfo = {
   name: string;
@@ -23,7 +24,6 @@ const useServerStore = defineStore('server', () => {
     selected.value = lastSelectedServer;
   })();
 
-
   function add(server: ServerInfo) {
     const lcServerUrl = server.url.toLowerCase();
     let index = servers.value.findIndex(({ url, }) => {
@@ -39,7 +39,13 @@ const useServerStore = defineStore('server', () => {
     return index;
   }
 
-  function select(index: number) {
+  async function select(index: number) {
+    if (index === -1) {
+      await router.push({
+        name: 'login',
+      });
+    }
+
     if (index >= -1 && index < servers.value.length) {
       selected.value = index;
 

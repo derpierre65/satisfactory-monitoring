@@ -68,7 +68,7 @@ async function login() {
   }
 
   const serverIndex = serverStore.add(server.value);
-  serverStore.select(serverIndex);
+  await serverStore.select(serverIndex);
 
   await router.push({
     name: 'dashboard',
