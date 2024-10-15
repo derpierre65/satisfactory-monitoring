@@ -9,9 +9,9 @@
             </q-toolbar>
             <q-card-section class="q-gutter-y-md">
               <q-select
-                v-if="servers.length"
+                v-if="serverStore.selectableServer.length"
                 :model-value="null"
-                :options="servers"
+                :options="serverStore.selectableServer"
                 label="Server"
                 @update:model-value="selectServer"
               />
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import useServerStore from 'stores/server.ts';
 import { useRouter } from 'vue-router';
 
@@ -52,12 +52,6 @@ const server = ref({
 //#endregion
 
 //#region Computed
-const servers = computed(() => {
-  return serverStore.servers.map((server, index) => ({
-    value: index,
-    label: `${server.name} (${server.url})`,
-  }));
-});
 //#endregion
 
 //#region Watch
