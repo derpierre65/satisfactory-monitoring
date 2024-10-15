@@ -16,15 +16,6 @@
         </q-toolbar-title>
 
         <div class="flex items-center tw-space-x-2">
-          <q-icon
-            :name="$q.dark.isActive ? 'fas fa-moon' : 'fas fa-sun'"
-            class="cursor-pointer"
-            size="sm"
-            @click="toggleDarkMode"
-          >
-            <q-tooltip>Toggle Dark Mode</q-tooltip>
-          </q-icon>
-
           <q-select
             :model-value="serverStore.selected"
             :options="serverStore.selectableServer"
@@ -32,6 +23,15 @@
             map-options
             @update:model-value="selectServer"
           />
+
+          <q-btn
+            :icon="$q.dark.isActive ? 'fas fa-moon' : 'fas fa-sun'"
+            flat
+            round
+            @click="toggleDarkMode"
+          >
+            <q-tooltip>Toggle Dark Mode</q-tooltip>
+          </q-btn>
 
           <q-btn
             icon="fas fa-power-off"
