@@ -22,6 +22,7 @@
   "devDependencies": {
     "@derpierre65/eslint-config": "github:derpierre65/eslint-config",
     "@derpierre65/ficsit-remote-monitoring": "^0.2.0",
+    "@derpierre65/frontend-utils": "^0.3.12",
     "@quasar/app-vite": "^2.0.0-beta.12",
     "@types/node": "^20.5.9",
     "@typescript-eslint/eslint-plugin": "^7.18.0",

@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import FRM from 'src/utils/FRM.ts';
 import { Dialog, Loading } from 'quasar';
 import router from 'src/router';
+import { GetModListResponse } from '@derpierre65/ficsit-remote-monitoring';
 
 type ServerInfo = {
   name: string;
@@ -59,7 +60,7 @@ const useServerStore = defineStore('server', () => {
       message: 'Try to connect to the server...',
     });
 
-    return new FRM(server).getModList()
+    return FRM.fetch<GetModListResponse>(server.url, 'getModList')
       .then(() => true)
       .catch(() => {
         Dialog.create({
