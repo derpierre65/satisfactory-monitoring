@@ -15,6 +15,11 @@ const routes: RouteRecordRaw[] = [
         path: '',
         component: () => import('pages/IndexPage.vue'),
       },
+      {
+        name: 'power',
+        path: 'power',
+        component: () => import('pages/PowerPage.vue'),
+      },
     ],
   },
   {

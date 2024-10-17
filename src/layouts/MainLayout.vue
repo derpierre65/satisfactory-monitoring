@@ -60,12 +60,24 @@
       :width="leftDrawerOpen ? 250 : 50"
     >
       <q-list>
-        <q-item clickable>
+        <q-item
+          v-for="menuItem in menuItems"
+          :to="menuItem.route"
+          :active="menuItem.route.name === $route.name"
+          clickable
+        >
           <q-item-section side>
-            <q-icon name="fas fa-dashboard" size="16px" />
+            <q-icon
+              v-bind="menuItem.route.name === $route.name ? {color: 'primary'} : {}"
+              :name="menuItem.icon"
+              size="16px"
+            />
+            <q-tooltip v-if="!leftDrawerOpen" anchor="center end" self="center left">
+              {{ menuItem.title }}
+            </q-tooltip>
           </q-item-section>
           <q-item-section v-if="leftDrawerOpen">
-            <q-item-label>Dashboard</q-item-label>
+            <q-item-label>{{ menuItem.title }}</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -103,6 +115,22 @@ const updateIntervals = [
   15,
   30,
   60,
+];
+const menuItems = [
+  {
+    title: 'Dashboard',
+    icon: 'fas fa-dashboard',
+    route: {
+      name: 'dashboard',
+    },
+  },
+  {
+    title: 'Power',
+    icon: 'fas fa-bolt-lightning',
+    route: {
+      name: 'power',
+    },
+  },
 ];
 //#endregion
 
