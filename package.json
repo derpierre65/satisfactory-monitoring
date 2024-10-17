@@ -10,7 +10,8 @@
     "build": "quasar build",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "lint:fix": "eslint --ext .js,.ts,.vue ./ --fix",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "storybook": "storybook dev --no-open --port 9999"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
@@ -22,13 +23,22 @@
   "devDependencies": {
     "@derpierre65/eslint-config": "github:derpierre65/eslint-config",
     "@derpierre65/ficsit-remote-monitoring": "^0.2.0",
-    "@derpierre65/frontend-utils": "^0.3.12",
+    "@derpierre65/frontend-utils": "^0.3.13",
     "@quasar/app-vite": "^2.0.0-beta.12",
+    "@storybook/addon-essentials": "^8.3.5",
+    "@storybook/addon-interactions": "^8.3.5",
+    "@storybook/addon-links": "^8.3.5",
+    "@storybook/blocks": "^8.3.5",
+    "@storybook/test": "^8.3.5",
+    "@storybook/vue3": "^8.3.5",
+    "@storybook/vue3-vite": "^8.3.5",
     "@types/node": "^20.5.9",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "autoprefixer": "^10.4.2",
     "pinia": "^2.2.4",
+    "storybook": "^8.3.5",
+    "storybook-addon-vue-slots": "^0.9.30-next.2",
     "tailwindcss": "^3.4.13",
     "typescript": "~5.5.3"
   },
