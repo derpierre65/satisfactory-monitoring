@@ -17,8 +17,16 @@
 
         <div class="flex items-center tw-space-x-2">
           <q-select
+            v-model="updateInterval"
+            :options="updateIntervals"
+            label="Update Rate"
+            class="tw-w-[120px]"
+          />
+          <q-select
             :model-value="serverStore.selected"
             :options="serverStore.selectableServer"
+            label="Server"
+            class="tw-w-[120px]"
             emit-value
             map-options
             @update:model-value="selectServer"
@@ -70,9 +78,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import useServerStore from 'stores/server.ts';
 import { useQuasar } from 'quasar';
+import useSettingsStore from 'stores/settings.ts';
 
 defineOptions({
   name: 'MainLayout',
@@ -80,14 +89,28 @@ defineOptions({
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
+const settingsStore = useSettingsStore();
 const q = useQuasar();
 //#endregion
 
 //#region Data
 const leftDrawerOpen = ref(false);
+const updateIntervals = [
+  1,
+  3,
+  5,
+  10,
+  15,
+  30,
+  60,
+];
 //#endregion
 
 //#region Computed
+const updateInterval = computed({
+  set: (newValue) => settingsStore.updateInterval = newValue * 1_000,
+  get: () => settingsStore.updateInterval / 1_000,
+});
 //#endregion
 
 //#region Watch
