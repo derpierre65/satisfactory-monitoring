@@ -63,7 +63,7 @@ const useDataStore = defineStore('data', () => {
     }
   }
 
-  setInterval(() => fetch(), 1_000, 'fetchInterval');
+  setInterval(() => fetch(), 100, 'fetchInterval');
 
   return {
     lastUpdate,

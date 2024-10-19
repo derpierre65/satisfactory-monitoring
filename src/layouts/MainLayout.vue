@@ -105,6 +105,9 @@ const q = useQuasar();
 //#region Data
 const leftDrawerOpen = ref(false);
 const updateIntervals = [
+  0.1,
+  0.25,
+  0.5,
   1,
   3,
   5,
