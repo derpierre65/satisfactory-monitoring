@@ -75,7 +75,12 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <q-page class="q-pa-md">
+        <AppAlert v-if="!serverStore.isConnected" type="warning">
+          Could not connect to the Satisfactory Ficsit Remote Monitoring Api.
+        </AppAlert>
+        <router-view />
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
@@ -85,6 +90,7 @@ import { computed, ref } from 'vue';
 import useServerStore from 'stores/server.ts';
 import { useQuasar } from 'quasar';
 import useSettingsStore from 'stores/settings.ts';
+import AppAlert from 'components/AppAlert.vue';
 
 defineOptions({
   name: 'MainLayout',
