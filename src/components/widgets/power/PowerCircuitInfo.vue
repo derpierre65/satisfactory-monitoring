@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <div class="tw-grid tw-grid-cols-4 tw-gap-4">
+      <div class="tw-grid md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-4">
         <q-card class="shadow-0 tw-bg-neutral-950">
           <q-card-section>
             <q-skeleton v-if="!circuit" height="24px" class="q-my-xs" />
@@ -88,7 +88,7 @@
           </q-badge>
         </div>
       </div>
-      <div v-if="!circuit || circuit.BatteryCapacity" class="tw-grid tw-grid-cols-4 tw-gap-4">
+      <div v-if="!circuit || circuit.BatteryCapacity" class="tw-grid md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-4">
         <q-card class="shadow-0 tw-bg-neutral-950">
           <q-card-section>
             <q-skeleton v-if="!circuit" height="24px" class="q-my-xs" />

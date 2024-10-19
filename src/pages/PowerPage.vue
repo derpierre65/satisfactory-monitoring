@@ -7,7 +7,7 @@
       Overview
     </h6>
     <q-separator class="q-mb-md" />
-    <div class="tw-grid tw-gap-4 tw-grid-cols-3">
+    <div class="tw-grid tw-gap-4 md:tw-grid-cols-2 lg:tw-grid-cols-3">
       <PowerTotalProduction />
       <PowerCurrentConsumption />
       <PowerMaxConsumption />

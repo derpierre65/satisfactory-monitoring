@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          FicsIt Remote Monitoring
+          FicsIt Remote Monitoring Dashboard
         </q-toolbar-title>
 
         <div class="flex items-center tw-space-x-2">
