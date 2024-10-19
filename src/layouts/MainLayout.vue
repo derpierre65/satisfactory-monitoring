@@ -63,13 +63,13 @@
               :name="menuItem.icon"
               size="16px"
             />
-            <q-tooltip v-if="!leftDrawerOpen" anchor="center end" self="center left">
-              {{ menuItem.title }}
-            </q-tooltip>
           </q-item-section>
           <q-item-section v-if="leftDrawerOpen">
             <q-item-label>{{ menuItem.title }}</q-item-label>
           </q-item-section>
+          <q-tooltip v-else anchor="center end" self="center left">
+            {{ menuItem.title }}
+          </q-tooltip>
         </q-item>
       </q-list>
     </q-drawer>
