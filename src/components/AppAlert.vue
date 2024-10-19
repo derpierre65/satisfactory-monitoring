@@ -106,10 +106,10 @@ const leftIcon = computed(() => {
       attributes.name = 'fas fa-circle-info';
     }
     else if (props.type === 'success') {
-      attributes.name = 'fas fa-circle-check';
+      attributes.name = 'fas fa-check';
     }
     else if (props.type === 'error') {
-      attributes.name = 'fas fa-circle-xmark';
+      attributes.name = 'fas fa-xmark';
     }
     else if (props.type === 'warning') {
       attributes.name = 'fas fa-triangle-exclamation';
