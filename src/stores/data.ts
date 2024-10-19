@@ -12,6 +12,7 @@ const useDataStore = defineStore('data', () => {
   const fetchEndpoints = ref<string[]>([]);
   const lastUpdate = ref<Record<string, number>>({});
   const apiData = ref<Record<string, object>>({});
+  const promises: Record<string, Promise<unknown>> = {};
 
   function addEndpoint(endpoint: string) {
     fetchEndpoints.value.push(endpoint);
@@ -30,8 +31,8 @@ const useDataStore = defineStore('data', () => {
   }
 
   function fetch(endpoint: string | null = null) {
-    const { currentServer, } = useServerStore();
-    if (!currentServer) {
+    const serverStore = useServerStore();
+    if (!serverStore.currentServer) {
       return;
     }
 
@@ -43,10 +44,22 @@ const useDataStore = defineStore('data', () => {
       }
 
       lastUpdate.value[endpoint] = Date.now();
-      FRM.fetch<object>(currentServer.url, endpoint).then((data) => {
-        apiData.value[endpoint] = data;
-      });
-      console.log('updating', endpoint);
+      if (!promises[endpoint]) {
+        promises[endpoint] = FRM.fetch<object>(serverStore.currentServer.url, endpoint)
+          .then((data) => {
+            serverStore.isConnected = true;
+            apiData.value[endpoint] = data;
+          })
+          .catch((response) => {
+            if (response.code === 'ERR_NETWORK') {
+              serverStore.isConnected = false;
+            }
+          })
+          .finally(() => {
+            delete promises[endpoint];
+          });
+        console.log('updating', endpoint);
+      }
     }
   }
 
