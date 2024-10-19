@@ -1,7 +1,7 @@
-import { onScopeDispose } from 'vue';
+import { computed, onScopeDispose } from 'vue';
 import useDataStore from 'stores/data.ts';
 
-function useFRMEndpoint(endpoint: string) {
+function useFRMEndpoint<T>(endpoint: string) {
   const dataStore = useDataStore();
 
   dataStore.addEndpoint(endpoint);
@@ -9,6 +9,8 @@ function useFRMEndpoint(endpoint: string) {
   onScopeDispose(() => {
     dataStore.removeEndpoint(endpoint);
   });
+
+  return computed<T | null>(() => (dataStore.apiData[endpoint] as T) || null);
 }
 
 export {
