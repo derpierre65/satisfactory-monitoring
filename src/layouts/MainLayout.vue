@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lff">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -82,6 +82,30 @@
         <router-view />
       </q-page>
     </q-page-container>
+
+    <q-footer class="bg-transparent tw-max-w-screen-xl tw-mx-auto">
+      <q-separator />
+
+      <div class="q-py-sm tw-text-neutral-400 flex">
+        <div>
+          <span>Required Mod: </span>
+          <a href="https://ficsit.app/mod/FicsitRemoteMonitoring" class="text-primary">Ficsit Remote Monitoring</a>
+          <br>
+          <span>Open Source: </span>
+          <a href="https://github.com/derpierre65/satisfactory-monitoring" class="text-primary">GitHub Repository</a>
+        </div>
+
+        <q-space />
+
+        <div>
+          <div>
+            <span>Proudly made by <a href="https://www.derpierre65.dev/" class="text-primary">derpierre65</a> with </span>
+            <q-icon name="fa fa-heart" color="red" />
+            <span> in Ireland</span>
+          </div>
+        </div>
+      </div>
+    </q-footer>
   </q-layout>
 </template>
 
