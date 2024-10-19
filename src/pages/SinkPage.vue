@@ -1,10 +1,10 @@
 <template>
-  <div class="tw-max-w-screen-xl tw-mx-auto tw-gap-4 flex">
-    <SinkGraph class="tw-w-3/4" />
+  <div class="tw-max-w-screen-xl tw-mx-auto tw-grid md:tw-grid-cols-4">
+    <SinkGraph class="md:tw-col-span-3" />
 
     <div>
       <SinkCouponStatus />
-      <SinkCouponProgress class="q-mt-md" />
+      <SinkCouponProgress class="q-mt-md q-mx-auto" />
     </div>
   </div>
 </template>
