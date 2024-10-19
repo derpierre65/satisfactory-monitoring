@@ -1,7 +1,7 @@
 <template>
   <q-banner
     v-if="visible"
-    :class="[textClass, backgroundColor]"
+    :class="[textClass, backgroundColor, 'tw-min-h-[48px]']"
     rounded
   >
     <template #avatar>
@@ -126,16 +126,16 @@ const leftIcon = computed(() => {
 });
 const backgroundColor = computed(() => {
   if (props.type === 'info' || props.type === 'loading') {
-    return props.text || props.type === 'loading' ? 'bg-blue-1' : 'bg-blue text-white';
+    return props.text || props.type === 'loading' ? 'tw-bg-blue-500 tw-bg-opacity-10' : 'bg-blue text-white';
   }
   if (props.type === 'success') {
-    return props.text ? 'bg-green-1' : 'bg-green text-white';
+    return props.text ? 'tw-bg-green-500 tw-bg-opacity-10' : 'bg-green text-white';
   }
   if (props.type === 'error') {
-    return props.text ? 'bg-red-1' : 'bg-red text-white';
+    return props.text ? 'tw-bg-red-500 tw-bg-opacity-10' : 'bg-red text-white';
   }
   if (props.type === 'warning') {
-    return props.text ? 'bg-orange-1' : 'bg-orange text-white';
+    return props.text ? 'tw-bg-yellow-500 tw-bg-opacity-10' : 'bg-orange text-white';
   }
 
   return '';

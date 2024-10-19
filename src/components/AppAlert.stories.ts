@@ -43,6 +43,7 @@ const Meta: Meta<typeof AppAlert> = {
 const DefaultArgs: StoryObj<typeof AppAlert>['args'] = {
   default: 'Hello World',
   dense: true,
+  text: false,
 };
 
 const Error: StoryObj<typeof AppAlert> = {
