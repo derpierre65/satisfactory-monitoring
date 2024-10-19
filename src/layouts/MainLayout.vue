@@ -155,6 +155,13 @@ const menuItems = [
       name: 'power',
     },
   },
+  {
+    title: 'AWESOME Sink',
+    icon: 'fas fa-ticket',
+    route: {
+      name: 'sink',
+    },
+  },
 ];
 //#endregion
 

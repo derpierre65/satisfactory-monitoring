@@ -4,7 +4,7 @@
   </AppAlert>
   <div v-else class="tw-mx-auto tw-max-w-screen-xl">
     <h6 class="text-h5 q-mb-xs">
-      Overview
+      <span>Overview</span>
     </h6>
     <q-separator class="q-mb-md" />
     <div class="tw-grid tw-gap-4 md:tw-grid-cols-2 lg:tw-grid-cols-3">
@@ -16,7 +16,7 @@
       <PowerBatteryFirstEmpty />
     </div>
     <h6 class="text-h5 q-mt-md q-mb-xs">
-      All Power Circuits
+      <span>All Power Circuits</span>
     </h6>
     <q-separator class="q-mb-md" />
 

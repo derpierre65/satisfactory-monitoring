@@ -20,6 +20,11 @@ const routes: RouteRecordRaw[] = [
         path: 'power',
         component: () => import('pages/PowerPage.vue'),
       },
+      {
+        name: 'sink',
+        path: 'sink',
+        component: () => import('pages/SinkPage.vue'),
+      },
     ],
   },
   {
