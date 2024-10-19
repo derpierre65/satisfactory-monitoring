@@ -33,15 +33,6 @@
           />
 
           <q-btn
-            :icon="$q.dark.isActive ? 'fas fa-moon' : 'fas fa-sun'"
-            flat
-            round
-            @click="toggleDarkMode"
-          >
-            <q-tooltip>Toggle Dark Mode</q-tooltip>
-          </q-btn>
-
-          <q-btn
             icon="fas fa-power-off"
             flat
             round
@@ -150,11 +141,6 @@ const updateInterval = computed({
 //#region Methods
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
-}
-
-function toggleDarkMode() {
-  q.dark.toggle();
-  window.localStorage.setItem('light_mode', (!q.dark.isActive).toString());
 }
 
 async function selectServer(serverIndex: number) {

@@ -22,17 +22,8 @@ function setDefault(component: ComponentOptions, key: string, value: boolean | s
   }
 }
 
-function updateDarkMode() {
-  let lightMode = false;
-  if (window.localStorage) {
-    lightMode = window.localStorage.getItem('light_mode') === 'true';
-  }
-
-  Dark.set(!lightMode);
-}
-
 export default boot(() => {
-  updateDarkMode();
+  Dark.set(true);
 
   for (const component of [
     QInput,
