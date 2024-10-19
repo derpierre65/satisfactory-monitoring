@@ -11,7 +11,7 @@
     "lint": "eslint --ext .js,.ts,.vue ./",
     "lint:fix": "eslint --ext .js,.ts,.vue ./ --fix",
     "test": "echo \"No test specified\" && exit 0",
-    "storybook": "storybook dev --no-open --port 9999"
+    "storybook": "storybook dev --no-open --port 4000"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
