@@ -10,12 +10,20 @@
         <div>
           <q-skeleton v-if="!circuit" type="QChip" width="120px" height="28px" />
           <q-badge
-            v-else
+            v-else-if="!circuit.FuseTriggered"
             class="!tw-bg-green-500 tw-text-green-500 !tw-bg-opacity-10 tw-px-3 tw-text-base"
             rounded
           >
             <q-icon name="fa fa-check" />
             <span class="q-pl-xs">All Good</span>
+          </q-badge>
+          <q-badge
+            v-else
+            class="!tw-bg-red-500 tw-text-red-500 !tw-bg-opacity-10 tw-px-3 tw-text-base"
+            rounded
+          >
+            <q-icon name="fa fa-bolt" />
+            <span class="q-pl-xs">Fuse Blown</span>
           </q-badge>
         </div>
       </div>
