@@ -27,6 +27,11 @@ export default configure((/* ctx */) => {
       },
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
       vitePlugins: [],
+
+      // cloudflare app-vite 2.x workaround
+      afterBuild() {
+        process.exit(0);
+      },
     },
 
     devServer: {
