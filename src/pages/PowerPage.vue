@@ -22,10 +22,16 @@
 
     <div class="flex q-mb-md">
       <q-space />
-      <q-toggle
-        v-model="settings.hideEmpty"
-        label="Hide Empty Circuits"
-      />
+      <div class="q-gutter-x-sm">
+        <q-toggle
+          v-model="settings.onlyFuseBlown"
+          label="Only Fuse Blown"
+        />
+        <q-toggle
+          v-model="settings.hideEmpty"
+          label="Hide Empty Circuits"
+        />
+      </div>
     </div>
 
     <div class="tw-space-y-4">
@@ -66,6 +72,7 @@ const powerData = useFRMEndpoint<GetPowerResponse>('getPower');
 
 //#region Data
 const settings = ref({
+  onlyFuseBlown: false,
   hideEmpty: false,
 });
 //#endregion
@@ -73,6 +80,10 @@ const settings = ref({
 //#region Computed
 const circuits = computed(() => {
   let circuits = powerData.value!;
+  if (settings.value.onlyFuseBlown) {
+    circuits = circuits.filter((circuit) => circuit.FuseTriggered);
+  }
+
   if (settings.value.hideEmpty) {
     circuits = circuits.filter((circuit) => {
       return circuit.PowerMaxConsumed > 0 || circuit.BatteryCapacity > 0;
