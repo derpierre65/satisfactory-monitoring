@@ -7,6 +7,8 @@ const useSettingsStore = defineStore('settings', () => {
   return {
     updateInterval,
   };
+}, {
+  persist: true,
 });
 
 export {
