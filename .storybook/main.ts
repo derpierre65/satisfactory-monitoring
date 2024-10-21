@@ -2,7 +2,7 @@ import {StorybookConfig} from '@storybook/vue3-vite';
 import vue from '@vitejs/plugin-vue';
 import {quasar, transformAssetUrls} from '@quasar/vite-plugin';
 import path from 'path';
-import {mergeConfig} from 'vite';
+import {type PluginOption} from 'vite';
 //import * as hq from 'alias-hq';
 
 export default {
