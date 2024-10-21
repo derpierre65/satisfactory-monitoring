@@ -3,11 +3,11 @@ import 'quasar/dist/quasar.sass';
 import '@/css/app.scss';
 import {Preview, setup} from '@storybook/vue3';
 import {createPinia} from 'pinia';
-import {Quasar, useQuasar} from 'quasar';
-import quasarUserOptions from '../.quasar/dev-spa/quasar-user-options';
+import {Dialog, Loading, Notify, Quasar, useQuasar} from 'quasar';
+import iconSet from 'quasar/icon-set/fontawesome-v6.js';
 
 setup(async (app) => {
-  app.use(Quasar, quasarUserOptions);
+  app.use(Quasar, {config: {}, iconSet, plugins: {Loading, Notify, Dialog}});
   app.use(createPinia());
 
   return Promise
