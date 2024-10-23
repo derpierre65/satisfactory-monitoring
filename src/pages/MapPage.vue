@@ -12,6 +12,7 @@
           <q-toggle v-model="settings.trainStations" label="Train Stations" />
           <q-toggle v-model="settings.trains" label="Trains" />
           <q-toggle v-model="settings.powerSlugs" label="Power Slugs" />
+          <q-toggle v-model="settings.radarTowers" label="Radar Towers" />
         </q-card-section>
       </q-card>
     </div>
@@ -28,5 +29,6 @@ const settings = ref({
   players: true,
   trainStations: true,
   powerSlugs: true,
+  radarTowers: true,
 });
 </script>

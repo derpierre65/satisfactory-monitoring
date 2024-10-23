@@ -90,6 +90,10 @@ const useServerStore = defineStore('server', () => {
       });
   }
 
+  function getItemUrl(className: string) {
+    return `${currentServer.value?.url}/Icons/${className}.png`;
+  }
+
   const currentServer = computed(() => {
     if (selected.value === -1) {
       return null;
@@ -111,6 +115,7 @@ const useServerStore = defineStore('server', () => {
     servers,
     currentServer,
     isConnected,
+    getItemUrl,
     add,
     select,
     tryConnect,

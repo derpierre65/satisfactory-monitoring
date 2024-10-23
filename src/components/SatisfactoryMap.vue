@@ -60,18 +60,56 @@
         <LTooltip :content="entity.Name || 'Unknown Player'" />
       </LMarker>
     </template>
+
+    <!-- radar towers -->
+    <template v-if="settings.radarTowers">
+      <LMarker v-for="entity of radarTowers" :lat-lng="[entity.location.y * -1, entity.location.x]">
+        <LIcon :icon-size="[32, 32]" icon-url="/assets/map/radar_tower.png" />
+        <LPopup>
+          <div class="text-center q-mb-md">
+            <span>Weak signals found in area:</span>
+          </div>
+          <div class="tw-flex tw-flex-wrap justify-center tw-gap-4">
+            <div v-for="signal of entity.Signal" class="tw-flex tw-items-center tw-gap-2">
+              <img :src="serverStore.getItemUrl(signal.ClassName)" width="32px" height="32px">
+              <span>x{{ signal.Amount }}</span>
+            </div>
+          </div>
+
+          <div class="text-center q-my-md">
+            <span>Fauna found in area:</span>
+          </div>
+          <div class="tw-flex tw-flex-wrap justify-center tw-gap-x-2">
+            <div v-for="fauna of entity.Fauna" class="tw-flex tw-items-center tw-gap-2">
+              <img :src="serverStore.getItemUrl(fauna.ClassName)" width="32px" height="32px">
+              <span>x{{ fauna.Amount }}</span>
+            </div>
+          </div>
+
+          <div class="text-center q-my-md">
+            <span>Flora found in area:</span>
+          </div>
+          <div class="tw-flex tw-flex-wrap justify-center tw-gap-x-2">
+            <div v-for="flora of entity.Flora" class="tw-flex tw-items-center tw-gap-2">
+              <img :src="serverStore.getItemUrl(flora.ClassName)" width="32px" height="32px">
+              <span>x{{ flora.Amount }}</span>
+            </div>
+          </div>
+        </LPopup>
+      </LMarker>
+    </template>
   </LMap>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { LIcon, LMap, LMarker, LImageOverlay, LTooltip } from '@vue-leaflet/vue-leaflet';
+import { LIcon, LMap, LMarker, LImageOverlay, LTooltip, LPopup } from '@vue-leaflet/vue-leaflet';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import useServerStore from 'stores/server.ts';
 import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
 import type {
-  GetPlayerResponse, GetPowerSlugResponse,
+  GetPlayerResponse, GetPowerSlugResponse, GetRadarTowerResponse,
   GetSpaceElevatorResponse,
   GetTrainsResponse,
   GetTrainStationResponse,
@@ -86,6 +124,7 @@ const { settings, } = defineProps<{
     players: boolean;
     trainStations: boolean;
     powerSlugs: boolean;
+    radarTowers: boolean;
   };
 }>();
 
@@ -95,6 +134,7 @@ const spaceElevators = useFRMEndpoint<GetSpaceElevatorResponse>('getSpaceElevato
 const players = useFRMEndpoint<GetPlayerResponse>('getPlayer');
 const trainStations = useFRMEndpoint<GetTrainStationResponse>('getTrainStation');
 const powerSlug = useFRMEndpoint<GetPowerSlugResponse>('getPowerSlug');
+const radarTowers = useFRMEndpoint<GetRadarTowerResponse>('getRadarTower');
 //#endregion
 
 //#region Data
@@ -118,6 +158,7 @@ const filteredTrains = computed(() => {
 
   return trains.value.filter((train) => train.location.y !== 0 && train.location.x !== 0 && train.location.z !== 0);
 });
+
 const filteredPowerSlugs = computed(() => {
   if (!powerSlug.value) {
     return [];
