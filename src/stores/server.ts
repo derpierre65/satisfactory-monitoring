@@ -61,7 +61,22 @@ const useServerStore = defineStore('server', () => {
     });
 
     return FRM.fetch<GetModListResponse>(server.url, 'getModList')
-      .then(() => true)
+      .then((data) => {
+        const frmMod = data.find((mod) => mod.SMRName === 'FicsitRemoteMonitoring')!;
+        const requiredVersion = import.meta.env.VITE_REQUIRED_FRM_MOD;
+        if (frmMod.Version >= requiredVersion) {
+          return true;
+        }
+
+        Dialog.create({
+          message: `The savegame does not have the required Ficsit Remote Monitoring version 
+          ${requiredVersion} or higher.
+          Please update your Ficsit Remote Monitoring mod to the latest version to continue.`,
+          class: 'shadow-0',
+        });
+
+        return false;
+      })
       .catch(() => {
         Dialog.create({
           message: `Can't connect to ${server.url}`,
