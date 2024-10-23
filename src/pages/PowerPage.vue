@@ -24,6 +24,10 @@
       <q-space />
       <div class="q-gutter-x-sm">
         <q-toggle
+          v-model="settings.ignoreLowLoad"
+          label="Ignore power circuits with low load"
+        />
+        <q-toggle
           v-model="settings.onlyFuseBlown"
           label="Only Fuse Blown"
         />
@@ -74,6 +78,7 @@ const powerData = useFRMEndpoint<GetPowerResponse>('getPower');
 const settings = ref({
   onlyFuseBlown: false,
   hideEmpty: false,
+  ignoreLowLoad: false,
 });
 //#endregion
 
@@ -87,6 +92,16 @@ const circuits = computed(() => {
   if (settings.value.hideEmpty) {
     circuits = circuits.filter((circuit) => {
       return circuit.PowerMaxConsumed > 0 || circuit.BatteryCapacity > 0;
+    });
+  }
+
+  if (settings.value.ignoreLowLoad) {
+    circuits = circuits.filter((circuit) => {
+      if (circuit.PowerCapacity === 0) {
+        return false;
+      }
+
+      return (circuit.PowerConsumed / circuit.PowerCapacity) * 100 > 70;
     });
   }
 
