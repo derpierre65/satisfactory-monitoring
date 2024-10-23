@@ -75,8 +75,8 @@
     </q-drawer>
 
     <q-page-container>
-      <q-page class="q-pa-md">
-        <AppAlert v-if="!serverStore.isConnected" type="warning">
+      <q-page class="q-pa-md tw-flex tw-flex-col">
+        <AppAlert v-if="!serverStore.isConnected" type="warning" class="q-mb-md">
           Could not connect to the Satisfactory Ficsit Remote Monitoring Api.
         </AppAlert>
         <router-view />
