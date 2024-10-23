@@ -47,11 +47,11 @@
             <span class="text-caption">Power Production</span>
           </q-card-section>
         </q-card>
-        <q-card class="shadow-0 tw-bg-neutral-950">
+        <q-card class="shadow-0" :class="circuitLoadColor">
           <q-card-section>
             <q-skeleton v-if="!circuit" height="24px" class="q-my-xs" />
             <div v-else class="text-h6">
-              <span>{{ formatNumber(circuit.PowerConsumed) }} MW</span>
+              <span>{{ formatNumber(circuit.PowerConsumed) }} MW ({{ formatNumber(circuitLoad) }}%)</span>
             </div>
             <span class="text-caption">Current consumption</span>
           </q-card-section>
@@ -179,6 +179,31 @@ const batteryTime = computed(() => {
   }
 
   return null;
+});
+const circuitLoad = computed(() => {
+  if (!props.circuit) {
+    return 0;
+  }
+
+  const capacity = props.circuit.PowerCapacity;
+  if (capacity === 0) {
+    return 0;
+  }
+
+  return (props.circuit.PowerConsumed / capacity) * 100;
+});
+const circuitLoadColor = computed(() => {
+  if (circuitLoad.value < 70) {
+    return 'tw-bg-neutral-950';
+  }
+  if (circuitLoad.value < 80) {
+    return 'bg-yellow-10';
+  }
+  if (circuitLoad.value < 90) {
+    return 'bg-orange-10';
+  }
+
+  return 'bg-red-10';
 });
 //#endregion
 
