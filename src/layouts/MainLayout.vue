@@ -149,6 +149,13 @@ const menuItems = [
     },
   },
   {
+    title: 'Map',
+    icon: 'fas fa-map',
+    route: {
+      name: 'map',
+    },
+  },
+  {
     title: 'Power',
     icon: 'fas fa-bolt-lightning',
     route: {

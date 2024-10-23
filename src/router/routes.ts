@@ -25,6 +25,11 @@ const routes: RouteRecordRaw[] = [
         path: 'sink',
         component: () => import('pages/SinkPage.vue'),
       },
+      {
+        name: 'map',
+        path: 'map',
+        component: () => import('pages/MapPage.vue'),
+      },
     ],
   },
   {
