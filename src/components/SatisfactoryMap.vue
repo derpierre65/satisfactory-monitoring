@@ -13,23 +13,25 @@
     />
 
     <!-- trains -->
-    <template v-if="settings.trains && filteredTrains">
-      <LMarker v-for="entity of filteredTrains" :lat-lng="[entity.location.y * -1, entity.location.x]">
-        <LIcon :icon-size="[32, 32]" icon-url="/assets/map/train.png" />
-        <LTooltip :content="entity.Name" />
-      </LMarker>
+    <template v-if="settings.trains">
+      <template v-for="entity of filteredTrains" :key="entity.ID">
+        <LMarker :lat-lng="getEntityLocation(entity)">
+          <LIcon :icon-size="[32, 32]" icon-url="/assets/map/train.png" />
+          <LTooltip :content="entity.Name" />
+        </LMarker>
+      </template>
     </template>
 
     <!-- power slugs -->
     <template v-if="settings.spaceElevator">
-      <LMarker v-for="entity of spaceElevators" :lat-lng="[entity.location.y * -1, entity.location.x]">
+      <LMarker v-for="entity of spaceElevators" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
         <LIcon :icon-size="[32, 32]" icon-url="/assets/map/space_elevator.png" />
       </LMarker>
     </template>
 
     <!-- train stations -->
     <template v-if="settings.trainStations">
-      <LMarker v-for="entity of trainStations" :lat-lng="[entity.location.y * -1, entity.location.x]">
+      <LMarker v-for="entity of trainStations" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
         <LIcon :icon-size="[32, 32]" icon-url="/assets/map/train_station.png" />
         <LTooltip :content="entity.Name" />
       </LMarker>
@@ -37,21 +39,21 @@
 
     <!-- space elevator -->
     <template v-if="settings.spaceElevator">
-      <LMarker v-for="entity of spaceElevators" :lat-lng="[entity.location.y * -1, entity.location.x]">
+      <LMarker v-for="entity of spaceElevators" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
         <LIcon :icon-size="[32, 32]" icon-url="/assets/map/space_elevator.png" />
       </LMarker>
     </template>
 
     <!-- power slug -->
     <template v-if="settings.powerSlugs">
-      <LMarker v-for="entity of filteredPowerSlugs" :lat-lng="[entity.location.y * -1, entity.location.x]">
+      <LMarker v-for="entity of filteredPowerSlugs" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
         <LIcon :icon-size="[32, 32]" :icon-url="`/assets/map/power_slug_${entity.slugColor}.png`" />
       </LMarker>
     </template>
 
     <!-- players -->
     <template v-if="settings.players">
-      <LMarker v-for="entity of players" :lat-lng="[entity.location.y * -1, entity.location.x]">
+      <LMarker v-for="entity of players" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
         <LIcon
           :icon-size="[32, 32]"
           icon-url="/assets/map/player.png"
@@ -62,7 +64,7 @@
     </template>
 
     <template v-if="settings.drones">
-      <LMarker v-for="entity of drones" :lat-lng="[entity.location.y * -1, entity.location.x]">
+      <LMarker v-for="entity of drones" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
         <LIcon
           :icon-size="[32, 32]"
           icon-url="/assets/map/drone.png"
@@ -72,7 +74,7 @@
     </template>
 
     <template v-if="settings.droneStations">
-      <LMarker v-for="entity of droneStations" :lat-lng="[entity.location.y * -1, entity.location.x]">
+      <LMarker v-for="entity of droneStations" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
         <LIcon
           :icon-size="[32, 32]"
           icon-url="/assets/map/drone_station.png"
@@ -81,9 +83,39 @@
       </LMarker>
     </template>
 
+    <template v-if="settings.truckStations">
+      <LMarker v-for="entity of truckStations" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
+        <LIcon
+          :icon-size="[32, 32]"
+          icon-url="/assets/map/truck_station.png"
+        />
+        <LTooltip :content="entity.Name || 'Unknown'" />
+      </LMarker>
+    </template>
+
+    <template v-if="settings.trucks">
+      <LMarker v-for="entity of trucks" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
+        <LIcon
+          :icon-size="[32, 32]"
+          icon-url="/assets/map/tractor.png"
+        />
+        <LTooltip :content="entity.Name || 'Unknown'" />
+      </LMarker>
+    </template>
+
+    <LLayerGroup v-if="settings.tractors" name="tractors">
+      <LMarker v-for="entity of tractors" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
+        <LIcon
+          :icon-size="[32, 32]"
+          icon-url="/assets/map/tractor.png"
+        />
+        <LTooltip :content="entity.Name || 'Unknown'" />
+      </LMarker>
+    </LLayerGroup>
+
     <!-- radar towers -->
     <template v-if="settings.radarTowers">
-      <LMarker v-for="entity of radarTowers" :lat-lng="[entity.location.y * -1, entity.location.x]">
+      <LMarker v-for="entity of radarTowers" :key="entity.ID" :lat-lng="[entity.location.y * -1, entity.location.x]">
         <LIcon :icon-size="[32, 32]" icon-url="/assets/map/radar_tower.png" />
         <LPopup>
           <template v-if="entity.Signal.length">
@@ -129,7 +161,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { LIcon, LMap, LMarker, LImageOverlay, LTooltip, LPopup } from '@vue-leaflet/vue-leaflet';
+import { LIcon, LMap, LMarker, LImageOverlay, LTooltip } from '@vue-leaflet/vue-leaflet';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import useServerStore from 'stores/server.ts';
@@ -153,6 +185,9 @@ const { settings, } = defineProps<{
     radarTowers: boolean;
     drones: boolean;
     droneStations: boolean;
+    truckStations: boolean;
+    tractors: boolean;
+    trucks: boolean;
   };
 }>();
 
@@ -165,6 +200,9 @@ const powerSlug = useFRMEndpoint<GetPowerSlugResponse>('getPowerSlug');
 const radarTowers = useFRMEndpoint<GetRadarTowerResponse>('getRadarTower');
 const drones = useFRMEndpoint<GetDroneResponse>('getDrone');
 const droneStations = useFRMEndpoint<GetDroneStationResponse>('getDroneStation');
+const truckStations = useFRMEndpoint<GetTruckStationResponse>('getTruckStation');
+const trucks = useFRMEndpoint<GetTruckResponse>('getTruck');
+const tractors = useFRMEndpoint<GetTractorResponse>('getTractor');
 //#endregion
 
 //#region Data
@@ -210,6 +248,12 @@ const filteredPowerSlugs = computed(() => {
 //#endregion
 
 //#region Methods
+function getEntityLocation(entity) {
+  return [
+    entity.location.y * -1,
+    entity.location.x,
+  ];
+}
 //#endregion
 
 //#region Created
