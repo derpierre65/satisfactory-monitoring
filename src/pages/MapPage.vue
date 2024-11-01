@@ -9,6 +9,7 @@
         <q-card-section class="tw-flex tw-flex-col tw-gap-2">
           <q-toggle v-model="settings.spaceElevator" label="Space Elevator" />
           <q-toggle v-model="settings.players" label="Players" />
+          <q-toggle v-model="settings.doggos" label="Doggos" />
           <q-toggle v-model="settings.trainStations" label="Train Stations" />
           <q-toggle v-model="settings.trains" label="Trains" />
           <q-toggle v-model="settings.powerSlugs" label="Power Slugs" />
@@ -33,6 +34,7 @@ const settings = ref({
   trains: true,
   spaceElevator: true,
   players: true,
+  doggos: true,
   trainStations: true,
   powerSlugs: true,
   radarTowers: true,

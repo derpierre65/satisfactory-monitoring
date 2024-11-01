@@ -27,6 +27,20 @@
       <MapSpaceElevators :entities="cachedSpaceElevators" />
     </template>
 
+    <!-- truck stations -->
+    <template v-if="settings.doggos">
+      <MapStaticMarker
+        v-for="entity in cachedDoggos"
+        :key="entity.ID"
+        :entity="entity"
+        :icon-url="serverStore.getItemUrl('Desc_SpaceRabbit_C')"
+      >
+        <template #tooltip>
+          <ItemSlot v-if="entity.Inventory.length" :item="entity.Inventory[0]" :size="64" />
+        </template>
+      </MapStaticMarker>
+    </template>
+
     <!-- power slug -->
     <template v-if="settings.powerSlugs">
       <MapStaticMarker
@@ -129,7 +143,9 @@ import 'leaflet/dist/leaflet.css';
 import useServerStore from 'stores/server.ts';
 import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
 import type {
+  GetDoggoResponse,
   GetDroneResponse,
+  GetDroneStationResponse,
   GetPlayerResponse,
   GetPowerSlugResponse,
   GetRadarTowerResponse,
@@ -149,7 +165,8 @@ import MapRadarTowerNodes from 'components/map/MapRadarTowerNodes.vue';
 import { getEntityLocation } from 'src/utils/map.ts';
 import MapRadarTowers from 'components/map/MapRadarTowers.vue';
 import MapSpaceElevators from 'components/map/MapSpaceElevators.vue';
-import MapStaticMarker from 'components/map/MapStaticMarker';
+import MapStaticMarker from 'components/map/MapStaticMarker.vue';
+import ItemSlot from 'components/ItemSlot.vue';
 
 //#region Composable & Prepare
 const { settings, } = defineProps<{
@@ -166,6 +183,7 @@ const { settings, } = defineProps<{
     truckStations: boolean;
     tractors: boolean;
     trucks: boolean;
+    doggos: boolean;
   };
 }>();
 
@@ -181,6 +199,7 @@ const droneStations = useFRMEndpoint<GetDroneStationResponse>('getDroneStation')
 const truckStations = useFRMEndpoint<GetTruckStationResponse>('getTruckStation');
 const trucks = useFRMEndpoint<GetTruckResponse>('getTruck');
 const tractors = useFRMEndpoint<GetTractorResponse>('getTractor');
+const doggos = useFRMEndpoint<GetDoggoResponse>('getDoggo');
 //#endregion
 
 //#region Data
@@ -215,6 +234,7 @@ const cachedRadarTowers = createCachedComputed(radarTowers);
 const cachedDroneStations = createCachedComputed(droneStations);
 const cachedTruckStations = createCachedComputed(truckStations);
 const cachedTrainStations = createCachedComputed(trainStations);
+const cachedDoggos = createCachedComputed(doggos);
 const cachedRadarTowerNodes = createCachedComputed(radarTowers, () => {
   return radarTowers.value!.reduce((acc, tower) => {
     acc.push(...tower.ScannedResourceNodes);
