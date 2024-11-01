@@ -1,18 +1,21 @@
 <template>
-  <div>
-    <div class="text-center">
-      <q-icon name="fa fa-ticket" size="100px" /><br>
-      <q-skeleton v-if="!resourceSink" width="180px" class="q-mx-auto" />
-      <div v-else>
-        <span>Printable Coupons {{ resourceSink[0].NumCoupon }}</span>
-      </div>
-    </div>
+  <div class="text-center">
+    <q-skeleton v-if="!resourceSink" width="180px" class="q-mx-auto" />
+    <ItemSlot
+      v-else
+      :amount="resourceSink[0].NumCoupon"
+      class="tw-mx-auto"
+      item="Desc_ResourceSinkCoupon_C"
+      title="Printable Coupons"
+      size="256"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
-import type { GetResourceSinkResponse } from '@derpierre65/ficsit-remote-monitoring';
+import { GetResourceSinkResponse } from '@derpierre65/ficsit-remote-monitoring';
+import ItemSlot from 'components/ItemSlot.vue';
 
 //#region Composable & Prepare
 const resourceSink = useFRMEndpoint<GetResourceSinkResponse>('getResourceSink');

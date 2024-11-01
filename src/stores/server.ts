@@ -64,7 +64,7 @@ const useServerStore = defineStore('server', () => {
       .then((data) => {
         const frmMod = data.find((mod) => mod.SMRName === 'FicsitRemoteMonitoring')!;
         const requiredVersion = import.meta.env.VITE_REQUIRED_FRM_MOD;
-        if (frmMod.Version >= requiredVersion) {
+        if (frmMod.Version === requiredVersion || import.meta.env.DEV) {
           return true;
         }
 
