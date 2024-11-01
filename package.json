@@ -17,13 +17,13 @@
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
-    "quasar": "^2.16.0",
-    "vue": "^3.4.18",
-    "vue-router": "^4.0.12"
+    "quasar": "^2.17.1",
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@derpierre65/eslint-config": "github:derpierre65/eslint-config",
-    "@derpierre65/ficsit-remote-monitoring": "^0.3.3",
+    "@derpierre65/ficsit-remote-monitoring": "^0.4.2",
     "@derpierre65/frontend-utils": "^0.3.13",
     "@quasar/app-vite": "^2.0.0-beta.23",
     "@storybook/addon-essentials": "^8.3.5",

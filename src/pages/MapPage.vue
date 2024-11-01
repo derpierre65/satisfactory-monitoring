@@ -13,6 +13,7 @@
           <q-toggle v-model="settings.trains" label="Trains" />
           <q-toggle v-model="settings.powerSlugs" label="Power Slugs" />
           <q-toggle v-model="settings.radarTowers" label="Radar Towers" />
+          <q-toggle v-model="settings.radarTowerNodes" label="Radar Tower Nodes" />
           <q-toggle v-model="settings.drones" label="Drones" />
           <q-toggle v-model="settings.droneStations" label="Drone Stations" />
           <q-toggle v-model="settings.truckStations" label="Truck Stations" />
@@ -36,6 +37,7 @@ const settings = ref({
   powerSlugs: true,
   radarTowers: true,
   drones: true,
+  radarTowerNodes: true,
   droneStations: true,
   truckStations: true,
   tractors: true,

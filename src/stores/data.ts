@@ -58,7 +58,7 @@ const useDataStore = defineStore('data', () => {
           .finally(() => {
             delete promises[endpoint];
           });
-        console.log('updating', endpoint);
+        console.debug('updating', endpoint);
       }
     }
   }
