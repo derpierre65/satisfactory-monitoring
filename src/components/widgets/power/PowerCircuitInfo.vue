@@ -4,7 +4,7 @@
       <div class="flex q-mb-sm">
         <q-skeleton v-if="!circuit" height="24px" width="200px" class="q-my-xs" />
         <div v-else class="text-h6">
-          <span>Power Circuit #{{ circuit.CircuitID }}</span>
+          <span>Power Circuit #{{ circuit.CircuitGroupID }}</span>
         </div>
         <q-space />
         <div>

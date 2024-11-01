@@ -49,7 +49,7 @@ const batteryTimeEmpty = computed(() => {
 
     if (!maxTime || circuit.BatteryTimeEmpty < maxTime) {
       maxTime = circuit.BatteryTimeEmpty;
-      circuitID = circuit.CircuitID;
+      circuitID = circuit.CircuitGroupID;
     }
   }
 
