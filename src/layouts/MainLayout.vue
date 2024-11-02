@@ -169,6 +169,13 @@ const menuItems = [
       name: 'sink',
     },
   },
+  {
+    title: 'Inventories',
+    icon: 'fa-solid fa-boxes-stacked',
+    route: {
+      name: 'inventory',
+    },
+  },
 ];
 //#endregion
 

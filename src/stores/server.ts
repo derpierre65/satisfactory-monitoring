@@ -91,7 +91,7 @@ const useServerStore = defineStore('server', () => {
   }
 
   function getItemUrl(className: string) {
-    return `${currentServer.value?.url}/Icons/${className}.png`;
+    return `${currentServer.value?.url}/Icons/${className.replace('Build_', 'Desc_')}.png`;
   }
 
   const currentServer = computed(() => {
