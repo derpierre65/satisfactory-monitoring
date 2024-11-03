@@ -1,4 +1,8 @@
 import { configure } from 'quasar/wrappers';
+import generateFile from 'vite-plugin-generate-file';
+
+process.env.VITE_BUILD_TIMESTAMP = Date.now().toString();
+process.env.VITE_BUILD_VERSION = process.env.npm_package_version;
 
 export default configure((/* ctx */) => {
   return {
@@ -26,7 +30,18 @@ export default configure((/* ctx */) => {
         node: 'node20',
       },
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
-      vitePlugins: [],
+      vitePlugins: [
+        generateFile([
+          {
+            type: 'json',
+            output: './assets/version.json',
+            data: {
+              version: process.env.npm_package_version,
+              date: parseInt(process.env.VITE_BUILD_TIMESTAMP),
+            },
+          },
+        ]),
+      ],
 
       // cloudflare app-vite 2.x workaround
       afterBuild() {

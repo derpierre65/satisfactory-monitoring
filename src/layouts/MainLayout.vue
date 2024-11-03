@@ -106,6 +106,16 @@
         </div>
       </div>
     </q-footer>
+
+    <q-dialog v-model="updateAvailable" position="bottom" no-focus seamless>
+      <q-card class="tw-w-96" dark>
+        <q-card-section class="row items-center no-wrap">
+          <div>A new version is available.</div>
+          <q-space />
+          <q-btn label="Refresh" color="primary" @click="refreshApplication" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
@@ -115,6 +125,8 @@ import useServerStore from 'stores/server.ts';
 import { useQuasar } from 'quasar';
 import useSettingsStore from 'stores/settings.ts';
 import AppAlert from 'components/AppAlert.vue';
+import axios from 'axios';
+import { noop } from '@derpierre65/frontend-utils';
 
 defineOptions({
   name: 'MainLayout',
@@ -128,6 +140,7 @@ const q = useQuasar();
 
 //#region Data
 const leftDrawerOpen = ref(false);
+const updateAvailable = ref(false);
 const updateIntervals = [
   0.1,
   0.25,
@@ -200,6 +213,10 @@ const updateInterval = computed({
 //#endregion
 
 //#region Methods
+function refreshApplication() {
+  window.location.reload();
+}
+
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
@@ -217,5 +234,26 @@ function logout() {
 //#endregion
 
 //#region Created
+if (!import.meta.env.DEV) {
+  window.setInterval(() => {
+    if (updateAvailable.value) {
+      return;
+    }
+
+    axios
+      .get('/assets/version.json', {
+        baseURL: '',
+        params: {
+          t: Date.now(),
+        },
+      })
+      .then(({ data, }) => {
+        if (data.date.toString() !== import.meta.env.VITE_BUILD_TIMESTAMP) {
+          updateAvailable.value = true;
+        }
+      })
+      .catch(noop);
+  }, 20_000);
+}
 //#endregion
 </script>
