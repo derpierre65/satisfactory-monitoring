@@ -1,6 +1,12 @@
 <template>
   <div class="tw-max-w-screen-xl tw-mx-auto tw-w-full">
-    <q-input v-model="search" label="Search" class="q-mb-md" />
+    <div class="tw-flex tw-gap-2 q-mb-md">
+      <q-input v-model="search" label="Search" class="tw-flex-auto" />
+      <q-btn-group>
+        <q-btn label="ON" color="grey-9" dense @click="switchAll(true)" />
+        <q-btn label="OFF" color="grey-9" dense @click="switchAll(false)" />
+      </q-btn-group>
+    </div>
 
     <div class="tw-flex tw-gap-2 tw-w-full">
       <div class="tw-flex-auto tw-grid tw-grid-cols-4 tw-gap-2">
@@ -34,9 +40,13 @@ import PowerSwitchGroup from 'components/widgets/power-switch/PowerSwitchGroup.v
 import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
 import { useCacheComputed } from 'src/composables/computeds.ts';
 import { GetSwitchesResponse, SwitchObject } from '@derpierre65/ficsit-remote-monitoring';
+import useServerStore from 'stores/server.ts';
+import useDataStore from 'stores/data.ts';
 
 //#region Composable & Prepare
 const powerSwitches = useFRMEndpoint<GetSwitchesResponse>('getSwitches');
+const serverStore = useServerStore();
+const dataStore = useDataStore();
 //#endregion
 
 //#region Data
@@ -66,6 +76,13 @@ const cachedPowerSwitches = useCacheComputed({
 //#endregion
 
 //#region Methods
+function switchAll(status: boolean) {
+  serverStore.post('setSwitches', powerSwitches.value.map((powerSwitch) => ({
+    ID: powerSwitch.ID,
+    status,
+  }
+  ))).then(() => dataStore.fetch('getSwitches', true));
+}
 //#endregion
 
 //#region Created
