@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <q-skeleton v-if="!resourceSink" width="180px" class="q-mx-auto" />
+    <q-skeleton v-if="!resourceSink[0]" width="180px" class="q-mx-auto" />
     <ItemSlot
       v-else
       :amount="resourceSink[0].NumCoupon"

@@ -23,8 +23,8 @@ const explorationSink = useFRMEndpoint<GetExplorationSinkResponse>('getExplorati
 //#region Computed
 const maxLabels = computed(() => {
   return Math.max(
-    resourceSink.value?.[0].GraphPoints.length,
-    explorationSink.value?.[0].GraphPoints.length,
+    resourceSink.value[0]?.GraphPoints.length,
+    explorationSink.value[0]?.GraphPoints.length,
   ) || 10;
 });
 const chartLabels = computed(() => {
@@ -41,12 +41,12 @@ const chartData = computed(() => {
     datasets: [
       {
         label: 'Standard Points',
-        data: resourceSink.value ? resourceSink.value[0].GraphPoints : [],
+        data: resourceSink.value[0]?.GraphPoints || [],
         borderColor: 'rgb(229, 147, 68)',
       },
       {
         label: 'DNA Points',
-        data: explorationSink.value ? explorationSink.value[0].GraphPoints : [],
+        data: explorationSink.value[0]?.GraphPoints || [],
         borderColor: 'rgb(161, 113, 161)',
       },
     ],
@@ -60,6 +60,7 @@ const chartOptions = computed(() => {
         ticks: {
           stepSize: 1_000,
         },
+        beginAtZero: true,
       },
     },
   };

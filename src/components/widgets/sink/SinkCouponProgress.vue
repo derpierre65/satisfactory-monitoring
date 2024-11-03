@@ -13,7 +13,7 @@
         </div>
         <div>
           <span>Standard Points until next Coupon:</span>
-          <q-skeleton v-if="!resourceSink" height="24px" />
+          <q-skeleton v-if="!resourceSink[0]" height="24px" />
           <div v-else class="text-h6">
             <span>{{ formatNumber(resourceSink[0].PointsToCoupon) }}</span>
           </div>
@@ -33,7 +33,7 @@
         </div>
         <div>
           <span>DNA Points until next Coupon:</span>
-          <q-skeleton v-if="!explorationSink" height="24px" />
+          <q-skeleton v-if="!explorationSink[0]" height="24px" />
           <div v-else class="text-h6">
             <span>{{ formatNumber(explorationSink[0].PointsToCoupon) }}</span>
           </div>
@@ -61,8 +61,8 @@ const serverStore = useServerStore();
 //#endregion
 
 //#region Computed
-const resourceSinkPercent = computed(() => (resourceSink.value?.[0].Percent ?? 0) * 100);
-const explorationSinkPercent = computed(() => (explorationSink.value?.[0].Percent ?? 0) * 100);
+const resourceSinkPercent = computed(() => (resourceSink.value[0]?.Percent ?? 0) * 100);
+const explorationSinkPercent = computed(() => (explorationSink.value[0]?.Percent ?? 0) * 100);
 //#endregion
 
 //#region Watch
