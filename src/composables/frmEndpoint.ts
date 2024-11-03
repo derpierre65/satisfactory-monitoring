@@ -1,4 +1,4 @@
-import { computed, ComputedRef, onScopeDispose, Reactive, ref, toValue, watchEffect, WritableComputedRef } from 'vue';
+import { computed, onScopeDispose, Reactive, ref, toValue, watchEffect, WritableComputedRef } from 'vue';
 import useDataStore from 'stores/data.ts';
 
 function useFRMEndpoint<T>(endpoint: string) {
@@ -60,7 +60,7 @@ function usePausableFRMEndpoint<T>(endpoint: string) {
 }
 
 function useEndpointsByOptions<T extends Record<string, Reactive<ReturnType<typeof usePausableFRMEndpoint>>>, U extends Record<string, keyof T>>(
-  options: ComputedRef<string[]> | WritableComputedRef<string[]>,
+  options: WritableComputedRef<string[]>,
   endpoints: T,
   aliases: U = {},
 ) {

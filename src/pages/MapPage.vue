@@ -146,20 +146,32 @@
     <div class="tw-w-1/4">
       <q-card class="no-shadow">
         <q-card-section class="tw-flex tw-flex-col tw-gap-2">
-          <q-toggle v-model="settings" val="spaceElevators" label="Space Elevator" />
+          <q-btn-group>
+            <q-btn label="Enable all" color="green" @click="enableAllSettings" />
+            <q-btn label="Disable all" color="red" @click="settings = []" />
+          </q-btn-group>
+
+          <strong>Entities</strong>
           <q-toggle v-model="settings" val="players" label="Players" />
           <q-toggle v-model="settings" val="doggos" label="Doggos" />
-          <q-toggle v-model="settings" val="trainStations" label="Train Stations" />
-          <q-toggle v-model="settings" val="trains" label="Trains" />
-          <q-toggle v-model="settings" val="powerSlugs" label="Power Slugs" />
+
+          <strong>Buildings</strong>
+          <q-toggle v-model="settings" val="spaceElevators" label="Space Elevator" />
           <q-toggle v-model="settings" val="radarTowers" label="Radar Towers" />
           <q-toggle v-model="settings" val="radarTowerNodes" label="Radar Tower Nodes" />
-          <q-toggle v-model="settings" val="drones" label="Drones" />
+          <q-toggle v-model="settings" val="trainStations" label="Train Stations" />
           <q-toggle v-model="settings" val="droneStations" label="Drone Stations" />
           <q-toggle v-model="settings" val="truckStations" label="Truck Stations" />
+          <q-toggle v-model="settings" val="powerSwitches" label="Power Switches" />
+
+          <strong>Vehicles</strong>
+          <q-toggle v-model="settings" val="trains" label="Trains" />
+          <q-toggle v-model="settings" val="drones" label="Drones" />
           <q-toggle v-model="settings" val="tractors" label="Tractors" />
           <q-toggle v-model="settings" val="trucks" label="Trucks" />
-          <q-toggle v-model="settings" val="powerSwitches" label="Power Switches" />
+
+          <strong>Collectibles</strong>
+          <q-toggle v-model="settings" val="powerSlugs" label="Power Slugs" />
         </q-card-section>
       </q-card>
     </div>
@@ -253,6 +265,24 @@ const cachedTrains = computed(() => {
 //#endregion
 
 //#region Methods
+function enableAllSettings() {
+  settings.value = [
+    'players',
+    'doggos',
+    'spaceElevators',
+    'radarTowers',
+    'radarTowerNodes',
+    'trainStations',
+    'droneStations',
+    'truckStations',
+    'powerSwitches',
+    'trains',
+    'drones',
+    'tractors',
+    'trucks',
+    'powerSlugs',
+  ];
+}
 //#endregion
 
 //#region Created
