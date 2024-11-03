@@ -1,33 +1,29 @@
 <template>
-  <LMarker
+  <MapStaticMarker
     v-for="node in entities"
     :key="node.ID"
-    :lat-lng="getEntityLocation(node)"
+    :entity="node"
+    :icon-url="serverStore.getItemUrl(node.ClassName)"
+    :icon-classes="getRadarTowerNodeClass(node)"
   >
-    <LIcon
-      :icon-size="[32, 32]"
-      :icon-url="serverStore.getItemUrl(node.ClassName)"
-      :class-name="getRadarTowerNodeClass(node)"
-    />
-    <q-icon name="fas fa-check" class="absolute tw-inset-0" />
-
-    <LTooltip :content="`${node.Name || 'Unknown'} (${node.Purity})`" />
-  </LMarker>
+    <template #icon>
+      <q-icon v-if="node.Exploited" name="fas fa-check" class="absolute tw-bottom-1 tw-right-1" />
+    </template>
+  </MapStaticMarker>
 </template>
 
-<script setup lang="ts">
-import { LIcon, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet';
+<script setup lang="ts" generic="T extends Omit<ResourceNodeObject, 'features'>">
 import { ResourceNodeObject, ResourceNodePurity } from '@derpierre65/ficsit-remote-monitoring';
 import useServerStore from 'stores/server.ts';
-import { getEntityLocation } from 'src/utils/map.ts';
+import MapStaticMarker from 'components/map/MapStaticMarker.vue';
 
 defineProps<{
-  entities: Array<Omit<ResourceNodeObject, 'features'>>;
+  entities: T[];
 }>();
 
 const serverStore = useServerStore();
 
-function getRadarTowerNodeClass(entity: ResourceNodeObject) {
+function getRadarTowerNodeClass(entity: T) {
   if (entity.EnumPurity === ResourceNodePurity.Impure) {
     return 'tw-bg-red-500 tw-rounded-full';
   }

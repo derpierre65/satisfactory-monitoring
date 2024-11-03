@@ -35,6 +35,7 @@
     <SatisfactoryMap class="tw-min-h-[680px]">
       <MapStaticMarker
         v-for="powerSwitch in cachedPowerSwitches"
+        :key="powerSwitch.ID"
         :entity="powerSwitch"
         :icon-url="serverStore.getItemUrl(powerSwitch.ClassName)"
         :icon-classes="getPowerSwitchMapIconClasses(powerSwitch)"

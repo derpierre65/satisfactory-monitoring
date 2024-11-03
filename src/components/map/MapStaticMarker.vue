@@ -1,14 +1,15 @@
 <template>
   <LMarker :lat-lng="getEntityLocation(entity)">
     <LIcon
-      :icon-size="[40, 40]"
+      :icon-size="[32, 32]"
       :class-name="'!tw-flex !tw-items-center !tw-justify-center ' + iconClasses"
     >
       <img
         :src="iconUrl"
         :alt="entityName"
-        class="!tw-w-7"
+        class="!tw-w-6"
       >
+      <slot name="icon" />
     </LIcon>
     <LTooltip v-if="!hideTooltip">
       <div class="text-center">
@@ -38,6 +39,7 @@ const { entity, } = defineProps<{
 defineSlots<{
   default(): never;
   tooltip(): never;
+  icon(): never;
 }>();
 
 const entityName = computed(() => entity.Name || 'Unknown');

@@ -113,6 +113,24 @@
           </LMarker>
         </template>
 
+        <template v-if="settings.powerSwitches">
+          <MapStaticMarker
+            v-for="entity in powerSwitches"
+            :key="entity.ID"
+            :entity="entity"
+            :icon-url="serverStore.getItemUrl(entity.ClassName)"
+            :icon-classes="getPowerSwitchMapIconClasses(entity)"
+          >
+            <q-input
+              :model-value="entity.Name"
+              bg-color="black"
+              dark
+              dense
+              autofocus
+            />
+          </MapStaticMarker>
+        </template>
+
         <!-- radar towers -->
         <template v-if="settings.radarTowers">
           <MapRadarTowers :entities="cachedRadarTowers" />
@@ -141,6 +159,7 @@
           <q-toggle v-model="settings.truckStations" label="Truck Stations" />
           <q-toggle v-model="settings.tractors" label="Tractors" />
           <q-toggle v-model="settings.trucks" label="Trucks" />
+          <q-toggle v-model="settings.powerSwitches" label="Power Switches" />
         </q-card-section>
       </q-card>
     </div>
@@ -178,6 +197,7 @@ import MapSpaceElevators from 'components/map/MapSpaceElevators.vue';
 import MapStaticMarker from 'components/map/MapStaticMarker.vue';
 import MapRadarTowers from 'components/map/MapRadarTowers.vue';
 import MapRadarTowerNodes from 'components/map/MapRadarTowerNodes.vue';
+import { getPowerSwitchMapIconClasses } from 'src/utils/api/switches.ts';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
@@ -193,6 +213,7 @@ const truckStations = useFRMEndpoint<GetTruckStationResponse>('getTruckStation')
 const trucks = useFRMEndpoint<GetTruckResponse>('getTruck');
 const tractors = useFRMEndpoint<GetTractorResponse>('getTractor');
 const doggos = useFRMEndpoint<GetDoggoResponse>('getDoggo');
+const powerSwitches = useFRMEndpoint<GetDoggoResponse>('getSwitches');
 //#endregion
 
 //#region Data
@@ -210,6 +231,7 @@ const settings = ref({
   truckStations: true,
   tractors: true,
   trucks: true,
+  powerSwitches: true,
 });
 //#endregion
 
