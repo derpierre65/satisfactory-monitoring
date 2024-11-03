@@ -114,21 +114,11 @@
         </template>
 
         <template v-if="settings.includes('powerSwitches')">
-          <MapStaticMarker
+          <MapPowerSwitch
             v-for="entity in endpoints.powerSwitches.data"
             :key="entity.ID"
             :entity="entity"
-            :icon-url="serverStore.getItemUrl(entity.ClassName)"
-            :icon-classes="getPowerSwitchMapIconClasses(entity)"
-          >
-            <q-input
-              :model-value="entity.Name"
-              bg-color="black"
-              dark
-              dense
-              autofocus
-            />
-          </MapStaticMarker>
+          />
         </template>
 
         <!-- radar towers -->
@@ -204,8 +194,8 @@ import MapSpaceElevators from 'components/map/MapSpaceElevators.vue';
 import MapStaticMarker from 'components/map/MapStaticMarker.vue';
 import MapRadarTowers from 'components/map/MapRadarTowers.vue';
 import MapRadarTowerNodes from 'components/map/MapRadarTowerNodes.vue';
-import { getPowerSwitchMapIconClasses } from 'src/utils/api/switches.ts';
 import useSettingsStore from 'stores/settings.ts';
+import MapPowerSwitch from 'components/map/MapPowerSwitch.vue';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
@@ -234,7 +224,6 @@ const { options: settings, } = useEndpointsByOptions(computed({
 }), endpoints, {
   radarTowerNodes: 'radarTowers',
 });
-console.log(settings);
 //#endregion
 
 //#region Data

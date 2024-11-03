@@ -33,21 +33,11 @@
     </div>
 
     <SatisfactoryMap class="tw-min-h-[680px]">
-      <MapStaticMarker
-        v-for="powerSwitch in cachedPowerSwitches"
-        :key="powerSwitch.ID"
-        :entity="powerSwitch"
-        :icon-url="serverStore.getItemUrl(powerSwitch.ClassName)"
-        :icon-classes="getPowerSwitchMapIconClasses(powerSwitch)"
-      >
-        <q-input
-          :model-value="powerSwitch.Name"
-          bg-color="black"
-          dark
-          dense
-          autofocus
-        />
-      </MapStaticMarker>
+      <MapPowerSwitch
+        v-for="entity in cachedPowerSwitches"
+        :key="entity.ID"
+        :entity="entity"
+      />
     </SatisfactoryMap>
   </div>
 </template>
@@ -58,14 +48,12 @@ import PowerSwitchGroup from 'components/widgets/power-switch/PowerSwitchGroup.v
 import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
 import { useCacheComputed } from 'src/composables/computeds.ts';
 import { GetSwitchesResponse, SwitchObject } from '@derpierre65/ficsit-remote-monitoring';
-import useServerStore from 'stores/server.ts';
 import SatisfactoryMap from 'components/SatisfactoryMap.vue';
-import MapStaticMarker from 'components/map/MapStaticMarker.vue';
-import { getPowerSwitchMapIconClasses, switchAll } from 'src/utils/api/switches.ts';
+import { switchAll } from 'src/utils/api/switches.ts';
+import MapPowerSwitch from 'components/map/MapPowerSwitch.vue';
 
 //#region Composable & Prepare
 const powerSwitches = useFRMEndpoint<GetSwitchesResponse>('getSwitches');
-const serverStore = useServerStore();
 //#endregion
 
 //#region Data

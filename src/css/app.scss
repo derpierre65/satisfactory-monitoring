@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: $dark !important;
+  color: white !important;
+}

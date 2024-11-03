@@ -6,8 +6,8 @@
       </q-icon>
       <span>{{ item.Name || 'Unnamed Switch' }}</span>
     </div>
-    <q-toggle :model-value="item.IsOn" @click="toggleStatus" />
-    <q-popup-edit v-slot="scope" :model-value="item.Name" auto-save @save="updateName">
+    <q-toggle :model-value="item.IsOn" @click="toggleSwitchStatus(item)" />
+    <q-popup-edit v-slot="scope" :model-value="item.Name" auto-save @save="updateSwitchName(item, $event)">
       <q-input v-model="scope.value" dense autofocus @keyup.enter="scope.set" />
     </q-popup-edit>
   </div>
@@ -15,16 +15,12 @@
 
 <script setup lang="ts">
 import { SwitchObject } from '@derpierre65/ficsit-remote-monitoring';
-import useServerStore from 'stores/server.ts';
-import useDataStore from 'stores/data.ts';
+import { toggleSwitchStatus, updateSwitchName } from 'src/utils/api/switches.ts';
 
 //#region Composable & Prepare
 const { item, } = defineProps<{
   item: SwitchObject;
 }>();
-
-const serverStore = useServerStore();
-const dataStore = useDataStore();
 //#endregion
 
 //#region Data
@@ -40,18 +36,6 @@ const dataStore = useDataStore();
 //#endregion
 
 //#region Methods
-function updateName(newName: string) {
-  serverStore.post('setSwitches', {
-    ID: item.ID,
-    name: newName,
-  }).then(() => dataStore.fetch('getSwitches', true));
-}
-function toggleStatus() {
-  serverStore.post('setSwitches', {
-    ID: item.ID,
-    status: !item.IsOn,
-  }).then(() => dataStore.fetch('getSwitches', true));
-}
 //#endregion
 
 //#region Created
