@@ -20,6 +20,7 @@
         :model-value="entity.Priority"
         :min="0"
         :max="8"
+        label="Priority"
         type="number"
         @change="updateSwitchPriority(entity, $event)"
       />

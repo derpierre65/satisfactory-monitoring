@@ -6,3 +6,11 @@
   background: $dark !important;
   color: white !important;
 }
+
+.leaflet-popup-close-button {
+  @apply tw-text-neutral-400 #{!important};
+
+  &:hover {
+    color: white !important;
+  }
+}
