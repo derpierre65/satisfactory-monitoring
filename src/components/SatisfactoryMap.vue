@@ -1,7 +1,7 @@
 <template>
   <LMap
     :min-zoom="-10"
-    :max-zoom="10"
+    :max-zoom="-5"
     :zoom="-10"
     :center="[0, 0]"
     :options="mapOptions"
