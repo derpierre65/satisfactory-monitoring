@@ -35,6 +35,11 @@ const routes: RouteRecordRaw[] = [
         path: 'inventory',
         component: () => import('pages/InventoryPage.vue'),
       },
+      {
+        name: 'power-switches',
+        path: 'power-switches',
+        component: () => import('pages/PowerSwitchesPage.vue'),
+      },
     ],
   },
   {

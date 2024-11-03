@@ -30,7 +30,7 @@ const useDataStore = defineStore('data', () => {
     return !lastUpdate.value[endpoint] || (Date.now() - lastUpdate.value[endpoint]) > settingsStore.updateInterval;
   }
 
-  function fetch(endpoint: string | null = null) {
+  function fetch(endpoint: string | null = null, force = false) {
     const serverStore = useServerStore();
     if (!serverStore.currentServer) {
       return;
@@ -39,7 +39,7 @@ const useDataStore = defineStore('data', () => {
     const fetch = endpoint ? [ endpoint, ] : unique(fetchEndpoints.value);
 
     for (const endpoint of fetch) {
-      if (!needUpdate(endpoint)) {
+      if (!force && !needUpdate(endpoint)) {
         continue;
       }
 
@@ -71,6 +71,7 @@ const useDataStore = defineStore('data', () => {
     fetchEndpoints,
     addEndpoint,
     removeEndpoint,
+    fetch,
   };
 });
 

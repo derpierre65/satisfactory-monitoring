@@ -10,7 +10,7 @@ function useFRMEndpoint<T>(endpoint: string) {
     dataStore.removeEndpoint(endpoint);
   });
 
-  return computed<T | null>(() => (dataStore.apiData[endpoint] as T) || []);
+  return computed(() => (dataStore.apiData[endpoint] as T) || []);
 }
 
 function usePausableFRMEndpoint<T>(endpoint: string) {

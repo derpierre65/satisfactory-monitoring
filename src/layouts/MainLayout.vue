@@ -163,6 +163,13 @@ const menuItems = [
     },
   },
   {
+    title: 'Power Switches',
+    icon: 'fas fa-toggle-on',
+    route: {
+      name: 'power-switches',
+    },
+  },
+  {
     title: 'AWESOME Sink',
     icon: 'fas fa-ticket',
     route: {

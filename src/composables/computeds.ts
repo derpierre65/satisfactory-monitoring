@@ -2,7 +2,7 @@ import { computed, ComputedRef, toValue } from 'vue';
 import type { HasLocation, IDClassObject } from '@derpierre65/ficsit-remote-monitoring';
 
 function buildIDCache(entity: IDClassObject) {
-  return entity.ID;
+  return entity.ID.toString();
 }
 
 function buildIDCacheWithLocation(entity: IDClassObject & HasLocation) {

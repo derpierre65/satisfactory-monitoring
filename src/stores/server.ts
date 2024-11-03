@@ -4,6 +4,7 @@ import FRM from 'src/utils/FRM.ts';
 import { Dialog, Loading } from 'quasar';
 import router from 'src/router';
 import { GetModListResponse } from '@derpierre65/ficsit-remote-monitoring';
+import axios from 'axios';
 
 type ServerInfo = {
   name: string;
@@ -90,6 +91,12 @@ const useServerStore = defineStore('server', () => {
       });
   }
 
+  function post(path: string, data: object) {
+    return axios.post(path, data, {
+      baseURL: currentServer.value?.url,
+    }).then(({ data, }) => data);
+  }
+
   function getItemUrl(className: string) {
     return `${currentServer.value?.url}/Icons/${className.replace('Build_', 'Desc_')}.png`;
   }
@@ -117,6 +124,7 @@ const useServerStore = defineStore('server', () => {
     isConnected,
     getItemUrl,
     add,
+    post,
     select,
     tryConnect,
   };
