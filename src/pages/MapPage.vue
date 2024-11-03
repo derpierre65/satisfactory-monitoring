@@ -3,9 +3,9 @@
     <div class="tw-flex tw-flex-col tw-flex-auto">
       <SatisfactoryMap class="tw-flex-auto">
         <!-- train stations -->
-        <template v-if="settings.trainStations">
+        <template v-if="settings.includes('trainStations')">
           <MapStaticMarker
-            v-for="entity in cachedTrainStations"
+            v-for="entity in endpoints.trainStations.data"
             :key="entity.ID"
             :entity="entity"
             icon-url="/assets/map/train_station.png"
@@ -13,14 +13,14 @@
         </template>
 
         <!-- space elevator -->
-        <template v-if="settings.spaceElevator">
-          <MapSpaceElevators :entities="cachedSpaceElevators" />
+        <template v-if="settings.includes('spaceElevators')">
+          <MapSpaceElevators :entities="endpoints.spaceElevators.data" />
         </template>
 
         <!-- truck stations -->
-        <template v-if="settings.doggos">
+        <template v-if="settings.includes('doggos')">
           <MapStaticMarker
-            v-for="entity in cachedDoggos"
+            v-for="entity in endpoints.doggos.data"
             :key="entity.ID"
             :entity="entity"
             :icon-url="serverStore.getItemUrl('Desc_SpaceRabbit_C')"
@@ -32,19 +32,19 @@
         </template>
 
         <!-- power slug -->
-        <template v-if="settings.powerSlugs">
+        <template v-if="settings.includes('powerSlugs')">
           <MapStaticMarker
-            v-for="entity in cachedPowerSlugs"
+            v-for="entity in endpoints.powerSlugs.data"
             :key="entity.ID"
             :entity="entity"
-            :icon-url="`/assets/map/power_slug_${entity.slugColor}.png`"
+            :icon-url="serverStore.getItemUrl(entity.ClassName)"
             hide-tooltip
           />
         </template>
 
         <!-- players -->
-        <template v-if="settings.players">
-          <LMarker v-for="entity in players" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
+        <template v-if="settings.includes('players')">
+          <LMarker v-for="entity in endpoints.players.data" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
             <LIcon
               :icon-size="[32, 32]"
               icon-url="/assets/map/player.png"
@@ -55,9 +55,9 @@
         </template>
 
         <!-- drone stations -->
-        <template v-if="settings.droneStations">
+        <template v-if="settings.includes('droneStations')">
           <MapStaticMarker
-            v-for="entity in cachedDroneStations"
+            v-for="entity in endpoints.droneStations.data"
             :key="entity.ID"
             :entity="entity"
             icon-url="/assets/map/drone_station.png"
@@ -65,9 +65,9 @@
         </template>
 
         <!-- truck stations -->
-        <template v-if="settings.truckStations">
+        <template v-if="settings.includes('truckStations')">
           <MapStaticMarker
-            v-for="entity in cachedTruckStations"
+            v-for="entity in endpoints.truckStations.data"
             :key="entity.ID"
             :entity="entity"
             icon-url="/assets/map/truck_station.png"
@@ -75,8 +75,8 @@
         </template>
 
         <!-- drones -->
-        <template v-if="settings.drones">
-          <LMarker v-for="entity in drones" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
+        <template v-if="settings.includes('drones')">
+          <LMarker v-for="entity in endpoints.drones.data" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
             <LIcon
               :icon-size="[32, 32]"
               icon-url="/assets/map/drone.png"
@@ -86,15 +86,15 @@
         </template>
 
         <!-- trains -->
-        <template v-if="settings.trains">
-          <LMarker v-for="entity in filteredTrains" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
+        <template v-if="settings.includes('trains')">
+          <LMarker v-for="entity in cachedTrains" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
             <LIcon :icon-size="[32, 32]" icon-url="/assets/map/train.png" />
             <LTooltip :content="entity.Name" />
           </LMarker>
         </template>
 
-        <template v-if="settings.trucks">
-          <LMarker v-for="entity in trucks" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
+        <template v-if="settings.includes('trucks')">
+          <LMarker v-for="entity in endpoints.trucks.data" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
             <LIcon
               :icon-size="[32, 32]"
               icon-url="/assets/map/tractor.png"
@@ -103,8 +103,8 @@
           </LMarker>
         </template>
 
-        <template v-if="settings.tractors">
-          <LMarker v-for="entity in tractors" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
+        <template v-if="settings.includes('tractors')">
+          <LMarker v-for="entity in endpoints.tractors.data" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
             <LIcon
               :icon-size="[32, 32]"
               icon-url="/assets/map/tractor.png"
@@ -113,9 +113,9 @@
           </LMarker>
         </template>
 
-        <template v-if="settings.powerSwitches">
+        <template v-if="settings.includes('powerSwitches')">
           <MapStaticMarker
-            v-for="entity in powerSwitches"
+            v-for="entity in endpoints.powerSwitches.data"
             :key="entity.ID"
             :entity="entity"
             :icon-url="serverStore.getItemUrl(entity.ClassName)"
@@ -132,34 +132,34 @@
         </template>
 
         <!-- radar towers -->
-        <template v-if="settings.radarTowers">
-          <MapRadarTowers :entities="cachedRadarTowers" />
+        <template v-if="settings.includes('radarTowers')">
+          <MapRadarTowers :entities="endpoints.radarTowers.data" />
         </template>
 
         <MapRadarTowerNodes
-          v-if="settings.radarTowerNodes"
+          v-if="settings.includes('radarTowerNodes')"
           :entities="cachedRadarTowerNodes"
         />
       </SatisfactoryMap>
     </div>
 
     <div class="tw-w-1/4">
-      <q-card>
+      <q-card class="no-shadow">
         <q-card-section class="tw-flex tw-flex-col tw-gap-2">
-          <q-toggle v-model="settings.spaceElevator" label="Space Elevator" />
-          <q-toggle v-model="settings.players" label="Players" />
-          <q-toggle v-model="settings.doggos" label="Doggos" />
-          <q-toggle v-model="settings.trainStations" label="Train Stations" />
-          <q-toggle v-model="settings.trains" label="Trains" />
-          <q-toggle v-model="settings.powerSlugs" label="Power Slugs" />
-          <q-toggle v-model="settings.radarTowers" label="Radar Towers" />
-          <q-toggle v-model="settings.radarTowerNodes" label="Radar Tower Nodes" />
-          <q-toggle v-model="settings.drones" label="Drones" />
-          <q-toggle v-model="settings.droneStations" label="Drone Stations" />
-          <q-toggle v-model="settings.truckStations" label="Truck Stations" />
-          <q-toggle v-model="settings.tractors" label="Tractors" />
-          <q-toggle v-model="settings.trucks" label="Trucks" />
-          <q-toggle v-model="settings.powerSwitches" label="Power Switches" />
+          <q-toggle v-model="settings" val="spaceElevators" label="Space Elevator" />
+          <q-toggle v-model="settings" val="players" label="Players" />
+          <q-toggle v-model="settings" val="doggos" label="Doggos" />
+          <q-toggle v-model="settings" val="trainStations" label="Train Stations" />
+          <q-toggle v-model="settings" val="trains" label="Trains" />
+          <q-toggle v-model="settings" val="powerSlugs" label="Power Slugs" />
+          <q-toggle v-model="settings" val="radarTowers" label="Radar Towers" />
+          <q-toggle v-model="settings" val="radarTowerNodes" label="Radar Tower Nodes" />
+          <q-toggle v-model="settings" val="drones" label="Drones" />
+          <q-toggle v-model="settings" val="droneStations" label="Drone Stations" />
+          <q-toggle v-model="settings" val="truckStations" label="Truck Stations" />
+          <q-toggle v-model="settings" val="tractors" label="Tractors" />
+          <q-toggle v-model="settings" val="trucks" label="Trucks" />
+          <q-toggle v-model="settings" val="powerSwitches" label="Power Switches" />
         </q-card-section>
       </q-card>
     </div>
@@ -168,9 +168,9 @@
 
 <script setup lang="ts">
 import SatisfactoryMap from 'components/SatisfactoryMap.vue';
-import { computed, ComputedRef, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import useServerStore from 'stores/server.ts';
-import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
+import { useEndpointsByOptions, usePausableFRMEndpoint } from 'src/composables/frmEndpoint.ts';
 import {
   GetDoggoResponse,
   GetDroneResponse,
@@ -178,18 +178,13 @@ import {
   GetPlayerResponse,
   GetPowerSlugResponse,
   GetRadarTowerResponse,
-  GetSpaceElevatorResponse,
+  GetSpaceElevatorResponse, GetSwitchesResponse,
   GetTractorResponse,
   GetTrainsResponse,
   GetTrainStationResponse,
   GetTruckResponse,
-  GetTruckStationResponse,
-  type HasLocation,
-  type IDClassObject,
-  TowerObject,
+  GetTruckStationResponse, TowerObject,
 } from '@derpierre65/ficsit-remote-monitoring';
-import { getSlugColor } from 'src/utils/slug.ts';
-import { isEqual } from '@derpierre65/frontend-utils';
 import { getEntityLocation } from 'src/utils/map.ts';
 import ItemSlot from 'components/ItemSlot.vue';
 import { LIcon, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet';
@@ -198,72 +193,56 @@ import MapStaticMarker from 'components/map/MapStaticMarker.vue';
 import MapRadarTowers from 'components/map/MapRadarTowers.vue';
 import MapRadarTowerNodes from 'components/map/MapRadarTowerNodes.vue';
 import { getPowerSwitchMapIconClasses } from 'src/utils/api/switches.ts';
+import useSettingsStore from 'stores/settings.ts';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
-const trains = useFRMEndpoint<GetTrainsResponse>('getTrains');
-const spaceElevators = useFRMEndpoint<GetSpaceElevatorResponse>('getSpaceElevator');
-const players = useFRMEndpoint<GetPlayerResponse>('getPlayer');
-const trainStations = useFRMEndpoint<GetTrainStationResponse>('getTrainStation');
-const powerSlugs = useFRMEndpoint<GetPowerSlugResponse>('getPowerSlug');
-const radarTowers = useFRMEndpoint<GetRadarTowerResponse>('getRadarTower');
-const drones = useFRMEndpoint<GetDroneResponse>('getDrone');
-const droneStations = useFRMEndpoint<GetDroneStationResponse>('getDroneStation');
-const truckStations = useFRMEndpoint<GetTruckStationResponse>('getTruckStation');
-const trucks = useFRMEndpoint<GetTruckResponse>('getTruck');
-const tractors = useFRMEndpoint<GetTractorResponse>('getTractor');
-const doggos = useFRMEndpoint<GetDoggoResponse>('getDoggo');
-const powerSwitches = useFRMEndpoint<GetDoggoResponse>('getSwitches');
+const settingsStore = useSettingsStore();
+const endpoints = {
+  trains: reactive(usePausableFRMEndpoint<GetTrainsResponse>('getTrains')),
+  spaceElevators: reactive(usePausableFRMEndpoint<GetSpaceElevatorResponse>('getSpaceElevator')),
+  players: reactive(usePausableFRMEndpoint<GetPlayerResponse>('getPlayer')),
+  trainStations: reactive(usePausableFRMEndpoint<GetTrainStationResponse>('getTrainStation')),
+  powerSlugs: reactive(usePausableFRMEndpoint<GetPowerSlugResponse>('getPowerSlug')),
+  radarTowers: reactive(usePausableFRMEndpoint<GetRadarTowerResponse>('getRadarTower')),
+  drones: reactive(usePausableFRMEndpoint<GetDroneResponse>('getDrone')),
+  droneStations: reactive(usePausableFRMEndpoint<GetDroneStationResponse>('getDroneStation')),
+  truckStations: reactive(usePausableFRMEndpoint<GetTruckStationResponse>('getTruckStation')),
+  trucks: reactive(usePausableFRMEndpoint<GetTruckResponse>('getTruck')),
+  tractors: reactive(usePausableFRMEndpoint<GetTractorResponse>('getTractor')),
+  doggos: reactive(usePausableFRMEndpoint<GetDoggoResponse>('getDoggo')),
+  powerSwitches: reactive(usePausableFRMEndpoint<GetSwitchesResponse>('getSwitches')),
+};
+
+const { options: settings, } = useEndpointsByOptions(computed({
+  get: () => settingsStore.mapSettings,
+  set: (newValue) => settingsStore.$patch({
+    mapSettings: newValue,
+  }),
+}), endpoints, {
+  radarTowerNodes: 'radarTowers',
+});
+console.log(settings);
 //#endregion
 
 //#region Data
-const settings = ref({
-  trains: true,
-  spaceElevator: true,
-  players: true,
-  doggos: true,
-  trainStations: true,
-  powerSlugs: true,
-  radarTowers: true,
-  drones: true,
-  radarTowerNodes: true,
-  droneStations: true,
-  truckStations: true,
-  tractors: true,
-  trucks: true,
-  powerSwitches: true,
-});
 //#endregion
 
 //#region Computed
-const filteredTrains = computed(() => {
-  if (!trains.value) {
-    return [];
-  }
-
-  return trains.value.filter((train) => train.location.y !== 0 && train.location.x !== 0 && train.location.z !== 0);
-});
-
-const cachedSpaceElevators = createCachedComputed(spaceElevators);
-const cachedRadarTowers = createCachedComputed(radarTowers);
-const cachedDroneStations = createCachedComputed(droneStations);
-const cachedTruckStations = createCachedComputed(truckStations);
-const cachedTrainStations = createCachedComputed(trainStations);
-const cachedDoggos = createCachedComputed(doggos);
-const cachedRadarTowerNodes = createCachedComputed(radarTowers, () => {
-  return radarTowers.value!.reduce((acc, tower) => {
+const cachedRadarTowerNodes = computed(() => {
+  return endpoints.radarTowers.data.reduce((acc, tower) => {
     acc.push(...tower.ScannedResourceNodes);
 
     return acc;
   }, [] as TowerObject['ScannedResourceNodes']);
 });
-const cachedPowerSlugs = createCachedComputed(powerSlugs, () => {
-  return powerSlugs.value!.map((slug) => {
-    return {
-      ...slug,
-      slugColor: getSlugColor(slug),
-    };
-  });
+
+const cachedTrains = computed(() => {
+  if (!endpoints.trains.data || endpoints.trains.data.length === 0) {
+    return [];
+  }
+
+  return endpoints.trains.data.filter((train) => train.location.y !== 0 && train.location.x !== 0 && train.location.z !== 0);
 });
 //#endregion
 
@@ -274,26 +253,6 @@ const cachedPowerSlugs = createCachedComputed(powerSlugs, () => {
 //#endregion
 
 //#region Methods
-function createCachedComputed<T extends IDClassObject & HasLocation, U extends IDClassObject & HasLocation = T>(
-  obj: ComputedRef<T[] | null>,
-  getNewValues: (() => U[]) | null = null,
-) {
-  return computed<U[]>((oldValue) => {
-    if (!obj.value) {
-      return [] as U[];
-    }
-
-    const newValue = getNewValues ? getNewValues() : obj.value;
-
-    const newIds = newValue.map((entity) => entity.ID + entity.location.x + entity.location.z);
-    const oldIds = oldValue?.map((entity) => entity.ID + entity.location.x + entity.location.z) || [];
-    if (isEqual(newIds, oldIds)) {
-      return oldValue;
-    }
-
-    return newValue;
-  });
-}
 //#endregion
 
 //#region Created

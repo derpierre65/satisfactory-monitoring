@@ -108,7 +108,7 @@
     </q-footer>
 
     <q-dialog v-model="updateAvailable" position="bottom" no-focus seamless>
-      <q-card class="tw-w-96" dark>
+      <q-card class="tw-w-96">
         <q-card-section class="row items-center no-wrap">
           <div>A new version is available.</div>
           <q-space />

@@ -11,6 +11,12 @@ type ServerInfo = {
   url: string;
 };
 
+const iconAliases: Record<string, string> = {
+  BP_Crystal_C: '/assets/map/power_slug_blue.png',
+  BP_Crystal_mk2_C: '/assets/map/power_slug_yellow.png',
+  BP_Crystal_mk3_C: '/assets/map/power_slug_purple.png',
+};
+
 const useServerStore = defineStore('server', () => {
   const servers = ref<ServerInfo[]>([]);
   const isConnected = ref(false);
@@ -98,6 +104,10 @@ const useServerStore = defineStore('server', () => {
   }
 
   function getItemUrl(className: string) {
+    if (iconAliases[className]) {
+      return iconAliases[className];
+    }
+
     return `${currentServer.value?.url}/Icons/${className.replace('Build_', 'Desc_')}.png`;
   }
 
