@@ -10,7 +10,7 @@
       </div>
       <slot name="tooltip" />
     </LTooltip>
-    <LPopup v-if="$slots.default">
+    <LPopup v-if="$slots.default" >
       <slot />
     </LPopup>
   </LMarker>

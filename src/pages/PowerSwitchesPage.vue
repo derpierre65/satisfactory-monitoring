@@ -1,10 +1,10 @@
 <template>
-  <div class="tw-max-w-screen-xl tw-mx-auto tw-w-full">
-    <div class="tw-flex tw-gap-2 q-mb-md">
+  <div class="tw-max-w-screen-xl tw-mx-auto tw-w-full q-gutter-y-md">
+    <div class="tw-flex tw-gap-2">
       <q-input v-model="search" label="Search" class="tw-flex-auto" />
       <q-btn-group>
-        <q-btn label="ON" color="grey-9" dense @click="switchAll(true)" />
-        <q-btn label="OFF" color="grey-9" dense @click="switchAll(false)" />
+        <q-btn label="ON" color="grey-9" dense @click="switchAll(powerSwitches, true)" />
+        <q-btn label="OFF" color="grey-9" dense @click="switchAll(powerSwitches, false)" />
       </q-btn-group>
     </div>
 
@@ -15,7 +15,7 @@
           :key="groupId"
           :group-id="groupId"
           :title="`Priority Group ${groupId}`"
-          :switches="cachedPowerSwitches[groupId] || []"
+          :switches="groupedPowerSwitches[groupId] || []"
         />
       </div>
 
@@ -23,25 +23,44 @@
         <PowerSwitchGroup
           title="Priority Power Switches (Undefined)"
           :group-id="0"
-          :switches="cachedPowerSwitches[0] || []"
+          :switches="groupedPowerSwitches[0] || []"
         />
         <PowerSwitchGroup
           title="Power Switches"
-          :switches="cachedPowerSwitches[-1] || []"
+          :switches="groupedPowerSwitches[-1] || []"
         />
       </div>
     </div>
+
+    <SatisfactoryMap class="tw-min-h-[680px]">
+      <MapStaticMarker
+        v-for="powerSwitch in cachedPowerSwitches"
+        :entity="powerSwitch"
+        :icon-url="serverStore.getItemUrl(powerSwitch.ClassName)"
+      >
+        <q-input
+          :model-value="powerSwitch.Name"
+          bg-color="black"
+          dark
+          dense
+          autofocus
+        />
+      </MapStaticMarker>
+    </SatisfactoryMap>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import PowerSwitchGroup from 'components/widgets/power-switch/PowerSwitchGroup.vue';
 import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
 import { useCacheComputed } from 'src/composables/computeds.ts';
 import { GetSwitchesResponse, SwitchObject } from '@derpierre65/ficsit-remote-monitoring';
 import useServerStore from 'stores/server.ts';
 import useDataStore from 'stores/data.ts';
+import SatisfactoryMap from 'components/SatisfactoryMap.vue';
+import MapStaticMarker from 'components/map/MapStaticMarker.vue';
+import { switchAll } from 'src/utils/api/switches.ts';
 
 //#region Composable & Prepare
 const powerSwitches = useFRMEndpoint<GetSwitchesResponse>('getSwitches');
@@ -62,10 +81,14 @@ const cachedPowerSwitches = useCacheComputed({
   formatValues(data) {
     const searchValue = search.value.toLowerCase();
 
-    return Object.groupBy(data.filter((powerSwitch) => {
+    return data.filter((powerSwitch) => {
       return (powerSwitch.Name || 'Unnamed Switch').toLowerCase().includes(searchValue);
-    }), (s) => s.Priority) as Record<number, SwitchObject[]>;
+    });
   },
+});
+
+const groupedPowerSwitches = computed(() => {
+  return Object.groupBy(cachedPowerSwitches.value, (s) => s.Priority) as Record<number, SwitchObject[]>;
 });
 //#endregion
 
@@ -76,13 +99,6 @@ const cachedPowerSwitches = useCacheComputed({
 //#endregion
 
 //#region Methods
-function switchAll(status: boolean) {
-  serverStore.post('setSwitches', powerSwitches.value.map((powerSwitch) => ({
-    ID: powerSwitch.ID,
-    status,
-  }
-  ))).then(() => dataStore.fetch('getSwitches', true));
-}
 //#endregion
 
 //#region Created

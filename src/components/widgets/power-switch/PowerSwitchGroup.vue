@@ -4,8 +4,8 @@
       <div>{{ title }}</div>
       <q-space />
       <div class="tw-flex">
-        <q-btn label="ON" dense @click="switchAll(true)" />
-        <q-btn label="OFF" dense @click="switchAll(false)" />
+        <q-btn label="ON" dense @click="switchAll(switches, true)" />
+        <q-btn label="OFF" dense @click="switchAll(switches, false)" />
       </div>
     </div>
     <component
@@ -28,6 +28,7 @@ import { DraggableEvent, VueDraggable } from 'vue-draggable-plus';
 import { computed } from 'vue';
 import useServerStore from 'stores/server.ts';
 import useDataStore from 'stores/data.ts';
+import { switchAll } from 'src/utils/api/switches.ts';
 
 //#region Composable & Prepare
 const { groupId = -1, switches, } = defineProps<{
@@ -82,13 +83,6 @@ function updatePriority(event: DraggableEvent) {
   }).then(() => dataStore.fetch('getSwitches', true));
 }
 
-function switchAll(status: boolean) {
-  serverStore.post('setSwitches', switches.map((powerSwitch) => ({
-    ID: powerSwitch.ID,
-    status,
-  }
-  ))).then(() => dataStore.fetch('getSwitches', true));
-}
 //#endregion
 
 //#region Created
