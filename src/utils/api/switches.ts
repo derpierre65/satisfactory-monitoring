@@ -13,6 +13,19 @@ function switchAll(powerSwitches: SwitchObject[], status: boolean) {
   ))).then(() => dataStore.fetch('getSwitches', true));
 }
 
+function getPowerSwitchMapIconClasses(powerSwitch: SwitchObject) {
+  const classes = [ 'tw-rounded-full', ];
+  if (powerSwitch.IsOn) {
+    classes.push('tw-bg-green-500');
+  }
+  else {
+    classes.push('tw-bg-red-500');
+  }
+
+  return classes.join(' ');
+}
+
 export {
+  getPowerSwitchMapIconClasses,
   switchAll,
 };
