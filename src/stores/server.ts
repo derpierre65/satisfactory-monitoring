@@ -111,6 +111,8 @@ const useServerStore = defineStore('server', () => {
     return `${currentServer.value?.url}/Icons/${className.replace('Build_', 'Desc_')}.png`;
   }
 
+  const currentApiUrl = computed(() => currentServer.value?.url || '');
+
   const currentServer = computed(() => {
     if (selected.value === -1) {
       return null;
@@ -132,6 +134,7 @@ const useServerStore = defineStore('server', () => {
     servers,
     currentServer,
     isConnected,
+    currentApiUrl,
     getItemUrl,
     add,
     post,

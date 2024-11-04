@@ -28,7 +28,7 @@ import { DraggableEvent, VueDraggable } from 'vue-draggable-plus';
 import { computed } from 'vue';
 import useServerStore from 'stores/server.ts';
 import useDataStore from 'stores/data.ts';
-import { switchAll } from 'src/utils/api/switches.ts';
+import { switchAll, updateSwitchPriority } from 'src/utils/api/switches.ts';
 
 //#region Composable & Prepare
 const { groupId = -1, switches, } = defineProps<{
@@ -77,10 +77,7 @@ function updatePriority(event: DraggableEvent) {
     return;
   }
 
-  serverStore.post('setSwitches', {
-    ID: powerSwitch.ID,
-    priority: parseInt(event.to.dataset.groupId!),
-  }).then(() => dataStore.fetch('getSwitches', true));
+  updateSwitchPriority(powerSwitch, parseInt(event.to.dataset.groupId!));
 }
 
 //#endregion

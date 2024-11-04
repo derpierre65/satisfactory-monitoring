@@ -7,7 +7,7 @@
       class="tw-mx-auto"
       item="Desc_ResourceSinkCoupon_C"
       title="Printable Coupons"
-      size="256"
+      size="128"
     />
   </div>
 </template>

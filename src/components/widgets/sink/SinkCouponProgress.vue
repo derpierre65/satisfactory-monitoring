@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-space-y-2 tw-w-[300px]">
+  <div class="tw-space-y-2">
     <div class="relative-position tw-bg-neutral-800 tw-rounded-lg tw-h-[64px]">
       <div class="absolute tw-inset-0 tw-bg-neutral-700 tw-z-0 tw-rounded-lg" :style="{width: `${resourceSinkPercent}%`}" />
       <div class="absolute tw-inset-0 tw-flex tw-gap-2 items-center tw-z-10">

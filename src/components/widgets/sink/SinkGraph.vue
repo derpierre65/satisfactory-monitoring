@@ -1,6 +1,6 @@
 <template>
-  <q-card class="shadow-0">
-    <q-card-section>
+  <q-card class="shadow-0 tw-h-full">
+    <q-card-section class="tw-h-full">
       <ChartLine :chart-data :chart-options />
     </q-card-section>
   </q-card>
@@ -55,6 +55,7 @@ const chartData = computed(() => {
 const chartOptions = computed(() => {
   return {
     responsive: true,
+    maintainAspectRatio: true,
     scales: {
       y: {
         ticks: {

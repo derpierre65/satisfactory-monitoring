@@ -4,7 +4,7 @@
 
     <div>
       <SinkCouponStatus />
-      <SinkCouponProgress class="q-mt-md q-mx-auto" />
+      <SinkCouponProgress class="q-mt-md q-mx-auto tw-w-[300px]" />
     </div>
   </div>
 </template>
