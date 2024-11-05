@@ -34,7 +34,7 @@ import { ref } from 'vue';
 
 //#region Composable & Prepare
 const { widget, defaultSettings = null, } = defineProps<{
-  endpointData: Record<string, unknown>;
+  endpointData: Record<string, unknown[]>;
   widget: Widget;
   defaultSettings?: Record<string, unknown> | null;
 }>();
@@ -66,7 +66,7 @@ const settings = ref(defaultSettings || {});
 //#region Methods
 function save() {
   errors.value = {};
-  for (const configuration of widget.configuration) {
+  for (const configuration of widget.configuration || []) {
     if (configuration.required && !settings.value[configuration.id]) {
       errors.value[configuration.id] = 'This field is required.';
     }

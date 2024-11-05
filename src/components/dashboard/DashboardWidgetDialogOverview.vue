@@ -39,11 +39,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { openEditWidget, Widget, widgets } from 'src/utils/dashboard/widgets.ts';
+import { openEditWidget, Widget, WidgetConfigurationData, widgets } from 'src/utils/dashboard/widgets.ts';
 
 //#region Composable & Prepare
 const emit = defineEmits<{
-  added: [widget: Widget, configurations: Record<string, unknown>];
+  added: [widget: Widget, configurations: WidgetConfigurationData];
 }>();
 //#endregion
 

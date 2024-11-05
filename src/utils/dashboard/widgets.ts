@@ -1,19 +1,19 @@
-import { Dialog, Loading } from 'quasar';
+import { Dialog, Loading, QSelectProps } from 'quasar';
 import DashboardWidgetDialogEdit from 'components/dashboard/DashboardWidgetDialogEdit.vue';
 import FRM from 'src/utils/FRM.ts';
 import useServerStore from 'stores/server.ts';
 import useDataStore from 'stores/data.ts';
-import { computed, DefineComponent } from 'vue';
+import { computed, ComputedRef } from 'vue';
 import PowerSwitchSwitcher from 'components/widgets/power-switch/PowerSwitchSwitcher.vue';
-import SinkCouponStatus from 'components/widgets/sink/SinkCouponStatus.vue';
-import SinkCouponProgress from 'components/widgets/sink/SinkCouponProgress.vue';
-import SinkGraph from 'components/widgets/sink/SinkGraph.vue';
+import { GetSwitchesResponse } from '@derpierre65/ficsit-remote-monitoring';
+import registerSinkWidgets from 'src/utils/dashboard/widgets/sink.ts';
 
 type WidgetConfiguration = ({
   type: 'select';
   fromEndpoint: string;
-  optionValue: string;
-  optionLabel: string;
+  optionValue: QSelectProps['optionValue'];
+  optionLabel: QSelectProps['optionLabel'];
+  options?: QSelectProps['options'];
 }) & {
   id: string;
   label: string;
@@ -32,12 +32,10 @@ type GridLayoutEntry = {
   maxH: number;
 };
 
-type WidgetConfigurationData = Record<string, unknown>;
-
 type Widget = {
   id: string;
   title: string;
-  component: string | DefineComponent;
+  component: unknown;
   category: string;
   layoutInfo: {
     h?: number;
@@ -49,15 +47,18 @@ type Widget = {
   };
   endpoints?: string[];
   configuration?: WidgetConfiguration[];
+  props?: (configuration: WidgetConfigurationData) => ComputedRef<Record<string, unknown> | null>;
   isValid?: (configuration: WidgetConfigurationData) => boolean | null;
 };
+
+type WidgetConfigurationData = Record<string, string | number | boolean>;
 
 const widgets: Readonly<Record<string, Readonly<Widget>>> = {};
 
 async function openEditWidget(widget: Widget) {
   if (!widget.configuration) {
     return {
-      onOk: (cb) => cb({}),
+      onOk: (cb: () => WidgetConfigurationData) => cb({}),
     };
   }
 
@@ -86,41 +87,9 @@ async function openEditWidget(widget: Widget) {
 }
 
 function registerWidget(data: Widget) {
+  // @ts-ignore i don't care about the readonly here.
   widgets[data.id] = data;
 }
-
-registerWidget({
-  id: 'awesome-sink-coupon-status',
-  title: 'AWESOME Sink Coupons',
-  component: SinkCouponStatus,
-  category: 'sink',
-  layoutInfo: {
-    minH: 5,
-    minW: 2,
-  },
-});
-
-registerWidget({
-  id: 'awesome-sink-coupon-progress',
-  title: 'AWESOME Sink Coupon Progress',
-  component: SinkCouponProgress,
-  category: 'sink',
-  layoutInfo: {
-    minW: 4,
-    minH: 5,
-  },
-});
-
-registerWidget({
-  id: 'awesome-sink-graph',
-  title: 'AWESOME Sink Graph',
-  component: SinkGraph,
-  category: 'sink',
-  layoutInfo: {
-    minW: 4,
-    minH: 6,
-  },
-});
 
 registerWidget({
   id: 'power-switch-witcher',
@@ -146,17 +115,19 @@ registerWidget({
   endpoints: [ 'getSwitches', ],
   isValid(configuration) {
     const dataStore = useDataStore();
-    if (!dataStore.apiData.getSwitches) {
+    const switches = dataStore.apiData.getSwitches as GetSwitchesResponse;
+    if (!switches) {
       return null;
     }
 
-    return dataStore.apiData.getSwitches.some((powerSwitch) => powerSwitch.ID === configuration.switchId);
+    return switches.some((powerSwitch) => powerSwitch.ID === configuration.switchId);
   },
-  props(configuration) {
+  props(configuration: WidgetConfigurationData) {
     const dataStore = useDataStore();
 
     return computed(() => {
-      const item = dataStore.apiData.getSwitches?.find((powerSwitch) => powerSwitch.ID === configuration.switchId);
+      const getSwitches = dataStore.apiData.getSwitches as GetSwitchesResponse;
+      const item = getSwitches?.find((powerSwitch) => powerSwitch.ID === configuration.switchId);
       if (!item) {
         return null;
       }
@@ -168,10 +139,14 @@ registerWidget({
   },
 });
 
+registerSinkWidgets();
+
 export {
   widgets,
   openEditWidget,
+  registerWidget,
   type Widget,
   type WidgetConfiguration,
+  type WidgetConfigurationData,
   type GridLayoutEntry,
 };
