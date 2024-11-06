@@ -8,6 +8,7 @@ export default configure((/* ctx */) => {
   return {
     boot: [
       'axios',
+      'i18n',
       'quasar',
       'load-server',
     ],

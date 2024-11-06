@@ -1,0 +1,15 @@
+{
+  "dashboard": {
+    "widgets": {
+      "session_play_time": {
+        "title": "Play Time"
+      },
+      "session_game_time": {
+        "title": "Game Time",
+        "day": "Day",
+        "night": "Night"
+      }
+    },
+    "widget_not_found": "This widget is no longer available or not loaded."
+  }
+}
