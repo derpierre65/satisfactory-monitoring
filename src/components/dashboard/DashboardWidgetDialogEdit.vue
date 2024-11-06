@@ -89,10 +89,5 @@ function save() {
 //#endregion
 
 //#region Created
-for (const configuration of widget.configuration || []) {
-  if (configuration.type === 'boolean') {
-    settings.value[configuration.id] = false;
-  }
-}
 //#endregion
 </script>

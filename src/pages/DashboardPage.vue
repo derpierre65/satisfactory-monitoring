@@ -34,6 +34,16 @@
               <q-icon name="fas fa-ellipsis-v" class="cursor-pointer">
                 <q-menu class="no-shadow">
                   <q-list dense>
+                    <q-item
+                      v-if="widgets[dashboardWidgets[item.id].widgetId].configuration"
+                      v-close-popup
+                      clickable
+                      @click="editWidget(item.id)"
+                    >
+                      <q-item-section>
+                        <q-item-label>{{ t('global.edit') }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
                     <q-item v-close-popup clickable @click="deleteWidget(item.id)">
                       <q-item-section>
                         <q-item-label>{{ t('global.delete') }}</q-item-label>
@@ -72,8 +82,13 @@ import { ComputedRef, ref } from 'vue';
 import { GridLayout, GridItem } from '@noction/vue-draggable-grid';
 import DashboardWidgetDialogOverview from 'components/dashboard/DashboardWidgetDialogOverview.vue';
 import '@noction/vue-draggable-grid/styles';
-import { GridLayoutEntry, Widget, WidgetConfigurationData, widgets } from 'src/utils/dashboard/widgets.ts';
-import { useInterval, uuidv4 } from '@derpierre65/frontend-utils';
+import {
+  GridLayoutEntry, openEditWidget,
+  Widget,
+  WidgetConfigurationData,
+  widgets,
+} from 'src/utils/dashboard/widgets.ts';
+import { deepClone, useInterval, uuidv4 } from '@derpierre65/frontend-utils';
 import useSettingsStore from 'stores/settings.ts';
 import useDataStore from 'stores/data.ts';
 import { useTranslation } from 'i18next-vue';
@@ -205,6 +220,17 @@ function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, 
     props: widget && widget.props ? widget.props(configuration) : false,
     configuration,
   };
+}
+
+async function editWidget(widgetId: string) {
+  const dashboardWidget = dashboardWidgets.value[widgetId];
+  (await openEditWidget(widgets[dashboardWidget.widgetId], deepClone(dashboardWidget.configuration)))
+    .onOk((configurations: WidgetConfigurationData) => {
+      const widget = widgets[dashboardWidget.widgetId];
+
+      dashboardWidget.props = widget && widget.props ? widget.props(configurations) : false;
+      dashboardWidget.configuration = configurations;
+    });
 }
 
 function deleteWidget(widgetId: string) {

@@ -57,7 +57,7 @@ type WidgetConfigurationData = Record<string, string | number | boolean>;
 
 const widgets: Readonly<Record<string, Readonly<Widget>>> = {};
 
-async function openEditWidget(widget: Widget) {
+async function openEditWidget(widget: Widget, settings: WidgetConfigurationData = {}) {
   if (!widget.configuration) {
     return {
       onOk: (cb: (data: WidgetConfigurationData) => void) => cb({} as WidgetConfigurationData),
@@ -71,17 +71,33 @@ async function openEditWidget(widget: Widget) {
   });
 
   const endpointData = Object.create(null);
-  for (const configuration of widget.configuration) {
-    if (configuration.fromEndpoint && !endpointData[configuration.fromEndpoint]) {
-      endpointData[configuration.fromEndpoint] = await FRM.fetch(serverStore.currentApiUrl, configuration.fromEndpoint);
+
+  try {
+    for (const configuration of widget.configuration) {
+      if (configuration.type === 'select' && configuration.fromEndpoint && !endpointData[configuration.fromEndpoint]) {
+        endpointData[configuration.fromEndpoint] = await FRM.fetch(serverStore.currentApiUrl, configuration.fromEndpoint);
+      }
+
+      if (configuration.type === 'boolean' && typeof settings[configuration.id] === 'undefined') {
+        settings[configuration.id] = false;
+      }
     }
   }
+  catch (error) {
+    console.error(error);
 
-  Loading.hide('openEditWidget');
+    return {
+      onOk: () => null,
+    };
+  }
+  finally {
+    Loading.hide('openEditWidget');
+  }
 
   return Dialog.create({
     component: DashboardWidgetDialogEdit,
     componentProps: {
+      defaultSettings: settings,
       endpointData,
       widget,
     },
