@@ -23,6 +23,7 @@
           :key="item.id"
           v-bind="{...gridItemProps, ...item}"
           drag-allow-from=".title-bar"
+          drag-ignore-from=".q-icon"
         >
           <q-card v-if="widgets[dashboardWidgets[item.id].widgetId]" class="tw-flex tw-flex-col full-height no-shadow">
             <q-card-section class="tw-bg-neutral-950 tw-flex tw-items-center tw-justify-between q-py-xs title-bar">
@@ -30,7 +31,17 @@
               <div v-if="isDevMode" class="tw-text-neutral-600">
                 {{ item.w }} x {{ item.h }}
               </div>
-              <q-icon name="fas fa-ellipsis-v" />
+              <q-icon name="fas fa-ellipsis-v" class="cursor-pointer">
+                <q-menu class="no-shadow">
+                  <q-list dense>
+                    <q-item v-close-popup clickable @click="deleteWidget(item.id)">
+                      <q-item-section>
+                        <q-item-label>{{ t('global.delete') }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-icon>
             </q-card-section>
 
             <q-card-section class="tw-flex-auto q-py-sm relative-position">
@@ -66,6 +77,7 @@ import { useInterval, uuidv4 } from '@derpierre65/frontend-utils';
 import useSettingsStore from 'stores/settings.ts';
 import useDataStore from 'stores/data.ts';
 import { useTranslation } from 'i18next-vue';
+import { Dialog } from 'quasar';
 
 //#region Composable & Prepare
 defineOptions({
@@ -193,6 +205,22 @@ function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, 
     props: widget && widget.props ? widget.props(configuration) : false,
     configuration,
   };
+}
+
+function deleteWidget(widgetId: string) {
+  Dialog.create({
+    message: t('dashboard.widget_delete_confirm'),
+    ok: {
+      color: 'primary',
+    },
+  }).onOk(() => {
+    const index = layout.value.findIndex((item) => item.id === widgetId);
+    if (index >= 0) {
+      layout.value.splice(index, 1);
+    }
+
+    delete dashboardWidgets.value[widgetId];
+  });
 }
 //#endregion
 

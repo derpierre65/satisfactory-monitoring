@@ -2,12 +2,15 @@
   "global": {
     "ok": "OK",
     "cancel": "Cancel",
-    "search": "Search"
+    "search": "Search",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "dashboard": {
     "widget_add": "Add Widget",
     "widget_not_found": "This widget is no longer available or not loaded.",
     "widget_category_empty": "No widgets found in this category.",
+    "widget_delete_confirm": "Do you want do delete this widget? You can't undo this action.",
     "widget_categories": {
       "power": "Power",
       "session": "Session",
