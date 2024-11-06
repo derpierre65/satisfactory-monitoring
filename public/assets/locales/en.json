@@ -1,5 +1,18 @@
 {
+  "global": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "search": "Search"
+  },
   "dashboard": {
+    "widget_add": "Add Widget",
+    "widget_not_found": "This widget is no longer available or not loaded.",
+    "widget_category_empty": "No widgets found in this category.",
+    "widget_categories": {
+      "power": "Power",
+      "session": "Session",
+      "sink": "AWESOME Sink"
+    },
     "widgets": {
       "awesome_sink_coupon_progress": {
         "title": "AWESOME Sink Coupon Progress"
@@ -11,7 +24,10 @@
         "title": "AWESOME Sink Graph"
       },
       "power_switch_witcher": {
-        "title": "Power Switch Switcher"
+        "title": "Power Switch Switcher",
+        "configuration": {
+          "power_switch": "Power Switch"
+        }
       },
       "session_last_incident": {
         "title": "Last Incident",
@@ -25,8 +41,6 @@
       "session_play_time": {
         "title": "Play Time"
       }
-    },
-    "widget_add": "Add Widget",
-    "widget_not_found": "This widget is no longer available or not loaded."
+    }
   }
 }

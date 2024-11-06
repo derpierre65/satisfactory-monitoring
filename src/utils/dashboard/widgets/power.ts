@@ -17,7 +17,7 @@ export default function registerPowerWidgets() {
     configuration: [
       {
         id: 'switchId',
-        label: 'Power Switch',
+        label: 'dashboard.widgets.power_switch_witcher.configuration.power_switch',
         required: true,
         type: 'select',
         fromEndpoint: 'getSwitches',

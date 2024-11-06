@@ -7,7 +7,7 @@
             v-if="configuration.type === 'select'"
             v-model="settings[configuration.id]"
             :options="configuration.fromEndpoint ? endpointData[configuration.fromEndpoint] : configuration.options"
-            :label="configuration.label"
+            :label="t(configuration.label)"
             :option-label="configuration.optionLabel"
             :option-value="configuration.optionValue"
             :required="configuration.required"
@@ -20,8 +20,9 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn color="primary" label="OK" @click="save" />
-        <q-btn color="primary" label="Cancel" @click="onDialogCancel" />
+        <q-btn color="primary" :label="t('global.cancel')" @click="onDialogCancel" />
+        <q-space />
+        <q-btn color="primary" :label="t('global.ok')" @click="save" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -31,6 +32,7 @@
 import { useDialogPluginComponent } from 'quasar';
 import { Widget } from 'src/utils/dashboard/widgets.ts';
 import { ref } from 'vue';
+import { useTranslation } from 'i18next-vue';
 
 //#region Composable & Prepare
 const { widget, defaultSettings = null, } = defineProps<{
@@ -47,6 +49,7 @@ const {
   onDialogOK,
   onDialogCancel,
 } = useDialogPluginComponent();
+const { t, } = useTranslation();
 //#endregion
 
 //#region Data

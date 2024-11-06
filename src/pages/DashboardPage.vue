@@ -1,7 +1,12 @@
 <template>
   <q-page>
     <div class="tw-flex tw-justify-end">
-      <q-btn color="primary" icon="fas fa-plus" label="Add Widget" @click="showAddWidget = true" />
+      <q-btn
+        :label="t('dashboard.widget_add')"
+        color="primary"
+        icon="fas fa-plus"
+        @click="showAddWidget = true"
+      />
     </div>
 
     <GridLayout
