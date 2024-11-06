@@ -10,7 +10,6 @@
       :row-height="30"
       is-draggable
       is-resizable
-      use-css-transforms
       @noc-layout-update="saveLayout"
     >
       <template #default="{ gridItemProps }">
@@ -20,9 +19,9 @@
           v-bind="{...gridItemProps, ...item}"
           drag-allow-from=".title-bar"
         >
-          <q-card class="tw-flex tw-flex-col tw-h-full no-shadow">
+          <q-card v-if="widgets[dashboardWidgets[item.id].widgetId]" class="tw-flex tw-flex-col full-height no-shadow">
             <q-card-section class="tw-bg-neutral-950 tw-flex tw-items-center tw-justify-between q-py-xs title-bar">
-              <span>{{ widgets[dashboardWidgets[item.id].widgetId].title }}</span>
+              <span>{{ t(widgets[dashboardWidgets[item.id].widgetId].title) }}</span>
               <div v-if="isDevMode" class="tw-text-neutral-600">
                 {{ item.w }} x {{ item.h }}
               </div>
@@ -41,6 +40,9 @@
               <q-inner-loading v-else showing />
             </q-card-section>
           </q-card>
+          <q-card v-else class="full-height no-shadow text-center flex flex-center q-pa-md tw-text-red-500">
+            <small>{{ t('dashboard.widget_not_found') }}</small>
+          </q-card>
         </GridItem>
       </template>
     </GridLayout>
@@ -58,6 +60,7 @@ import { GridLayoutEntry, Widget, WidgetConfigurationData, widgets } from 'src/u
 import { useInterval, uuidv4 } from '@derpierre65/frontend-utils';
 import useSettingsStore from 'stores/settings.ts';
 import useDataStore from 'stores/data.ts';
+import { useTranslation } from 'i18next-vue';
 
 //#region Composable & Prepare
 defineOptions({
@@ -67,6 +70,7 @@ defineOptions({
 const { setInterval, } = useInterval();
 const settingsStore = useSettingsStore();
 const dataStore = useDataStore();
+const { t, } = useTranslation();
 //#endregion
 
 //#region Data
@@ -138,7 +142,7 @@ function loadLayout() {
       continue;
     }
     addNewWidget(
-      widgets[data.widget.widgetId],
+      data.widget.widgetId,
       data.widget.configuration,
       data.grid,
     );
@@ -149,8 +153,8 @@ function loadLayout() {
   loaded.value = true;
 }
 
-function buildWidgetLayout(widget: Widget) {
-  const widgetLayoutInfo = widget.layoutInfo || {};
+function buildWidgetLayout(widget: Widget | null) {
+  const widgetLayoutInfo = (widget && widget.layoutInfo) || {};
 
   return {
     x: 1,
@@ -163,7 +167,9 @@ function buildWidgetLayout(widget: Widget) {
   };
 }
 
-function addNewWidget(widget: Widget, configuration: WidgetConfigurationData, gridOptions = {}) {
+function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, gridOptions = {}) {
+  const widget = widgets[widgetId] || null;
+
   const id = uuidv4();
   layout.value.push({
     id,
@@ -171,15 +177,15 @@ function addNewWidget(widget: Widget, configuration: WidgetConfigurationData, gr
     ...gridOptions,
   });
 
-  if (widget.endpoints) {
+  if (widget && widget.endpoints) {
     for (const endpoint of widget.endpoints) {
       dataStore.addEndpoint(endpoint);
     }
   }
 
   dashboardWidgets.value[id] = {
-    widgetId: widget.id,
-    props: widget.props ? widget.props(configuration) : false,
+    widgetId,
+    props: widget && widget.props ? widget.props(configuration) : false,
     configuration,
   };
 }

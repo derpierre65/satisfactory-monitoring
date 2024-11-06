@@ -2,7 +2,7 @@
   <q-dialog>
     <q-card class="full-width" style="max-width: 800px;">
       <q-card-section class="text-h6">
-        Add Widget
+        {{ t('dashboard.widget_add') }}
       </q-card-section>
       <q-separator />
       <q-card-section class="flex no-wrap items-start">
@@ -40,11 +40,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { openEditWidget, Widget, WidgetConfigurationData, widgets } from 'src/utils/dashboard/widgets.ts';
+import { useTranslation } from 'i18next-vue';
 
 //#region Composable & Prepare
 const emit = defineEmits<{
-  added: [widget: Widget, configurations: WidgetConfigurationData];
+  added: [widget: string, configurations: WidgetConfigurationData];
 }>();
+
+const { t, } = useTranslation();
 //#endregion
 
 //#region Data
@@ -90,8 +93,8 @@ const availableWidgets = computed(() => {
 
 //#region Methods
 async function addWidget(widget: Widget) {
-  (await openEditWidget(widget)).onOk((configurations) => {
-    emit('added', widget, configurations);
+  (await openEditWidget(widget)).onOk((configurations: WidgetConfigurationData) => {
+    emit('added', widget.id, configurations);
   });
 }
 //#endregion

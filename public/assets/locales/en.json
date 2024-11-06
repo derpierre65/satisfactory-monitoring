@@ -1,15 +1,32 @@
 {
   "dashboard": {
     "widgets": {
-      "session_play_time": {
-        "title": "Play Time"
+      "awesome_sink_coupon_progress": {
+        "title": "AWESOME Sink Coupon Progress"
+      },
+      "awesome_sink_coupon_status": {
+        "title": "AWESOME Sink Coupons"
+      },
+      "awesome_sink_graph":  {
+        "title": "AWESOME Sink Graph"
+      },
+      "power_switch_witcher": {
+        "title": "Power Switch Switcher"
+      },
+      "session_last_incident": {
+        "title": "Last Incident",
+        "subtitle": "Days since last Incident"
       },
       "session_game_time": {
         "title": "Game Time",
         "day": "Day",
         "night": "Night"
+      },
+      "session_play_time": {
+        "title": "Play Time"
       }
     },
+    "widget_add": "Add Widget",
     "widget_not_found": "This widget is no longer available or not loaded."
   }
 }

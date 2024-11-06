@@ -3,7 +3,7 @@
     <div class="text-h4">
       {{ gameTime }}
     </div>
-    <div>{{ sessionInfo.IsDay ? 'Day' : 'Night' }}</div>
+    <div>{{ t(`dashboard.widgets.session_game_time.${sessionInfo.IsDay ? 'day' : 'night'}`) }}</div>
   </div>
 </template>
 
@@ -11,8 +11,10 @@
 import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
 import { GetSessionInfoResponse } from '@derpierre65/ficsit-remote-monitoring';
 import { computed } from 'vue';
+import { useTranslation } from 'i18next-vue';
 
 const sessionInfo = useFRMEndpoint<GetSessionInfoResponse>('getSessionInfo', {} as GetSessionInfoResponse);
+const { t, } = useTranslation();
 
 const gameTime = computed(() => {
   return [
