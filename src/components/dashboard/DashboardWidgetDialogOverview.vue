@@ -58,6 +58,10 @@ const categories = ref([
     value: 'inventories',
   },
   {
+    label: 'Session',
+    value: 'session',
+  },
+  {
     label: 'AWESOME Sink',
     value: 'sink',
   },

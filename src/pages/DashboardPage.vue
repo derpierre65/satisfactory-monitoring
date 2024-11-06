@@ -23,14 +23,16 @@
           <q-card class="tw-flex tw-flex-col tw-h-full no-shadow">
             <q-card-section class="tw-bg-neutral-950 tw-flex tw-items-center tw-justify-between q-py-xs title-bar">
               <span>{{ widgets[dashboardWidgets[item.id].widgetId].title }}</span>
+              <div v-if="isDevMode" class="tw-text-neutral-600">
+                {{ item.w }} x {{ item.h }}
+              </div>
               <q-icon name="fas fa-ellipsis-v" />
             </q-card-section>
 
             <q-card-section class="tw-flex-auto q-py-sm relative-position">
-              <span
-                v-if="invalidWidgets.includes(item.id)"
-                class="tw-text-red-500"
-              >This widget is invalid, check the configuration or delete this widget.</span>
+              <div v-if="invalidWidgets.includes(item.id)" class="flex flex-center full-height tw-text-red-500">
+                <small>This widget is invalid, check the configuration or delete this widget.</small>
+              </div>
               <component
                 :is="widgets[dashboardWidgets[item.id].widgetId].component"
                 v-else-if="dashboardWidgets[item.id].props !== null"
@@ -48,11 +50,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ComputedRef, ref } from 'vue';
 import { GridLayout, GridItem } from '@noction/vue-draggable-grid';
 import DashboardWidgetDialogOverview from 'components/dashboard/DashboardWidgetDialogOverview.vue';
 import '@noction/vue-draggable-grid/styles';
-import { GridLayoutEntry, Widget, widgets } from 'src/utils/dashboard/widgets.ts';
+import { GridLayoutEntry, Widget, WidgetConfigurationData, widgets } from 'src/utils/dashboard/widgets.ts';
 import { useInterval, uuidv4 } from '@derpierre65/frontend-utils';
 import useSettingsStore from 'stores/settings.ts';
 import useDataStore from 'stores/data.ts';
@@ -68,13 +70,15 @@ const dataStore = useDataStore();
 //#endregion
 
 //#region Data
+const isDevMode = import.meta.env.DEV;
 const loaded = ref(false);
 const showAddWidget = ref(false);
 const invalidWidgets = ref<string[]>([]);
 const layout = ref<GridLayoutEntry[]>([]);
 const dashboardWidgets = ref<Record<string, {
   widgetId: string;
-  configuration: Record<string, unknown>;
+  configuration: WidgetConfigurationData;
+  props: ComputedRef<Record<string, unknown> | null> | false;
 }>>({});
 //#endregion
 
@@ -146,7 +150,7 @@ function loadLayout() {
 }
 
 function buildWidgetLayout(widget: Widget) {
-  const widgetLayoutInfo = widget.layoutInfo;
+  const widgetLayoutInfo = widget.layoutInfo || {};
 
   return {
     x: 1,
@@ -159,7 +163,7 @@ function buildWidgetLayout(widget: Widget) {
   };
 }
 
-function addNewWidget(widget: Widget, configuration: Record<string, unknown>, gridOptions = {}) {
+function addNewWidget(widget: Widget, configuration: WidgetConfigurationData, gridOptions = {}) {
   const id = uuidv4();
   layout.value.push({
     id,

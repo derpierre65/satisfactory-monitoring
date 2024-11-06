@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { GridLayoutEntry } from 'src/utils/dashboard/widgets.ts';
+import { GridLayoutEntry, WidgetConfigurationData } from 'src/utils/dashboard/widgets.ts';
 
 const useSettingsStore = defineStore('settings', () => {
   const updateInterval = ref(5_000);
@@ -23,7 +23,7 @@ const useSettingsStore = defineStore('settings', () => {
     grid: Omit<GridLayoutEntry, 'id' | 'minW' | 'minH' | 'maxW' | 'maxH'>;
     widget: {
       widgetId: string;
-      configuration: Record<string, unknown>;
+      configuration: WidgetConfigurationData;
     };
   }>>([]);
 

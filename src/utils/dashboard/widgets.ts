@@ -2,11 +2,16 @@ import { Dialog, Loading, QSelectProps } from 'quasar';
 import DashboardWidgetDialogEdit from 'components/dashboard/DashboardWidgetDialogEdit.vue';
 import FRM from 'src/utils/FRM.ts';
 import useServerStore from 'stores/server.ts';
-import useDataStore from 'stores/data.ts';
 import { computed, ComputedRef } from 'vue';
-import PowerSwitchSwitcher from 'components/widgets/power-switch/PowerSwitchSwitcher.vue';
+import useDataStore from 'stores/data.ts';
 import { GetSwitchesResponse } from '@derpierre65/ficsit-remote-monitoring';
-import registerSinkWidgets from 'src/utils/dashboard/widgets/sink.ts';
+import PowerSwitchSwitcher from 'components/widgets/power-switch/PowerSwitchSwitcher.vue';
+import SinkCouponStatus from 'components/widgets/sink/SinkCouponStatus.vue';
+import SinkCouponProgress from 'components/widgets/sink/SinkCouponProgress.vue';
+import SinkGraph from 'components/widgets/sink/SinkGraph.vue';
+import SessionLastIncident from 'components/widgets/session/SessionLastIncident.vue';
+import SessionGameTime from 'components/widgets/session/SessionGameTime.vue';
+import SessionPlaytime from 'components/widgets/session/SessionPlaytime.vue';
 
 type WidgetConfiguration = ({
   type: 'select';
@@ -27,9 +32,9 @@ type GridLayoutEntry = {
   h: number;
   w: number;
   minW: number;
-  maxW: number;
+  maxW?: number;
   minH: number;
-  maxH: number;
+  maxH?: number;
 };
 
 type Widget = {
@@ -91,6 +96,42 @@ function registerWidget(data: Widget) {
   widgets[data.id] = data;
 }
 
+// region sink widgets
+registerWidget({
+  id: 'awesome-sink-coupon-status',
+  title: 'AWESOME Sink Coupons',
+  component: SinkCouponStatus,
+  category: 'sink',
+  layoutInfo: {
+    minH: 5,
+    minW: 2,
+  },
+});
+
+registerWidget({
+  id: 'awesome-sink-coupon-progress',
+  title: 'AWESOME Sink Coupon Progress',
+  component: SinkCouponProgress,
+  category: 'sink',
+  layoutInfo: {
+    minW: 4,
+    minH: 5,
+  },
+});
+
+registerWidget({
+  id: 'awesome-sink-graph',
+  title: 'AWESOME Sink Graph',
+  component: SinkGraph,
+  category: 'sink',
+  layoutInfo: {
+    minW: 4,
+    minH: 6,
+  },
+});
+// endregion
+
+// region power widgets
 registerWidget({
   id: 'power-switch-witcher',
   title: 'Power Switch Switcher',
@@ -98,7 +139,7 @@ registerWidget({
   category: 'power',
   layoutInfo: {
     minW: 4,
-    minH: 3,
+    minH: 2,
     maxH: 4,
   },
   configuration: [
@@ -138,13 +179,47 @@ registerWidget({
     });
   },
 });
+// endregion
 
-registerSinkWidgets();
+// region session widgets
+registerWidget({
+  id: 'session-last-incident',
+  title: 'Last Incident',
+  category: 'session',
+  endpoints: [ 'getSessionInfo', ],
+  component: SessionLastIncident,
+  layoutInfo: {
+    minW: 2,
+    minH: 4,
+  },
+});
+registerWidget({
+  id: 'session-game-time',
+  title: 'Game Time',
+  category: 'session',
+  endpoints: [ 'getSessionInfo', ],
+  component: SessionGameTime,
+  layoutInfo: {
+    minW: 2,
+    minH: 3,
+  },
+});
+registerWidget({
+  id: 'session-play-time',
+  title: 'Play time',
+  category: 'session',
+  endpoints: [ 'getSessionInfo', ],
+  component: SessionPlaytime,
+  layoutInfo: {
+    minW: 2,
+    minH: 2,
+  },
+});
+// endregion
 
 export {
   widgets,
   openEditWidget,
-  registerWidget,
   type Widget,
   type WidgetConfiguration,
   type WidgetConfigurationData,

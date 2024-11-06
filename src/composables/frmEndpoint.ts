@@ -1,7 +1,7 @@
 import { computed, onScopeDispose, Reactive, ref, toValue, watchEffect, WritableComputedRef } from 'vue';
 import useDataStore from 'stores/data.ts';
 
-function useFRMEndpoint<T>(endpoint: string) {
+function useFRMEndpoint<T>(endpoint: string, defaultValue: T = [] as T) {
   const dataStore = useDataStore();
 
   dataStore.addEndpoint(endpoint);
@@ -10,7 +10,7 @@ function useFRMEndpoint<T>(endpoint: string) {
     dataStore.removeEndpoint(endpoint);
   });
 
-  return computed(() => (dataStore.apiData[endpoint] as T) || []);
+  return computed(() => (dataStore.apiData[endpoint] as T) || defaultValue);
 }
 
 function usePausableFRMEndpoint<T>(endpoint: string) {
