@@ -11,7 +11,8 @@
     "widget_categories": {
       "power": "Power",
       "session": "Session",
-      "sink": "AWESOME Sink"
+      "sink": "AWESOME Sink",
+      "inventory": "Inventories"
     },
     "widgets": {
       "awesome_sink_coupon_progress": {
@@ -22,6 +23,14 @@
       },
       "awesome_sink_graph":  {
         "title": "AWESOME Sink Graph"
+      },
+      "inventory_player": {
+        "title": "Player Inventory",
+        "unknown_player": "Unknown Player",
+        "configuration": {
+          "player": "Player",
+          "hide_header": "Hide Player Name"
+        }
       },
       "power_switch_witcher": {
         "title": "Power Switch Switcher",

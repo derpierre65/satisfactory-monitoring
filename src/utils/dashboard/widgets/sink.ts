@@ -8,8 +8,8 @@ export default function registerSinkWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/sink/SinkCouponStatus.vue')),
     category: 'sink',
     layoutInfo: {
-      minH: 5,
-      minW: 2,
+      minW: 4,
+      minH: 10,
     },
   });
 
@@ -19,8 +19,8 @@ export default function registerSinkWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/sink/SinkCouponProgress.vue')),
     category: 'sink',
     layoutInfo: {
-      minW: 4,
-      minH: 5,
+      minW: 8,
+      minH: 10,
     },
   });
 
@@ -30,8 +30,8 @@ export default function registerSinkWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/sink/SinkGraph.vue')),
     category: 'sink',
     layoutInfo: {
-      minW: 4,
-      minH: 6,
+      minW: 8,
+      minH: 12,
     },
   });
 }

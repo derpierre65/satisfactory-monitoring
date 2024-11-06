@@ -50,7 +50,7 @@
               icon-url="/assets/map/player.png"
               :class-name="!entity.Online ? 'tw-opacity-50' : ''"
             />
-            <LTooltip :content="entity.Name || 'Unknown Player'" />
+            <LTooltip :content="entity.Name || t('dashboard.widgets.inventory_player.unknown_player')" />
           </LMarker>
         </template>
 
@@ -196,10 +196,12 @@ import MapRadarTowers from 'components/map/MapRadarTowers.vue';
 import MapRadarTowerNodes from 'components/map/MapRadarTowerNodes.vue';
 import useSettingsStore from 'stores/settings.ts';
 import MapPowerSwitch from 'components/map/MapPowerSwitch.vue';
+import { useTranslation } from 'i18next-vue';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
 const settingsStore = useSettingsStore();
+const { t, } = useTranslation();
 const endpoints = {
   trains: reactive(usePausableFRMEndpoint<GetTrainsResponse>('getTrains')),
   spaceElevators: reactive(usePausableFRMEndpoint<GetSpaceElevatorResponse>('getSpaceElevator')),

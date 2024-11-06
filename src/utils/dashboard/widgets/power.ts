@@ -10,9 +10,9 @@ export default function registerPowerWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/power-switch/PowerSwitchSwitcher.vue')),
     category: 'power',
     layoutInfo: {
-      minW: 4,
-      minH: 2,
-      maxH: 4,
+      minW: 6,
+      minH: 4,
+      maxH: 5,
     },
     configuration: [
       {

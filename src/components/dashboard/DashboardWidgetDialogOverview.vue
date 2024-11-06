@@ -66,6 +66,7 @@ const categories = [
   'power',
   'sink',
   'session',
+  'inventory',
 ];
 const selectedCategory = ref('');
 const search = ref('');

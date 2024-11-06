@@ -6,18 +6,21 @@ import { ComputedRef } from 'vue';
 import registerSessionWidgets from 'src/utils/dashboard/widgets/session.ts';
 import registerPowerWidgets from 'src/utils/dashboard/widgets/power.ts';
 import registerSinkWidgets from 'src/utils/dashboard/widgets/sink.ts';
+import registerInventoryWidgets from 'src/utils/dashboard/widgets/inventory.ts';
 
-type WidgetConfiguration = ({
+type WidgetConfiguration = {
+  id: string;
+  label: string;
+  required?: boolean;
+} & ({
   type: 'select';
   fromEndpoint: string;
   optionValue: QSelectProps['optionValue'];
   optionLabel: QSelectProps['optionLabel'];
   options?: QSelectProps['options'];
-}) & {
-  id: string;
-  label: string;
-  required: true;
-};
+} | {
+  type: 'boolean';
+});
 
 type GridLayoutEntry = {
   id: string;
@@ -93,6 +96,7 @@ function registerWidget(data: Widget) {
 registerSinkWidgets();
 registerSessionWidgets();
 registerPowerWidgets();
+registerInventoryWidgets();
 
 export {
   widgets,

@@ -11,18 +11,16 @@
       </div>
       <q-separator class="q-my-sm" />
 
-      <div class="tw-grid tw-grid-cols-5 tw-gap-1">
-        <ItemSlot v-for="item in inventory" :item :size="48" />
-      </div>
+      <ItemBox :size="48" :inventory />
     </q-card-section>
   </q-card>
 </template>
 
 <script setup lang="ts">
-import ItemSlot from 'components/ItemSlot.vue';
 import { InventoryItemObject } from '@derpierre65/ficsit-remote-monitoring';
 import useServerStore from 'stores/server.ts';
 import { computed } from 'vue';
+import ItemBox from 'components/inventory/ItemBox.vue';
 
 const { image = '', } = defineProps<{
   inventory: InventoryItemObject[];

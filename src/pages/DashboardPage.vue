@@ -11,8 +11,8 @@
 
     <GridLayout
       v-model:layout="layout"
-      :col-num="20"
-      :row-height="30"
+      :col-num="40"
+      :row-height="10"
       is-draggable
       is-resizable
       @noc-layout-update="saveLayout"

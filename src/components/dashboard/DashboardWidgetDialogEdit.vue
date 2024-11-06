@@ -16,6 +16,11 @@
             emit-value
             map-options
           />
+          <q-toggle
+            v-else-if="configuration.type === 'boolean'"
+            v-model="settings[configuration.id]"
+            :label="t(configuration.label)"
+          />
         </template>
       </q-card-section>
 
@@ -68,17 +73,26 @@ const settings = ref(defaultSettings || {});
 
 //#region Methods
 function save() {
+  let hasErrors = false;
   errors.value = {};
   for (const configuration of widget.configuration || []) {
     if (configuration.required && !settings.value[configuration.id]) {
       errors.value[configuration.id] = 'This field is required.';
+      hasErrors = true;
     }
   }
 
-  onDialogOK(settings.value);
+  if (!hasErrors) {
+    onDialogOK(settings.value);
+  }
 }
 //#endregion
 
 //#region Created
+for (const configuration of widget.configuration || []) {
+  if (configuration.type === 'boolean') {
+    settings.value[configuration.id] = false;
+  }
+}
 //#endregion
 </script>

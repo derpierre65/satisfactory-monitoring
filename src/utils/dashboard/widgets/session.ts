@@ -9,8 +9,8 @@ export default function registerSessionWidgets() {
     endpoints: [ 'getSessionInfo', ],
     component: defineAsyncComponent(() => import('components/widgets/session/SessionLastIncident.vue')),
     layoutInfo: {
-      minW: 2,
-      minH: 4,
+      minW: 4,
+      minH: 7,
     },
   });
   registerWidget({
@@ -20,8 +20,8 @@ export default function registerSessionWidgets() {
     endpoints: [ 'getSessionInfo', ],
     component: defineAsyncComponent(() => import('components/widgets/session/SessionGameTime.vue')),
     layoutInfo: {
-      minW: 2,
-      minH: 3,
+      minW: 4,
+      minH: 6,
     },
   });
   registerWidget({
@@ -31,8 +31,8 @@ export default function registerSessionWidgets() {
     endpoints: [ 'getSessionInfo', ],
     component: defineAsyncComponent(() => import('components/widgets/session/SessionPlaytime.vue')),
     layoutInfo: {
-      minW: 2,
-      minH: 3,
+      minW: 4,
+      minH: 6,
     },
   });
 }
