@@ -3,8 +3,7 @@ import { defineAsyncComponent } from 'vue';
 
 export default function registerSessionWidgets() {
   registerWidget({
-    id: 'session-last-incident',
-    title: 'dashboard.widgets.session_last_incident.title',
+    id: 'session_last_incident',
     category: 'session',
     endpoints: [ 'getSessionInfo', ],
     component: defineAsyncComponent(() => import('components/widgets/session/SessionLastIncident.vue')),
@@ -14,8 +13,7 @@ export default function registerSessionWidgets() {
     },
   });
   registerWidget({
-    id: 'session-game-time',
-    title: 'dashboard.widgets.session_game_time.title',
+    id: 'session_game_time',
     category: 'session',
     endpoints: [ 'getSessionInfo', ],
     component: defineAsyncComponent(() => import('components/widgets/session/SessionGameTime.vue')),
@@ -25,8 +23,7 @@ export default function registerSessionWidgets() {
     },
   });
   registerWidget({
-    id: 'session-play-time',
-    title: 'dashboard.widgets.session_play_time.title',
+    id: 'session_play_time',
     category: 'session',
     endpoints: [ 'getSessionInfo', ],
     component: defineAsyncComponent(() => import('components/widgets/session/SessionPlaytime.vue')),

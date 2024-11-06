@@ -5,8 +5,7 @@ import { registerWidget, WidgetConfigurationData } from 'src/utils/dashboard/wid
 
 export default function registerPowerWidgets() {
   registerWidget({
-    id: 'power-switch-witcher',
-    title: 'dashboard.widgets.power_switch_witcher.title',
+    id: 'power_switch_switcher',
     component: defineAsyncComponent(() => import('components/widgets/power-switch/PowerSwitchSwitcher.vue')),
     category: 'power',
     layoutInfo: {
@@ -49,6 +48,90 @@ export default function registerPowerWidgets() {
           item,
         };
       });
+    },
+  });
+
+  registerWidget({
+    id: 'power_total_production',
+    category: 'power',
+    component: defineAsyncComponent(() => import('components/widgets/power/PowerTotalProduction.vue')),
+    layoutInfo: {
+      minW: 5,
+      minH: 6,
+    },
+    props: {
+      ignorePadding: true,
+      class: 'text-center',
+    },
+  });
+
+  registerWidget({
+    id: 'power_current_consumption',
+    category: 'power',
+    component: defineAsyncComponent(() => import('components/widgets/power/PowerCurrentConsumption.vue')),
+    layoutInfo: {
+      minW: 6,
+      minH: 6,
+    },
+    props: {
+      ignorePadding: true,
+      class: 'text-center',
+    },
+  });
+
+  registerWidget({
+    id: 'power_max_consumption',
+    category: 'power',
+    component: defineAsyncComponent(() => import('components/widgets/power/PowerMaxConsumption.vue')),
+    layoutInfo: {
+      minW: 6,
+      minH: 6,
+    },
+    props: {
+      ignorePadding: true,
+      class: 'text-center',
+    },
+  });
+
+  registerWidget({
+    id: 'power_battery_capacity',
+    category: 'power',
+    component: defineAsyncComponent(() => import('components/widgets/power/PowerBatteryCapacity.vue')),
+    layoutInfo: {
+      minW: 6,
+      minH: 6,
+    },
+    props: {
+      ignorePadding: true,
+      class: 'text-center',
+    },
+  });
+
+  registerWidget({
+    id: 'power_battery_time_full',
+    category: 'power',
+    component: defineAsyncComponent(() => import('components/widgets/power/PowerBatteryTimeFull.vue')),
+    layoutInfo: {
+      minW: 6,
+      minH: 9,
+    },
+    props: {
+      ignorePadding: true,
+      class: 'text-center',
+    },
+  });
+
+  registerWidget({
+    id: 'power_battery_first_empty',
+    category: 'power',
+    component: defineAsyncComponent(() => import('components/widgets/power/PowerBatteryFirstEmpty.vue')),
+    layoutInfo: {
+      minW: 6,
+      minH: 9,
+    },
+    props: {
+      ignorePadding: true,
+      class: 'text-center',
     },
   });
 }

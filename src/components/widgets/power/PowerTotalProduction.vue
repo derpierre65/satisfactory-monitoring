@@ -1,7 +1,7 @@
 <template>
   <q-card class="shadow-0">
     <PowerWidgetSkeleton v-if="!powerData" />
-    <q-card-section v-else>
+    <component :is="ignorePadding ? 'div' : QCardSection" v-else>
       <div class="text-h5">
         <span>{{ totalPowerProduction }}<q-tooltip>Production</q-tooltip></span>
         <span>/</span>
@@ -11,17 +11,22 @@
       <div class="text-h6">
         Total Production
       </div>
-    </q-card-section>
+    </component>
   </q-card>
 </template>
 
 <script setup lang="ts">
 import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
-import type { GetPowerResponse, PowerCircuitInformation } from '@derpierre65/ficsit-remote-monitoring';
+import type { GetPowerResponse, PowerObject } from '@derpierre65/ficsit-remote-monitoring';
 import { getTotalInfo } from 'src/utils/math.ts';
 import PowerWidgetSkeleton from 'components/skeleton/power/PowerWidgetSkeleton.vue';
+import { QCardSection } from 'quasar';
 
 //#region Composable & Prepare
+defineProps<{
+  ignorePadding?: boolean;
+}>();
+
 const powerData = useFRMEndpoint<GetPowerResponse>('getPower');
 //#endregion
 
@@ -29,8 +34,8 @@ const powerData = useFRMEndpoint<GetPowerResponse>('getPower');
 //#endregion
 
 //#region Computed
-const totalPowerProduction = getTotalInfo<PowerCircuitInformation>(powerData, 'PowerProduction');
-const totalPowerCapacity = getTotalInfo<PowerCircuitInformation>(powerData, 'PowerCapacity');
+const totalPowerProduction = getTotalInfo<PowerObject>(powerData, 'PowerProduction');
+const totalPowerCapacity = getTotalInfo<PowerObject>(powerData, 'PowerCapacity');
 //#endregion
 
 //#region Watch

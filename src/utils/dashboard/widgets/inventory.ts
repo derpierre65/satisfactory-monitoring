@@ -6,8 +6,7 @@ import i18next from 'i18next';
 
 export default function registerInventoryWidgets() {
   registerWidget({
-    id: 'inventory-player',
-    title: 'dashboard.widgets.inventory_player.title',
+    id: 'inventory_player',
     component: defineAsyncComponent(() => import('components/widgets/inventories/PlayerInventory.vue')),
     category: 'inventory',
     layoutInfo: {
@@ -33,19 +32,19 @@ export default function registerInventoryWidgets() {
     endpoints: [ 'getPlayer', ],
     isValid(configuration) {
       const dataStore = useDataStore();
-      const switches = dataStore.apiData.getPlayer as GetPlayerResponse;
-      if (!switches) {
+      const players = dataStore.apiData.getPlayer as GetPlayerResponse;
+      if (!players) {
         return null;
       }
 
-      return switches.some((powerSwitch) => powerSwitch.ID === configuration.playerId);
+      return players.some((powerSwitch) => powerSwitch.ID === configuration.playerId);
     },
     props(configuration: WidgetConfigurationData) {
       const dataStore = useDataStore();
 
       return computed(() => {
         const getPlayer = dataStore.apiData.getPlayer as GetPlayerResponse;
-        const item = getPlayer?.find((powerSwitch) => powerSwitch.ID === configuration.playerId);
+        const item = getPlayer?.find((player) => player.ID === configuration.playerId);
         if (!item) {
           return null;
         }

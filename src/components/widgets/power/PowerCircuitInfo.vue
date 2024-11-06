@@ -149,14 +149,14 @@
 </template>
 
 <script setup lang="ts">
-import { PowerCircuitInformation } from '@derpierre65/ficsit-remote-monitoring';
+import type { PowerObject } from '@derpierre65/ficsit-remote-monitoring';
 import AppAlert from 'components/AppAlert.vue';
 import { formatNumber } from 'src/utils/helpers/number.ts';
 import { computed } from 'vue';
 
 //#region Composable & Prepare
 const props = withDefaults(defineProps<{
-  circuit?: PowerCircuitInformation | null;
+  circuit?: PowerObject | null;
 }>(), {
   circuit: null,
 });

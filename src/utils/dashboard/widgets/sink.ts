@@ -3,8 +3,7 @@ import { defineAsyncComponent } from 'vue';
 
 export default function registerSinkWidgets() {
   registerWidget({
-    id: 'awesome-sink-coupon-status',
-    title: 'dashboard.widgets.awesome_sink_coupon_status.title',
+    id: 'awesome_sink_coupon_status',
     component: defineAsyncComponent(() => import('components/widgets/sink/SinkCouponStatus.vue')),
     category: 'sink',
     layoutInfo: {
@@ -14,8 +13,7 @@ export default function registerSinkWidgets() {
   });
 
   registerWidget({
-    id: 'awesome-sink-coupon-progress',
-    title: 'dashboard.widgets.awesome_sink_coupon_progress.title',
+    id: 'awesome_sink_coupon_progress',
     component: defineAsyncComponent(() => import('components/widgets/sink/SinkCouponProgress.vue')),
     category: 'sink',
     layoutInfo: {
@@ -25,8 +23,7 @@ export default function registerSinkWidgets() {
   });
 
   registerWidget({
-    id: 'awesome-sink-graph',
-    title: 'dashboard.widgets.awesome_sink_graph.title',
+    id: 'awesome_sink_graph',
     component: defineAsyncComponent(() => import('components/widgets/sink/SinkGraph.vue')),
     category: 'sink',
     layoutInfo: {

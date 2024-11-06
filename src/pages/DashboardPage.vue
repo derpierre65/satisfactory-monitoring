@@ -27,7 +27,7 @@
         >
           <q-card v-if="widgets[dashboardWidgets[item.id].widgetId]" class="tw-flex tw-flex-col full-height no-shadow">
             <q-card-section class="tw-bg-neutral-950 tw-flex tw-items-center tw-justify-between q-py-xs title-bar">
-              <span>{{ t(widgets[dashboardWidgets[item.id].widgetId].title) }}</span>
+              <span>{{ t(`dashboard.widgets.${dashboardWidgets[item.id].widgetId}.title`) }}</span>
               <div v-if="isDevMode" class="tw-text-neutral-600">
                 {{ item.w }} x {{ item.h }}
               </div>
@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ComputedRef, ref } from 'vue';
+import { ComputedRef, onUnmounted, ref } from 'vue';
 import { GridLayout, GridItem } from '@noction/vue-draggable-grid';
 import DashboardWidgetDialogOverview from 'components/dashboard/DashboardWidgetDialogOverview.vue';
 import '@noction/vue-draggable-grid/styles';
@@ -125,6 +125,11 @@ const dashboardWidgets = ref<Record<string, {
 //#endregion
 
 //#region Lifecycle Events
+onUnmounted(() => {
+  for (const widgetId of Object.keys(dashboardWidgets.value)) {
+    unloadWidget(dashboardWidgets.value[widgetId].widgetId);
+  }
+});
 //#endregion
 
 //#region Methods
@@ -199,6 +204,17 @@ function buildWidgetLayout(widget: Widget | null) {
   };
 }
 
+function unloadWidget(widgetId: string) {
+  const widget = widgets[widgetId];
+  if (!widget || !widget.endpoints) {
+    return;
+  }
+
+  for (const endpoint of widget.endpoints) {
+    dataStore.removeEndpoint(endpoint);
+  }
+}
+
 function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, gridOptions = {}) {
   const widget = widgets[widgetId] || null;
 
@@ -217,19 +233,31 @@ function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, 
 
   dashboardWidgets.value[id] = {
     widgetId,
-    props: widget && widget.props ? widget.props(configuration) : false,
+    props: getWidgetProps(widget, configuration),
     configuration,
   };
+}
+
+function getWidgetProps(widget: Widget, configuration: WidgetConfigurationData) {
+  if (!widget || !widget.props) {
+    return false;
+  }
+
+  if (typeof widget.props === 'function') {
+    return widget.props(configuration);
+  }
+
+  return widget.props;
 }
 
 async function editWidget(widgetId: string) {
   const dashboardWidget = dashboardWidgets.value[widgetId];
   (await openEditWidget(widgets[dashboardWidget.widgetId], deepClone(dashboardWidget.configuration)))
-    .onOk((configurations: WidgetConfigurationData) => {
+    .onOk((newConfiguration: WidgetConfigurationData) => {
       const widget = widgets[dashboardWidget.widgetId];
 
-      dashboardWidget.props = widget && widget.props ? widget.props(configurations) : false;
-      dashboardWidget.configuration = configurations;
+      dashboardWidget.props = getWidgetProps(widget, newConfiguration);
+      dashboardWidget.configuration = newConfiguration;
     });
 }
 
@@ -244,6 +272,8 @@ function deleteWidget(widgetId: string) {
     if (index >= 0) {
       layout.value.splice(index, 1);
     }
+
+    unloadWidget(dashboardWidgets.value[widgetId].widgetId);
 
     delete dashboardWidgets.value[widgetId];
   });

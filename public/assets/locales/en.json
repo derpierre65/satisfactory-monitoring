@@ -35,11 +35,29 @@
           "hide_header": "Hide Player Name"
         }
       },
-      "power_switch_witcher": {
+      "power_battery_capacity": {
+        "title": "Battery Capacity"
+      },
+      "power_battery_first_empty": {
+        "title": "Battery First Empty"
+      },
+      "power_battery_time_full": {
+        "title": "Battery Time Full"
+      },
+      "power_current_consumption": {
+        "title": "Current Consumption"
+      },
+      "power_max_consumption": {
+        "title": "Max Consumption"
+      },
+      "power_switch_switcher": {
         "title": "Power Switch Switcher",
         "configuration": {
           "power_switch": "Power Switch"
         }
+      },
+      "power_total_production": {
+        "title": "Total Production"
       },
       "session_last_incident": {
         "title": "Last Incident",

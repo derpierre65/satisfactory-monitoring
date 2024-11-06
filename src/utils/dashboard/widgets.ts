@@ -36,7 +36,6 @@ type GridLayoutEntry = {
 
 type Widget = {
   id: string;
-  title: string;
   component: unknown;
   category: string;
   layoutInfo: {
@@ -49,7 +48,7 @@ type Widget = {
   };
   endpoints?: string[];
   configuration?: WidgetConfiguration[];
-  props?: (configuration: WidgetConfigurationData) => ComputedRef<Record<string, unknown> | null>;
+  props?: ((configuration: WidgetConfigurationData) => ComputedRef<Record<string, unknown> | null>) | object;
   isValid?: (configuration: WidgetConfigurationData) => boolean | null;
 };
 

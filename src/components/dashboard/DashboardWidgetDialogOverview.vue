@@ -37,7 +37,7 @@
           <q-btn
             v-for="widgetId in availableWidgets[selectedCategory]"
             :key="widgetId"
-            :label="t(widgets[widgetId].title)"
+            :label="t(`dashboard.widgets.${widgetId}.title`)"
             color="primary"
             @click="addWidget(widgets[widgetId])"
           />
@@ -76,7 +76,7 @@ const search = ref('');
 const filteredWidgets = computed(() => {
   const searchTerm = search.value.toLowerCase();
 
-  return Object.keys(widgets).filter((id) => t(widgets[id].title).toLowerCase().includes(searchTerm));
+  return Object.keys(widgets).filter((id) => t(`dashboard.widgets.${id}.title`).toLowerCase().includes(searchTerm));
 });
 const availableWidgets = computed(() => {
   return Object.groupBy(filteredWidgets.value, (id) => widgets[id].category);
