@@ -9,7 +9,7 @@ export default function registerSessionWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/session/SessionLastIncident.vue')),
     layoutInfo: {
       minW: 4,
-      minH: 7,
+      minH: 6,
     },
   });
   registerWidget({

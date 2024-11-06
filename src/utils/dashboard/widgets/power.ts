@@ -10,8 +10,7 @@ export default function registerPowerWidgets() {
     category: 'power',
     layoutInfo: {
       minW: 6,
-      minH: 4,
-      maxH: 5,
+      minH: 3,
     },
     configuration: [
       {
@@ -57,7 +56,7 @@ export default function registerPowerWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/power/PowerTotalProduction.vue')),
     layoutInfo: {
       minW: 5,
-      minH: 6,
+      minH: 5,
     },
     props: {
       ignorePadding: true,
@@ -71,7 +70,7 @@ export default function registerPowerWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/power/PowerCurrentConsumption.vue')),
     layoutInfo: {
       minW: 6,
-      minH: 6,
+      minH: 5,
     },
     props: {
       ignorePadding: true,
@@ -85,7 +84,7 @@ export default function registerPowerWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/power/PowerMaxConsumption.vue')),
     layoutInfo: {
       minW: 6,
-      minH: 6,
+      minH: 5,
     },
     props: {
       ignorePadding: true,
@@ -99,7 +98,7 @@ export default function registerPowerWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/power/PowerBatteryCapacity.vue')),
     layoutInfo: {
       minW: 6,
-      minH: 6,
+      minH: 5,
     },
     props: {
       ignorePadding: true,
@@ -113,7 +112,7 @@ export default function registerPowerWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/power/PowerBatteryTimeFull.vue')),
     layoutInfo: {
       minW: 6,
-      minH: 9,
+      minH: 6,
     },
     props: {
       ignorePadding: true,
@@ -127,7 +126,7 @@ export default function registerPowerWidgets() {
     component: defineAsyncComponent(() => import('components/widgets/power/PowerBatteryFirstEmpty.vue')),
     layoutInfo: {
       minW: 6,
-      minH: 9,
+      minH: 6,
     },
     props: {
       ignorePadding: true,

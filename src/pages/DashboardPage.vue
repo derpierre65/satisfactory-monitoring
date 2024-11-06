@@ -1,6 +1,7 @@
 <template>
   <q-page>
-    <div class="tw-flex tw-justify-end">
+    <div class="tw-flex tw-justify-end tw-gap-2">
+      <q-toggle v-model="hideTitle" label="Hide Toolbars" />
       <q-btn
         :label="t('dashboard.widget_add')"
         color="primary"
@@ -26,7 +27,7 @@
           drag-ignore-from=".q-icon"
         >
           <q-card v-if="widgets[dashboardWidgets[item.id].widgetId]" class="tw-flex tw-flex-col full-height no-shadow">
-            <q-card-section class="tw-bg-neutral-950 tw-flex tw-items-center tw-justify-between q-py-xs title-bar">
+            <q-card-section v-if="!hideTitle" class="tw-bg-neutral-950 tw-flex tw-items-center tw-justify-between q-py-xs title-bar">
               <span>{{ t(`dashboard.widgets.${dashboardWidgets[item.id].widgetId}.title`) }}</span>
               <div v-if="isDevMode" class="tw-text-neutral-600">
                 {{ item.w }} x {{ item.h }}
@@ -109,6 +110,7 @@ const { t, } = useTranslation();
 const isDevMode = import.meta.env.DEV;
 const loaded = ref(false);
 const showAddWidget = ref(false);
+const hideTitle = ref(false);
 const invalidWidgets = ref<string[]>([]);
 const layout = ref<GridLayoutEntry[]>([]);
 const dashboardWidgets = ref<Record<string, {

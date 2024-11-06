@@ -8,7 +8,7 @@ export default function registerSinkWidgets() {
     category: 'sink',
     layoutInfo: {
       minW: 4,
-      minH: 10,
+      minH: 8,
     },
   });
 
@@ -18,7 +18,7 @@ export default function registerSinkWidgets() {
     category: 'sink',
     layoutInfo: {
       minW: 8,
-      minH: 10,
+      minH: 9,
     },
   });
 
@@ -28,7 +28,7 @@ export default function registerSinkWidgets() {
     category: 'sink',
     layoutInfo: {
       minW: 8,
-      minH: 12,
+      minH: 10,
     },
   });
 }
