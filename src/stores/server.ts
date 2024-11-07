@@ -5,6 +5,7 @@ import { Dialog, Loading } from 'quasar';
 import router from 'src/router';
 import { GetModListResponse } from '@derpierre65/ficsit-remote-monitoring';
 import axios from 'axios';
+import i18next from 'i18next';
 
 type ServerInfo = {
   name: string;
@@ -61,6 +62,14 @@ const useServerStore = defineStore('server', () => {
     }
   }
 
+  function isSameVersionNumber(version: string, requiredVersion: string) {
+    if (requiredVersion === '*') {
+      return true;
+    }
+
+    return version === requiredVersion;
+  }
+
   function tryConnect(server: ServerInfo) {
     Loading.show({
       group: 'tryConnect',
@@ -70,15 +79,27 @@ const useServerStore = defineStore('server', () => {
     return FRM.fetch<GetModListResponse>(server.url, 'getModList')
       .then((data) => {
         const frmMod = data.find((mod) => mod.SMRName === 'FicsitRemoteMonitoring')!;
-        const requiredVersion = import.meta.env.VITE_REQUIRED_FRM_MOD;
-        if (frmMod.Version === requiredVersion || import.meta.env.DEV) {
+        if (import.meta.env.DEV) {
           return true;
         }
 
+        const [ modMajor, modMinor, modPatch, ] = frmMod.Version.split('.');
+        const requiredVersions = import.meta.env.VITE_REQUIRED_FRM_MOD.split(',');
+        for (const version of requiredVersions) {
+          const [ major, minor, patch, ] = version.split('.');
+          if (isSameVersionNumber(modMajor, major) && isSameVersionNumber(modMinor, minor) && isSameVersionNumber(modPatch, patch)) {
+            return true;
+          }
+        }
+
         Dialog.create({
-          message: `The savegame does not have the required Ficsit Remote Monitoring version 
-          ${requiredVersion} or higher.
-          Please update your Ficsit Remote Monitoring mod to the latest version to continue.`,
+          message: `${i18next.t('connecting.wrong_version', {
+            versions: requiredVersions.join(', '),
+          })}<br>
+          ${i18next.t('connecting.installed_version', {
+            version: frmMod.Version,
+          })}`,
+          html: true,
           class: 'shadow-0',
         });
 

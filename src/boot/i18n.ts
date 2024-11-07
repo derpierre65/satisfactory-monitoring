@@ -14,7 +14,7 @@ export default boot(async({ app, }) => {
   i18next.use(I18nextLanguageDetector);
   i18next.use(I18nextHttpBackend);
 
-  i18next
+  return i18next
     .init({
       supportedLngs: supportedLanguages,
       load: 'languageOnly',
@@ -34,6 +34,7 @@ export default boot(async({ app, }) => {
         caches: [ 'localStorage', ],
       },
     })
+    .then(() => void 0)
     .catch((error) => {
       console.error('i18next initialization error', error);
     });
