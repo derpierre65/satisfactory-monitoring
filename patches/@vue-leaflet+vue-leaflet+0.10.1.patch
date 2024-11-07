@@ -1,0 +1,13 @@
+diff --git a/node_modules/@vue-leaflet/vue-leaflet/dist/vue-leaflet.es.js b/node_modules/@vue-leaflet/vue-leaflet/dist/vue-leaflet.es.js
+index 272b691..6fe0ad0 100644
+--- a/node_modules/@vue-leaflet/vue-leaflet/dist/vue-leaflet.es.js
++++ b/node_modules/@vue-leaflet/vue-leaflet/dist/vue-leaflet.es.js
+@@ -1458,7 +1458,7 @@ const $t = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+     };
+     return _(async () => {
+       const { marker: u, divIcon: d } = s ? b.L : await import("leaflet/dist/leaflet-src.esm");
+-      at(l, o) && (l.icon = d({ className: "" })), t.value = j(u(e.latLng, l));
++      /*at(l, o) && (l.icon = d({ className: "" })),*/ t.value = j(u(e.latLng, l));
+       const { listeners: y } = T(o.attrs);
+       t.value.on(y), t.value.on("move", i.moveHandler), L(a, t.value, e), r({
+         ...e,
