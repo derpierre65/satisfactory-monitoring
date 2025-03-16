@@ -40,6 +40,11 @@ const routes: RouteRecordRaw[] = [
         path: 'power-switches',
         component: () => import('pages/PowerSwitchesPage.vue'),
       },
+      {
+        name: 'test',
+        path: 'test',
+        component: () => import('pages/TestPage.vue'),
+      },
     ],
   },
   {
