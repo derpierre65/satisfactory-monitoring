@@ -26,8 +26,10 @@ const useSettingsStore = defineStore('settings', () => {
       configuration: WidgetConfigurationData;
     };
   }>>([]);
+  const dashboardHideToolbars = ref(false);
 
   return {
+    dashboardHideToolbars,
     mapSettings,
     dashboardLayout,
     updateInterval,
