@@ -1,5 +1,5 @@
 import { computed, onScopeDispose, Reactive, ref, toValue, watchEffect, WritableComputedRef } from 'vue';
-import useDataStore from 'stores/data.ts';
+import useDataStore from 'stores/data';
 
 function useFRMEndpoint<T>(endpoint: string, defaultValue: T = [] as T) {
   const dataStore = useDataStore();

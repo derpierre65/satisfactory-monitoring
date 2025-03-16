@@ -31,14 +31,15 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
-import { usePausableFRMEndpoint } from 'src/composables/frmEndpoint.ts';
+import { usePausableFRMEndpoint } from 'src/composables/frmEndpoint';
 import {
   GetCloudInvResponse,
   GetPlayerResponse,
   GetStorageInvResponse,
+  PlayerObject,
+  StorageInvObject,
 } from '@derpierre65/ficsit-remote-monitoring';
 import StorageInventory from 'components/inventory/StorageInventory.vue';
-import { useCacheComputed } from 'src/composables/computeds.ts';
 
 //#region Composable & Prepare
 const inventoryEndpoints = {
@@ -72,73 +73,53 @@ const selectableInventoryTypes = [
 //#endregion
 
 //#region Computed
-const storageInventories = useCacheComputed({
-  obj: () => inventoryEndpoints.storages.data,
-  buildCache: (entity) => {
-    return JSON.stringify(entity.Inventory);
-  },
-  formatValues: (storages) => {
-    return storages.map((storage) => {
-      return {
-        ID: storage.ID,
-        props: {
-          name: storage.Name,
-          image: storage.ClassName,
-          inventory: storage.Inventory,
-        },
-      };
-    });
-  },
-});
-
-const playerInventories = useCacheComputed({
-  obj: () => inventoryEndpoints.players.data,
-  buildCache: (entity) => {
-    return JSON.stringify(entity.Inventory);
-  },
-  formatValues(players) {
-    return players.map((player) => {
-      return {
-        ID: player.ID,
-        props: {
-          name: player.Name,
-          image: 'Desc_Helmet_Default_C',
-          inventory: player.Inventory,
-        },
-      };
-    });
-  },
-});
-
-const cloudInventory = useCacheComputed({
-  identifier: 'ClassName',
-  obj: () => inventoryEndpoints.cloud.data,
-  buildCache: (entity) => {
-    return entity.ClassName + entity.Amount;
-  },
-  formatValues: (items) => {
-    if (items.length === 0) {
-      return null;
-    }
-
+const storageInventories = computed(() => {
+  return inventoryEndpoints.storages.data.map((storage: StorageInvObject) => {
     return {
-      ID: 0,
+      ID: storage.ID,
       props: {
-        name: 'Cloud Inventory',
-        image: 'Desc_CentralStorage_C',
-        inventory: items,
+        name: storage.Name,
+        image: storage.ClassName,
+        inventory: storage.Inventory,
       },
     };
-  },
+  });
 });
 
-// TODO move to useCacheComputed
+const playerInventories = computed(() => {
+  return inventoryEndpoints.players.data.map((player: PlayerObject) => {
+    return {
+      ID: player.ID,
+      props: {
+        name: player.Name,
+        image: 'Desc_Helmet_Default_C',
+        inventory: player.Inventory,
+      },
+    };
+  });
+});
+
+const cloudInventory = computed(() => {
+  const cloudInventoryItems = inventoryEndpoints.cloud.data.filter((item) => item.Amount);
+  if (cloudInventoryItems.length === 0) {
+    return null;
+  }
+
+  return {
+    ID: 0,
+    props: {
+      name: 'Cloud Inventory',
+      image: 'Desc_CentralStorage_C',
+      inventory: cloudInventoryItems,
+    },
+  };
+});
+
 const filteredStorageInventories = computed(() => {
   return hideEmptyInventories.value ? storageInventories.value.filter((inventory) => {
     return inventory.props.inventory.length > 0;
   }) : storageInventories.value;
 });
-
 //#endregion
 
 //#region Watch
