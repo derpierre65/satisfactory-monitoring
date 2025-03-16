@@ -4,18 +4,20 @@
       <SatisfactoryMap class="tw-flex-auto">
         <!-- train stations -->
         <template v-if="settings.includes('trainStations')">
-          <MapStaticMarker
+          <MapMarker
             v-for="entity in endpoints.trainStations.data"
             :key="entity.ID"
-            :entity="entity"
-            icon-url="/assets/map/train_station.png"
+            :tooltip="entity.Name || 'Unknown'"
+            :lat-lng="getEntityLocation(entity)"
+            image="/assets/map/train_station.png"
           />
         </template>
 
         <!-- space elevator -->
-        <template v-if="settings.includes('spaceElevators')">
-          <MapSpaceElevators :entities="endpoints.spaceElevators.data" />
-        </template>
+        <MapSpaceElevators
+          v-if="settings.includes('spaceElevators')"
+          :entities="endpoints.spaceElevators.data"
+        />
 
         <!-- truck stations -->
         <template v-if="settings.includes('doggos')">
@@ -27,7 +29,13 @@
             :tooltip="entity.Name"
           >
             <template #tooltip>
-              <ItemSlot v-if="entity.Inventory.length" :item="entity.Inventory[0]" :size="64" />
+              <span>{{ entity.Name }}</span>
+              <ItemSlot
+                v-if="entity.Inventory.length"
+                :item="entity.Inventory[0]"
+                :size="64"
+                class="q-mx-auto"
+              />
             </template>
           </MapMarker>
         </template>
@@ -46,73 +54,83 @@
 
         <!-- players -->
         <template v-if="settings.includes('players')">
-          <LMarker v-for="entity in endpoints.players.data" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
-            <LIcon
-              :icon-size="[32, 32]"
-              icon-url="/assets/map/player.png"
-              :class-name="!entity.Online ? 'tw-opacity-50' : ''"
-            />
-            <LTooltip :content="entity.Name || t('dashboard.widgets.inventory_player.unknown_player')" />
-          </LMarker>
+          <MapMarker
+            v-for="entity in endpoints.players.data"
+            :key="entity.ID"
+            :lat-lng="getEntityLocation(entity)"
+            :bg-color="entity.Online ? 'green' : 'rgba(179,179,179,0.5)'"
+            :tooltip="entity.Name || t('dashboard.widgets.inventory_player.unknown_player')"
+            :icon-class="entity.Online ? '' : 'tw-opacity-50'"
+            image="/assets/map/player.png"
+          />
         </template>
 
         <!-- drone stations -->
         <template v-if="settings.includes('droneStations')">
-          <MapStaticMarker
+          <MapMarker
             v-for="entity in endpoints.droneStations.data"
             :key="entity.ID"
-            :entity="entity"
-            icon-url="/assets/map/drone_station.png"
+            :tooltip="entity.Name || 'Unknown'"
+            :lat-lng="getEntityLocation(entity)"
+            image="/assets/map/drone_station.png"
           />
         </template>
 
         <!-- truck stations -->
         <template v-if="settings.includes('truckStations')">
-          <MapStaticMarker
+          <MapMarker
             v-for="entity in endpoints.truckStations.data"
             :key="entity.ID"
-            :entity="entity"
-            icon-url="/assets/map/truck_station.png"
+            :tooltip="entity.Name || 'Unknown'"
+            :lat-lng="getEntityLocation(entity)"
+            image="/assets/map/truck_station.png"
           />
         </template>
 
         <!-- drones -->
         <template v-if="settings.includes('drones')">
-          <LMarker v-for="entity in endpoints.drones.data" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
-            <LIcon
-              :icon-size="[32, 32]"
-              icon-url="/assets/map/drone.png"
-            />
-            <LTooltip :content="entity.Name || 'Unknown'" />
-          </LMarker>
+          <MapMarker
+            v-for="entity in endpoints.drones.data"
+            :key="entity.ID"
+            :tooltip="entity.Name || 'Unknown'"
+            :lat-lng="getEntityLocation(entity)"
+            bg-color="rgb(87, 87, 87)"
+            image="/assets/map/drone.png"
+          />
         </template>
 
         <!-- trains -->
         <template v-if="settings.includes('trains')">
-          <LMarker v-for="entity in cachedTrains" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
-            <LIcon :icon-size="[32, 32]" icon-url="/assets/map/train.png" />
-            <LTooltip :content="entity.Name" />
-          </LMarker>
+          <MapMarker
+            v-for="entity in cachedTrains"
+            :key="entity.ID"
+            :tooltip="entity.Name"
+            :lat-lng="getEntityLocation(entity)"
+            bg-color="rgb(63, 63, 63)"
+            image="/assets/map/train.png"
+          />
         </template>
 
         <template v-if="settings.includes('trucks')">
-          <LMarker v-for="entity in endpoints.trucks.data" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
-            <LIcon
-              :icon-size="[32, 32]"
-              icon-url="/assets/map/tractor.png"
-            />
-            <LTooltip :content="entity.Name || 'Unknown'" />
-          </LMarker>
+          <MapMarker
+            v-for="entity in endpoints.trucks.data"
+            :key="entity.ID"
+            :tooltip="entity.Name"
+            :lat-lng="getEntityLocation(entity)"
+            bg-color="rgb(63, 63, 63)"
+            image="/assets/map/tractor.png"
+          />
         </template>
 
         <template v-if="settings.includes('tractors')">
-          <LMarker v-for="entity in endpoints.tractors.data" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
-            <LIcon
-              :icon-size="[32, 32]"
-              icon-url="/assets/map/tractor.png"
-            />
-            <LTooltip :content="entity.Name || 'Unknown'" />
-          </LMarker>
+          <MapMarker
+            v-for="entity in endpoints.tractors.data"
+            :key="entity.ID"
+            :tooltip="entity.Name"
+            :lat-lng="getEntityLocation(entity)"
+            bg-color="rgb(63, 63, 63)"
+            image="/assets/map/tractor.png"
+          />
         </template>
 
         <template v-if="settings.includes('powerSwitches')">
@@ -124,13 +142,14 @@
         </template>
 
         <!-- radar towers -->
-        <template v-if="settings.includes('radarTowers')">
-          <MapRadarTowers :entities="endpoints.radarTowers.data" />
-        </template>
+        <MapRadarTowers
+          v-if="settings.includes('radarTowers')"
+          :entities="endpoints.radarTowers.data"
+        />
 
         <MapRadarTowerNodes
           v-if="settings.includes('radarTowerNodes')"
-          :entities="cachedRadarTowerNodes"
+          :entities="endpoints.radarTowers.data"
         />
       </SatisfactoryMap>
     </div>
@@ -193,9 +212,7 @@ import {
 } from '@derpierre65/ficsit-remote-monitoring';
 import { getEntityLocation } from 'src/utils/map.ts';
 import ItemSlot from 'components/ItemSlot.vue';
-import { LIcon, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet';
 import MapSpaceElevators from 'components/map/MapSpaceElevators.vue';
-import MapStaticMarker from 'components/map/MapStaticMarker.vue';
 import MapRadarTowers from 'components/map/MapRadarTowers.vue';
 import MapRadarTowerNodes from 'components/map/MapRadarTowerNodes.vue';
 import useSettingsStore from 'stores/settings.ts';

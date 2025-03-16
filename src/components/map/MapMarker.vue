@@ -1,5 +1,5 @@
 <template>
-  <LMarker ref="marker" :icon="icon">
+  <LMarker :icon="icon">
     <LTooltip v-if="$slots.tooltip || tooltip">
       <slot name="tooltip">
         {{ tooltip }}
@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
+import { computed } from 'vue';
 import { LMarker, LPopup, LTooltip } from '@vue-leaflet/vue-leaflet';
 import * as L from 'leaflet';
 
@@ -21,17 +21,17 @@ const {
   color = '#fff',
   bgColor = '#b3b3b3',
   tooltip = '',
+  iconClass = '',
 } = defineProps<{
   image: string;
   color?: string;
   bgColor?: string;
   tooltip?: string;
+  iconClass?: string;
 }>();
 
-const marker = useTemplateRef('marker');
-
 const icon = computed(() => L.divIcon({
-  html: `<div class="custom-marker" style="background-color: ${bgColor}; border: 2px solid ${color};">
+  html: `<div class="custom-marker ${iconClass}" style="background-color: ${bgColor}; border: 2px solid ${color};">
     <img src="${image}" class="icon-image" />
     <div class="line" style="background-color: ${color};"></div>
     <div class="dot" style="background-color: ${color};"></div>

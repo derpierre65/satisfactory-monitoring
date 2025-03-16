@@ -1,37 +1,113 @@
 <template>
-  <MapStaticMarker
-    v-for="node in entities"
+  <MapMarker
+    v-for="node in cachedRadarTowerNodes"
     :key="node.ID"
-    :entity="node"
-    :icon-url="serverStore.getItemUrl(node.ClassName)"
-    :icon-classes="getRadarTowerNodeClass(node)"
+    :lat-lng="node.location"
+    :image="node.image"
+    :bg-color="node.bgColor"
   >
-    <template #icon>
-      <q-icon v-if="node.Exploited" name="fas fa-check" class="absolute tw-bottom-1 tw-right-1" />
+    <template #tooltip>
+      <table>
+        <thead>
+          <tr>
+            <th colspan="2" class="tw-min-w-[42px] text-right">50%</th>
+            <th class="tw-min-w-[42px] text-right">100%</th>
+            <th class="tw-min-w-[42px] text-right">150%</th>
+            <th class="tw-min-w-[42px] text-right">200%</th>
+            <th class="tw-min-w-[42px] text-right">250%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Miner MK1</th>
+            <td v-for="value in node.values" :key="value" class="tw-min-w-[42px] text-right">{{ value }}</td>
+          </tr>
+          <tr>
+            <th>Miner MK2</th>
+            <td v-for="value in node.values" :key="value" class="tw-min-w-[42px] text-right">{{ value * 2 }}</td>
+          </tr>
+          <tr>
+            <th>Miner MK3</th>
+            <td v-for="value in node.values" :key="value" class="tw-min-w-[42px] text-right">{{ value * 4 }}</td>
+          </tr>
+        </tbody>
+      </table>
     </template>
-  </MapStaticMarker>
+  </MapMarker>
 </template>
 
-<script setup lang="ts" generic="T extends Omit<ResourceNodeObject, 'features'>">
-import { ResourceNodeObject, ResourceNodePurity } from '@derpierre65/ficsit-remote-monitoring';
-import useServerStore from 'stores/server.ts';
-import MapStaticMarker from 'components/map/MapStaticMarker.vue';
+<script setup lang="ts">
+import {
+  GetRadarTowerResponse,
+  ResourceNodePurity,
+  TowerObject,
+} from '@derpierre65/ficsit-remote-monitoring';
+import useServerStore from 'stores/server';
+import MapMarker from 'components/map/MapMarker.vue';
+import { getEntityLocation } from 'src/utils/map';
+import { computed } from 'vue';
 
-defineProps<{
-  entities: T[];
+type CachedRadarTowerNode = {
+  ID: string;
+  bgColor: string;
+  image: string;
+  location: [number, number];
+  values: number[];
+};
+
+const props = defineProps<{
+  entities: GetRadarTowerResponse;
 }>();
 
 const serverStore = useServerStore();
 
-function getRadarTowerNodeClass(entity: T) {
+const cachedRadarTowerNodes = computed(() => {
+  return props.entities.reduce((acc, tower) => {
+    acc.push(...tower.ScannedResourceNodes.map((node) => {
+      return {
+        ID: node.ID,
+        image: serverStore.getItemUrl(node.ClassName),
+        location: getEntityLocation(node),
+        bgColor: getNodeBackground(node),
+        values: getNodeValues(getNodeBaseValue(node)),
+      };
+    }));
+
+    return acc;
+  }, [] as CachedRadarTowerNode[]);
+});
+
+function getNodeValues(baseValue: number) {
+  return [
+    baseValue * 0.5,
+    baseValue,
+    baseValue * 1.5,
+    baseValue * 2,
+    baseValue * 2.5,
+  ];
+}
+
+function getNodeBaseValue(entity: TowerObject['ScannedResourceNodes'][0]) {
   if (entity.EnumPurity === ResourceNodePurity.Impure) {
-    return 'tw-bg-red-500 tw-rounded-full';
+    return 30;
   }
 
   if (entity.EnumPurity === ResourceNodePurity.Normal) {
-    return 'tw-bg-orange-500 tw-rounded-full';
+    return 60;
   }
 
-  return 'tw-bg-green-500 tw-rounded-full';
+  return 120;
+}
+
+function getNodeBackground(entity: TowerObject['ScannedResourceNodes'][0]) {
+  if (entity.EnumPurity === ResourceNodePurity.Impure) {
+    return 'rgb(210, 52, 48)';
+  }
+
+  if (entity.EnumPurity === ResourceNodePurity.Normal) {
+    return 'rgb(242, 100, 24)';
+  }
+
+  return 'rgb(128, 177, 57)';
 }
 </script>

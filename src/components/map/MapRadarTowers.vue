@@ -3,7 +3,7 @@
     v-for="entity of entities"
     :key="entity.ID"
     :lat-lng="getEntityLocation(entity)"
-    :tooltip="t('buildings.radar_tower')"
+    :tooltip="entity.Name"
     image="/assets/map/radar_tower.png"
   >
     <template #popup>
@@ -12,7 +12,7 @@
           <span>Weak signals found in area:</span>
         </div>
         <div class="tw-flex tw-flex-wrap justify-center tw-gap-x-2">
-          <div v-for="signal of entity.Signal" class="tw-flex tw-items-center tw-gap-2">
+          <div v-for="signal in entity.Signal" :key="signal.ClassName" class="tw-flex tw-items-center tw-gap-2">
             <img :src="serverStore.getItemUrl(signal.ClassName)" width="32px" height="32px" :alt="signal.Name">
             <span>x{{ signal.Amount }}</span>
           </div>
@@ -23,7 +23,7 @@
           <span>Fauna found in area:</span>
         </div>
         <div class="tw-flex tw-flex-wrap justify-center tw-gap-x-2">
-          <div v-for="fauna of entity.Fauna" class="tw-flex tw-items-center tw-gap-2">
+          <div v-for="fauna in entity.Fauna" :key="fauna.ClassName" class="tw-flex tw-items-center tw-gap-2">
             <img :src="serverStore.getItemUrl(fauna.ClassName)" width="32px" height="32px" :alt="fauna.Name">
             <span>x{{ fauna.Amount }}</span>
           </div>
@@ -34,7 +34,7 @@
           <span>Flora found in area:</span>
         </div>
         <div class="tw-flex tw-flex-wrap justify-center tw-gap-x-2">
-          <div v-for="flora of entity.Flora" class="tw-flex tw-items-center tw-gap-2">
+          <div v-for="flora in entity.Flora" :key="flora.ClassName" class="tw-flex tw-items-center tw-gap-2">
             <img :src="serverStore.getItemUrl(flora.ClassName)" width="32px" height="32px" :alt="flora.Name">
             <span>x{{ flora.Amount }}</span>
           </div>
@@ -45,16 +45,14 @@
 </template>
 
 <script setup lang="ts">
-import { getEntityLocation } from 'src/utils/map.ts';
+import { getEntityLocation } from 'src/utils/map';
 import { TowerObject } from '@derpierre65/ficsit-remote-monitoring';
-import useServerStore from 'stores/server.ts';
+import useServerStore from 'stores/server';
 import MapMarker from 'components/map/MapMarker.vue';
-import { useTranslation } from 'i18next-vue';
 
 defineProps<{
   entities: TowerObject[];
 }>();
 
-const { t, } = useTranslation();
 const serverStore = useServerStore();
 </script>
