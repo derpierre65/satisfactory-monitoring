@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-max-w-screen-xl tw-mx-auto">
+  <div class="tw-w-full tw-max-w-screen-xl tw-mx-auto">
     <div class="flex tw-justify-end tw-gap-4 q-mb-md">
       <q-toggle v-model="hideEmptyInventories" label="Hide empty inventories" />
       <q-select
