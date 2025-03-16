@@ -7,6 +7,10 @@
   color: white !important;
 }
 
+.leaflet-container {
+  background: transparent !important;
+}
+
 .leaflet-popup-close-button {
   @apply tw-text-neutral-400 #{!important};
 

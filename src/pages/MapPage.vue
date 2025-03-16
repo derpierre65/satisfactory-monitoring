@@ -19,26 +19,28 @@
 
         <!-- truck stations -->
         <template v-if="settings.includes('doggos')">
-          <MapStaticMarker
+          <MapMarker
             v-for="entity in endpoints.doggos.data"
             :key="entity.ID"
-            :entity="entity"
-            :icon-url="serverStore.getItemUrl('Desc_SpaceRabbit_C')"
+            :lat-lng="getEntityLocation(entity)"
+            :image="serverStore.getItemUrl('Desc_SpaceRabbit_C')"
+            :tooltip="entity.Name"
           >
             <template #tooltip>
               <ItemSlot v-if="entity.Inventory.length" :item="entity.Inventory[0]" :size="64" />
             </template>
-          </MapStaticMarker>
+          </MapMarker>
         </template>
 
         <!-- power slug -->
         <template v-if="settings.includes('powerSlugs')">
-          <MapStaticMarker
+          <MapMarker
             v-for="entity in endpoints.powerSlugs.data"
             :key="entity.ID"
-            :entity="entity"
-            :icon-url="serverStore.getItemUrl(entity.ClassName)"
-            hide-tooltip
+            :lat-lng="getEntityLocation(entity)"
+            :image="serverStore.getItemUrl(entity.ClassName)"
+            :color="getPowerSlugColor(entity)"
+            bg-color="white"
           />
         </template>
 
@@ -146,8 +148,8 @@
           <q-toggle v-model="settings" val="doggos" label="Doggos" />
 
           <strong>Buildings</strong>
-          <q-toggle v-model="settings" val="spaceElevators" label="Space Elevator" />
-          <q-toggle v-model="settings" val="radarTowers" label="Radar Towers" />
+          <q-toggle v-model="settings" val="spaceElevators" :label="$t('buildings.space_elevator')" />
+          <q-toggle v-model="settings" val="radarTowers" :label="$t('buildings.radar_tower')" />
           <q-toggle v-model="settings" val="radarTowerNodes" label="Radar Tower Nodes" />
           <q-toggle v-model="settings" val="trainStations" label="Train Stations" />
           <q-toggle v-model="settings" val="droneStations" label="Drone Stations" />
@@ -185,7 +187,9 @@ import {
   GetTrainsResponse,
   GetTrainStationResponse,
   GetTruckResponse,
-  GetTruckStationResponse, TowerObject,
+  GetTruckStationResponse,
+  PowerSlugObject,
+  TowerObject,
 } from '@derpierre65/ficsit-remote-monitoring';
 import { getEntityLocation } from 'src/utils/map.ts';
 import ItemSlot from 'components/ItemSlot.vue';
@@ -197,6 +201,7 @@ import MapRadarTowerNodes from 'components/map/MapRadarTowerNodes.vue';
 import useSettingsStore from 'stores/settings.ts';
 import MapPowerSwitch from 'components/map/MapPowerSwitch.vue';
 import { useTranslation } from 'i18next-vue';
+import MapMarker from 'components/map/MapMarker.vue';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
@@ -273,6 +278,20 @@ function enableAllSettings() {
     'trucks',
     'powerSlugs',
   ];
+}
+
+function getPowerSlugColor(entity: PowerSlugObject) {
+  if (entity.ClassName === 'BP_Crystal_C') {
+    return '#5caad1';
+  }
+  if (entity.ClassName === 'BP_Crystal_mk2_C') {
+    return '#e3d281';
+  }
+  if (entity.ClassName === 'BP_Crystal_mk3_C') {
+    return '#e08be8';
+  }
+
+  return 'grey';
 }
 //#endregion
 

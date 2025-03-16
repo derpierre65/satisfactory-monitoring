@@ -10,6 +10,10 @@
     "wrong_version": "None of the Ficsit Remote Monitoring supported versions {{versions}} are installed. Please update to a supported version.",
     "installed_version": "Your installed mod version is {{install}}."
   },
+  "buildings": {
+    "space_elevator": "Space Elevator",
+    "radar_tower": "Radar Tower"
+  },
   "dashboard": {
     "widget_add": "Add Widget",
     "widget_not_found": "This widget is no longer available or not loaded.",

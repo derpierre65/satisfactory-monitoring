@@ -1,7 +1,12 @@
 <template>
-  <LMarker v-for="entity of entities" :key="entity.ID" :lat-lng="getEntityLocation(entity)">
-    <LIcon :icon-size="[32, 32]" icon-url="/assets/map/radar_tower.png" />
-    <LPopup>
+  <MapMarker
+    v-for="entity of entities"
+    :key="entity.ID"
+    :lat-lng="getEntityLocation(entity)"
+    :tooltip="t('buildings.radar_tower')"
+    image="/assets/map/radar_tower.png"
+  >
+    <template #popup>
       <template v-if="entity.Signal.length">
         <div class="text-center q-mb-md">
           <span>Weak signals found in area:</span>
@@ -13,7 +18,6 @@
           </div>
         </div>
       </template>
-
       <template v-if="entity.Fauna.length">
         <div class="text-center q-my-md">
           <span>Fauna found in area:</span>
@@ -25,7 +29,6 @@
           </div>
         </div>
       </template>
-
       <template v-if="entity.Flora">
         <div class="text-center q-my-md">
           <span>Flora found in area:</span>
@@ -37,19 +40,21 @@
           </div>
         </div>
       </template>
-    </LPopup>
-  </LMarker>
+    </template>
+  </MapMarker>
 </template>
 
 <script setup lang="ts">
 import { getEntityLocation } from 'src/utils/map.ts';
-import { LIcon, LMarker, LPopup } from '@vue-leaflet/vue-leaflet';
 import { TowerObject } from '@derpierre65/ficsit-remote-monitoring';
 import useServerStore from 'stores/server.ts';
+import MapMarker from 'components/map/MapMarker.vue';
+import { useTranslation } from 'i18next-vue';
 
 defineProps<{
   entities: TowerObject[];
 }>();
 
+const { t, } = useTranslation();
 const serverStore = useServerStore();
 </script>
