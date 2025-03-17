@@ -1,6 +1,7 @@
 # Ficsit Remote Monitoring Dashboard
 
-Dashboard for the [Ficsit Remote Monitoring](https://ficsit.app/mod/FicsitRemoteMonitoring) Mod.
+Dashboard for the Satisfactory Mod [Ficsit Remote Monitoring](https://ficsit.app/mod/FicsitRemoteMonitoring).  
+Hosted Version: https://ficsit.pages.dev/
 
 ## Contributing
 
