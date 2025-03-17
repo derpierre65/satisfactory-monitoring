@@ -3,8 +3,8 @@
     :min-zoom="-10"
     :max-zoom="-5"
     :zoom="-10"
-    :center="[0, 0]"
     :options="mapOptions"
+    :center
   >
     <LImageOverlay
       url="assets/map/map.png"
@@ -21,10 +21,15 @@ import { LMap, LImageOverlay } from '@vue-leaflet/vue-leaflet';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-//#region Composable & Prepare
-//#endregion
+withDefaults(defineProps<{
+  center?: [number, number];
+}>(), {
+  center: () => [
+    0,
+    0,
+  ],
+});
 
-//#region Data
 const mapBounds: [[number, number], [number, number]] = [
   [
     -375e3,
@@ -40,20 +45,4 @@ const mapOptions = {
   preferCanvas: true,
   crs: L.CRS.Simple,
 };
-//#endregion
-
-//#region Computed
-//#endregion
-
-//#region Watch
-//#endregion
-
-//#region Lifecycle Events
-//#endregion
-
-//#region Methods
-//#endregion
-
-//#region Created
-//#endregion
 </script>

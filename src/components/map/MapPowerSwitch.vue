@@ -33,10 +33,10 @@
 </template>
 
 <script setup lang="ts">
-import useServerStore from 'stores/server.ts';
-import { toggleSwitchStatus, updateSwitchName, updateSwitchPriority } from 'src/utils/api/switches.ts';
+import useServerStore from 'stores/server';
+import { toggleSwitchStatus, updateSwitchName, updateSwitchPriority } from 'src/utils/api/switches';
 import { Building, SwitchObject } from '@derpierre65/ficsit-remote-monitoring';
-import { getEntityLocation } from 'src/utils/map.ts';
+import { getEntityLocation } from 'src/utils/map';
 import MapMarker from 'components/map/MapMarker.vue';
 
 defineProps<{

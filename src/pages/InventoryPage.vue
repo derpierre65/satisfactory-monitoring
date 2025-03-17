@@ -40,8 +40,11 @@ import {
   StorageInvObject,
 } from '@derpierre65/ficsit-remote-monitoring';
 import StorageInventory from 'components/inventory/StorageInventory.vue';
+import { getEntityLocation } from 'src/utils/map';
+import useServerStore from 'stores/server';
 
 //#region Composable & Prepare
+const serverStore = useServerStore();
 const inventoryEndpoints = {
   storages: reactive(usePausableFRMEndpoint<GetStorageInvResponse>('getStorageInv')),
   players: reactive(usePausableFRMEndpoint<GetPlayerResponse>('getPlayer')),
@@ -79,7 +82,8 @@ const storageInventories = computed(() => {
       ID: storage.ID,
       props: {
         name: storage.Name,
-        image: storage.ClassName,
+        image: serverStore.getItemUrl(storage.ClassName),
+        location: getEntityLocation(storage),
         inventory: storage.Inventory,
       },
     };
@@ -92,7 +96,8 @@ const playerInventories = computed(() => {
       ID: player.ID,
       props: {
         name: player.Name,
-        image: 'Desc_Helmet_Default_C',
+        image: serverStore.getItemUrl('Desc_Helmet_Default_C'),
+        location: getEntityLocation(player),
         inventory: player.Inventory,
       },
     };
@@ -109,7 +114,7 @@ const cloudInventory = computed(() => {
     ID: 0,
     props: {
       name: 'Cloud Inventory',
-      image: 'Desc_CentralStorage_C',
+      image: serverStore.getItemUrl('Desc_CentralStorage_C'),
       inventory: cloudInventoryItems,
     },
   };
