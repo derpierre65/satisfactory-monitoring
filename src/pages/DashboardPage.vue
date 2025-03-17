@@ -58,7 +58,7 @@
               </q-icon>
             </q-card-section>
 
-            <q-card-section class="tw-flex-auto q-py-sm relative-position">
+            <q-card-section class="tw-flex-auto q-py-sm relative-position tw-flex tw-flex-col justify-center">
               <div v-if="invalidWidgets.includes(item.id)" class="flex flex-center full-height tw-text-red-500">
                 <small>This widget is invalid, check the configuration or delete this widget.</small>
               </div>
