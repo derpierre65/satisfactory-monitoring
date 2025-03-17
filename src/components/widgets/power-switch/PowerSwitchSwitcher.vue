@@ -4,7 +4,12 @@
       <q-icon name="fas fa-pencil" class="cursor-pointer">
         <q-tooltip>Rename</q-tooltip>
       </q-icon>
-      <span>{{ item.Name || 'Unnamed Switch' }}</span>
+      <MapShowLocation
+        :location="getEntityLocation(item)"
+        :image="serverStore.getItemUrl('Desc_PriorityPowerSwitch_C')"
+        :name
+      />
+      <span>{{ name }}</span>
     </div>
     <q-toggle :model-value="item.IsOn" @click="toggleSwitchStatus(item)" />
     <q-popup-edit v-slot="scope" :model-value="item.Name" auto-save @save="updateSwitchName(item, $event)">
@@ -16,28 +21,18 @@
 <script setup lang="ts">
 import { SwitchObject } from '@derpierre65/ficsit-remote-monitoring';
 import { toggleSwitchStatus, updateSwitchName } from 'src/utils/api/switches.ts';
+import MapShowLocation from 'components/map/MapShowLocation.vue';
+import { getEntityLocation } from 'src/utils/map';
+import { computed } from 'vue';
+import useServerStore from 'stores/server';
 
-//#region Composable & Prepare
 const { item, } = defineProps<{
   item: SwitchObject;
 }>();
-//#endregion
 
-//#region Data
-//#endregion
+const serverStore = useServerStore();
 
-//#region Computed
-//#endregion
-
-//#region Watch
-//#endregion
-
-//#region Lifecycle Events
-//#endregion
-
-//#region Methods
-//#endregion
-
-//#region Created
-//#endregion
+const name = computed(() => {
+  return item.Name || 'Unnamed Switch';
+});
 </script>

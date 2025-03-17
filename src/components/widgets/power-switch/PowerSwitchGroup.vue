@@ -26,19 +26,15 @@
 import PowerSwitchSwitcher from 'components/widgets/power-switch/PowerSwitchSwitcher.vue';
 import { DraggableEvent, VueDraggable } from 'vue-draggable-plus';
 import { computed } from 'vue';
-import useServerStore from 'stores/server.ts';
-import useDataStore from 'stores/data.ts';
-import { switchAll, updateSwitchPriority } from 'src/utils/api/switches.ts';
+import { switchAll, updateSwitchPriority } from 'src/utils/api/switches';
+import { SwitchObject } from '@derpierre65/ficsit-remote-monitoring';
 
 //#region Composable & Prepare
 const { groupId = -1, switches, } = defineProps<{
   groupId?: number;
   title: string;
-  switches: [];
+  switches: SwitchObject[];
 }>();
-
-const serverStore = useServerStore();
-const dataStore = useDataStore();
 //#endregion
 
 //#region Data
@@ -79,7 +75,6 @@ function updatePriority(event: DraggableEvent) {
 
   updateSwitchPriority(powerSwitch, parseInt(event.to.dataset.groupId!));
 }
-
 //#endregion
 
 //#region Created

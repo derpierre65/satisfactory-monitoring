@@ -1,5 +1,5 @@
 <template>
-  <q-icon name="fas fa-location" class="cursor-pointer" @click="showDialog = true">
+  <q-icon name="fas fa-location" class="cursor-pointer" @click.stop="showDialog = true">
     <q-tooltip>Show Location</q-tooltip>
   </q-icon>
 
