@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-max-w-screen-xl tw-mx-auto tw-w-full q-gutter-y-md">
+  <div class="tw-max-w-screen-2xl tw-mx-auto tw-w-full q-gutter-y-md">
     <div class="tw-flex tw-gap-2">
       <q-input v-model="search" label="Search" class="tw-flex-auto" />
       <q-btn-group>
@@ -8,8 +8,8 @@
       </q-btn-group>
     </div>
 
-    <div class="tw-flex tw-gap-2 tw-w-full">
-      <div class="tw-flex-auto tw-grid tw-grid-cols-4 tw-gap-2">
+    <div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-2 tw-w-full">
+      <div class="tw-flex-auto tw-grid md:tw-grid-cols-4 tw-gap-2">
         <PowerSwitchGroup
           v-for="groupId in 8"
           :key="groupId"
@@ -19,7 +19,7 @@
         />
       </div>
 
-      <div class="tw-w-1/5 tw-flex tw-flex-col tw-gap-2">
+      <div class="md:tw-w-1/3 tw-flex tw-flex-col tw-gap-2">
         <PowerSwitchGroup
           title="Priority Power Switches (Undefined)"
           :group-id="0"
