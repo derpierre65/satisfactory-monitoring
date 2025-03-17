@@ -6,12 +6,13 @@
   <q-dialog v-model="showDialog">
     <q-card class="tw-w-[40vw] tw-h-[40vh] shadow-0">
       <q-card-section>
-        <q-img :src="image" width="32px" /> {{ name }}
+        <q-img v-if="image" :src="image" width="32px" />
+        <span>{{ name }}</span>
       </q-card-section>
       <SatisfactoryMap :center="location">
         <MapMarker
           :lat-lng="location"
-          :image
+          :image="image || ''"
         />
       </SatisfactoryMap>
     </q-card>
@@ -25,10 +26,11 @@ import MapMarker from 'components/map/MapMarker.vue';
 
 withDefaults(defineProps<{
   location: [number, number];
-  image: string;
+  image?: string;
   name?: string;
 }>(), {
   name: '',
+  image: '',
 });
 
 const showDialog = ref(false);

@@ -29,10 +29,14 @@ import ItemBox from 'components/inventory/ItemBox.vue';
 import AppAlert from 'components/AppAlert.vue';
 import MapShowLocation from 'components/map/MapShowLocation.vue';
 
-const { image = '', location, } = defineProps<{
+withDefaults(defineProps<{
   inventory: InventoryItemObject[];
-  name: string;
+  name?: string;
   image?: string;
-  location?: [number, number];
-}>();
+  location?: [number, number] | null;
+}>(), {
+  name: '',
+  image: '',
+  location: null,
+});
 </script>
