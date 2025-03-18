@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@derpierre65/eslint-config": "github:derpierre65/eslint-config",
-    "@derpierre65/ficsit-remote-monitoring": "^1.2.0",
+    "@derpierre65/ficsit-remote-monitoring": "^1.2.2",
     "@derpierre65/frontend-utils": "^0.3.13",
     "@noction/vue-draggable-grid": "^1.11.0",
     "@quasar/app-vite": "^2.1.4",
