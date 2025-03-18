@@ -1,13 +1,19 @@
 import { computed, onScopeDispose, Reactive, ref, toValue, watchEffect, WritableComputedRef } from 'vue';
 import useDataStore from 'stores/data';
 
-function useFRMEndpoint<T>(endpoint: string, defaultValue: T = [] as T) {
+function useFRMEndpoint<T>(endpoint: string, { defaultValue, fetchEvery, }: {
+  defaultValue?: T;
+  fetchEvery?: number;
+} = {}) {
+  defaultValue ||= [] as T;
+  fetchEvery ||= -1;
+
   const dataStore = useDataStore();
 
-  dataStore.addEndpoint(endpoint);
+  const id = dataStore.addEndpoint(endpoint, fetchEvery);
 
   onScopeDispose(() => {
-    dataStore.removeEndpoint(endpoint);
+    dataStore.removeEndpoint(id);
   });
 
   return computed(() => (dataStore.apiData[endpoint] as T) || defaultValue);

@@ -1,8 +1,8 @@
 <template>
   <LMap
     :min-zoom="-10"
-    :max-zoom="-5"
-    :zoom="-10"
+    :max-zoom="-3"
+    :zoom="zoom"
     :options="mapOptions"
     :center
   >
@@ -23,7 +23,9 @@ import 'leaflet/dist/leaflet.css';
 
 withDefaults(defineProps<{
   center?: [number, number];
+  zoom?: number;
 }>(), {
+  zoom: -10,
   center: () => [
     0,
     0,

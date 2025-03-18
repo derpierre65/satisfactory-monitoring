@@ -1,33 +1,49 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import useServerStore from 'stores/server.ts';
-import { unique, useInterval } from '@derpierre65/frontend-utils';
-import FRM from 'src/utils/FRM.ts';
-import useSettingsStore from 'stores/settings.ts';
+import { useInterval, uuidv4 } from '@derpierre65/frontend-utils';
+import useServerStore from 'stores/server';
+import FRM from 'src/utils/FRM';
+import useSettingsStore from 'stores/settings';
+
+type EndpointFetchInfo = {
+  id: string;
+  endpoint: string;
+  fetchEvery: number;
+};
 
 const useDataStore = defineStore('data', () => {
   const settingsStore = useSettingsStore();
   const { setInterval, } = useInterval();
 
-  const fetchEndpoints = ref<string[]>([]);
+  const fetchEndpoints = ref<EndpointFetchInfo[]>([]);
   const lastUpdate = ref<Record<string, number>>({});
   const apiData = ref<Record<string, object>>({});
   const promises: Record<string, Promise<unknown>> = {};
 
-  function addEndpoint(endpoint: string) {
-    fetchEndpoints.value.push(endpoint);
+  function addEndpoint(endpoint: string, fetchEvery = -1) {
+    const id = uuidv4();
+    fetchEndpoints.value.push({
+      id: id,
+      endpoint,
+      fetchEvery,
+    });
     fetch(endpoint);
+
+    return id;
   }
 
-  function removeEndpoint(endpoint: string) {
-    const index = fetchEndpoints.value.indexOf(endpoint);
+  function removeEndpoint(id: string) {
+    const index = fetchEndpoints.value.findIndex((endpoint) => endpoint.id === id);
     if (index >= 0) {
       fetchEndpoints.value.splice(index, 1);
     }
   }
 
-  function needUpdate(endpoint: string) {
-    return !lastUpdate.value[endpoint] || (Date.now() - lastUpdate.value[endpoint]) > settingsStore.updateInterval;
+  function needUpdate(endpoint: EndpointFetchInfo) {
+    const lastEndpointUpdate = lastUpdate.value[endpoint.endpoint];
+    const updateInterval = endpoint.fetchEvery > 0 ? endpoint.fetchEvery : settingsStore.updateInterval;
+
+    return !lastEndpointUpdate || (Date.now() - lastEndpointUpdate) > updateInterval;
   }
 
   function fetch(endpoint: string | null = null, force = false) {
@@ -36,19 +52,25 @@ const useDataStore = defineStore('data', () => {
       return;
     }
 
-    const fetch = endpoint ? [ endpoint, ] : unique(fetchEndpoints.value);
+    const fetch = endpoint ? [
+      {
+        id: '',
+        fetchEvery: -1,
+        endpoint,
+      } as EndpointFetchInfo,
+    ] : fetchEndpoints.value;
 
     for (const endpoint of fetch) {
       if (!force && !needUpdate(endpoint)) {
         continue;
       }
 
-      lastUpdate.value[endpoint] = Date.now();
-      if (!promises[endpoint]) {
-        promises[endpoint] = FRM.fetch<object>(serverStore.currentServer.url, endpoint)
+      lastUpdate.value[endpoint.endpoint] = Date.now();
+      if (!promises[endpoint.endpoint]) {
+        promises[endpoint.endpoint] = FRM.fetch<object>(serverStore.currentServer.url, endpoint.endpoint)
           .then((data) => {
             serverStore.isConnected = true;
-            apiData.value[endpoint] = data;
+            apiData.value[endpoint.endpoint] = data;
           })
           .catch((response) => {
             if (response.code === 'ERR_NETWORK') {
@@ -56,7 +78,7 @@ const useDataStore = defineStore('data', () => {
             }
           })
           .finally(() => {
-            delete promises[endpoint];
+            delete promises[endpoint.endpoint];
           });
         console.debug('updating', endpoint);
       }

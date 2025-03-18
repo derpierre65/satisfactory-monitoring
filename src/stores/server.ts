@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import FRM from 'src/utils/FRM.ts';
+import FRM from 'src/utils/FRM';
 import { Dialog, Loading } from 'quasar';
 import router from 'src/router';
 import { GetModListResponse } from '@derpierre65/ficsit-remote-monitoring';
@@ -62,7 +62,7 @@ const useServerStore = defineStore('server', () => {
     }
   }
 
-  function isSameVersionNumber(version: string, requiredVersion: string) {
+  function isSameVersionNumber(version?: string, requiredVersion?: string) {
     if (requiredVersion === '*') {
       return true;
     }
@@ -120,7 +120,7 @@ const useServerStore = defineStore('server', () => {
 
   function post(path: string, data: object) {
     return axios.post(path, data, {
-      baseURL: currentServer.value?.url,
+      baseURL: currentServer.value!.url!,
     }).then(({ data, }) => data);
   }
 

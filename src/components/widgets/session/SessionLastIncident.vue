@@ -12,6 +12,6 @@ import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
 import { GetSessionInfoResponse } from '@derpierre65/ficsit-remote-monitoring';
 import { useTranslation } from 'i18next-vue';
 
-const sessionInfo = useFRMEndpoint<GetSessionInfoResponse>('getSessionInfo', {} as GetSessionInfoResponse);
+const sessionInfo = useFRMEndpoint<GetSessionInfoResponse>('getSessionInfo');
 const { t, } = useTranslation();
 </script>

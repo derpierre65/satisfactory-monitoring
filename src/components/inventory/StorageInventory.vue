@@ -10,7 +10,7 @@
         <span>{{ name }}</span>
         <template v-if="location">
           <q-space />
-          <MapShowLocation :name :location :image />
+          <MapShowLocation :entities="[entity]" />
         </template>
       </div>
       <q-separator class="q-my-sm" />
@@ -28,8 +28,9 @@ import { InventoryItemObject } from '@derpierre65/ficsit-remote-monitoring';
 import ItemBox from 'components/inventory/ItemBox.vue';
 import AppAlert from 'components/AppAlert.vue';
 import MapShowLocation from 'components/map/MapShowLocation.vue';
+import { computed } from 'vue';
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   inventory: InventoryItemObject[];
   name?: string;
   image?: string;
@@ -38,5 +39,14 @@ withDefaults(defineProps<{
   name: '',
   image: '',
   location: null,
+});
+
+const entity = computed(() => {
+  return {
+    ID: '1',
+    name: props.name,
+    location: props.location!,
+    image: props.image,
+  };
 });
 </script>

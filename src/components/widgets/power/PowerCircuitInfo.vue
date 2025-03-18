@@ -3,7 +3,12 @@
     <q-card-section>
       <div class="flex q-mb-sm">
         <q-skeleton v-if="!circuit" height="24px" width="200px" class="q-my-xs" />
-        <div v-else class="text-h6">
+        <div v-else class="text-h6 flex items-center tw-gap-1">
+          <MapShowLocation
+            v-if="circuitFactories.length"
+            :entities="circuitFactories"
+            :title="`Power Circuit #${circuit.CircuitGroupID}`"
+          />
           <span>Power Circuit #{{ circuit.CircuitGroupID }}</span>
         </div>
         <q-space />
@@ -131,7 +136,7 @@
               <span>{{ batteryTime }}</span>
             </div>
             <span v-if="!circuit || circuit.BatteryDifferential > 0" class="text-caption">Battery Full in</span>
-            <span v-else-if="circuit.BatteryDifferential < 0>" class="text-caption">Battery Empty in</span>
+            <span v-else-if="circuit.BatteryDifferential < 0" class="text-caption">Battery Empty in</span>
           </q-card-section>
         </q-card>
       </div>
@@ -149,16 +154,28 @@
 </template>
 
 <script setup lang="ts">
-import type { PowerObject } from '@derpierre65/ficsit-remote-monitoring';
-import AppAlert from 'components/AppAlert.vue';
-import { formatNumber } from 'src/utils/helpers/number.ts';
 import { computed } from 'vue';
+import type {
+  GetPowerUsageResponse,
+  PowerObject,
+} from '@derpierre65/ficsit-remote-monitoring';
+import AppAlert from 'components/AppAlert.vue';
+import { formatNumber } from 'src/utils/helpers/number';
+import MapShowLocation from 'components/map/MapShowLocation.vue';
+import { useFRMEndpoint } from 'src/composables/frmEndpoint';
+import { getEntityLocation } from 'src/utils/map';
+import useServerStore from 'stores/server';
 
 //#region Composable & Prepare
 const props = withDefaults(defineProps<{
   circuit?: PowerObject | null;
 }>(), {
   circuit: null,
+});
+
+const serverStore = useServerStore();
+const getPowerUsage = useFRMEndpoint<GetPowerUsageResponse>('getPowerUsage', {
+  fetchEvery: 15_000,
 });
 //#endregion
 
@@ -204,6 +221,22 @@ const circuitLoadColor = computed(() => {
   }
 
   return 'bg-red-10';
+});
+const circuitFactories = computed(() => {
+  if (!getPowerUsage.value || !props.circuit) {
+    return [];
+  }
+
+  return getPowerUsage.value.filter((factory) => {
+    return factory.PowerInfo.CircuitGroupID === props.circuit?.CircuitGroupID;
+  }).map((factory) => {
+    return {
+      ID: factory.ID,
+      name: factory.Name,
+      location: getEntityLocation(factory),
+      image: serverStore.getItemUrl(factory.ClassName),
+    };
+  });
 });
 //#endregion
 

@@ -5,9 +5,7 @@
         <q-tooltip>Rename</q-tooltip>
       </q-icon>
       <MapShowLocation
-        :location="getEntityLocation(item)"
-        :image="serverStore.getItemUrl('Desc_PriorityPowerSwitch_C')"
-        :name
+        :entities="[entity]"
       />
       <span>{{ name }}</span>
     </div>
@@ -20,7 +18,7 @@
 
 <script setup lang="ts">
 import { SwitchObject } from '@derpierre65/ficsit-remote-monitoring';
-import { toggleSwitchStatus, updateSwitchName } from 'src/utils/api/switches.ts';
+import { toggleSwitchStatus, updateSwitchName } from 'src/utils/api/switches';
 import MapShowLocation from 'components/map/MapShowLocation.vue';
 import { getEntityLocation } from 'src/utils/map';
 import { computed } from 'vue';
@@ -34,5 +32,14 @@ const serverStore = useServerStore();
 
 const name = computed(() => {
   return item.Name || 'Unnamed Switch';
+});
+
+const entity = computed(() => {
+  return {
+    ID: '1',
+    location: getEntityLocation(item),
+    name: name.value,
+    image: serverStore.getItemUrl('Desc_PriorityPowerSwitch_C'),
+  };
 });
 </script>

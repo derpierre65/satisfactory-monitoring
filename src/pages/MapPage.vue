@@ -31,7 +31,7 @@
             <template #tooltip>
               <span>{{ entity.Name }}</span>
               <ItemSlot
-                v-if="entity.Inventory.length"
+                v-if="entity.Inventory[0]"
                 :item="entity.Inventory[0]"
                 :size="64"
                 class="q-mx-auto"
@@ -192,8 +192,8 @@
 <script setup lang="ts">
 import SatisfactoryMap from 'components/SatisfactoryMap.vue';
 import { computed, reactive } from 'vue';
-import useServerStore from 'stores/server.ts';
-import { useEndpointsByOptions, usePausableFRMEndpoint } from 'src/composables/frmEndpoint.ts';
+import useServerStore from 'stores/server';
+import { useEndpointsByOptions, usePausableFRMEndpoint } from 'src/composables/frmEndpoint';
 import {
   GetDoggoResponse,
   GetDroneResponse,
@@ -201,21 +201,21 @@ import {
   GetPlayerResponse,
   GetPowerSlugResponse,
   GetRadarTowerResponse,
-  GetSpaceElevatorResponse, GetSwitchesResponse,
+  GetSpaceElevatorResponse,
+  GetSwitchesResponse,
   GetTractorResponse,
   GetTrainsResponse,
   GetTrainStationResponse,
   GetTruckResponse,
   GetTruckStationResponse,
   PowerSlugObject,
-  TowerObject,
 } from '@derpierre65/ficsit-remote-monitoring';
-import { getEntityLocation } from 'src/utils/map.ts';
+import { getEntityLocation } from 'src/utils/map';
 import ItemSlot from 'components/ItemSlot.vue';
 import MapSpaceElevators from 'components/map/MapSpaceElevators.vue';
 import MapRadarTowers from 'components/map/MapRadarTowers.vue';
 import MapRadarTowerNodes from 'components/map/MapRadarTowerNodes.vue';
-import useSettingsStore from 'stores/settings.ts';
+import useSettingsStore from 'stores/settings';
 import MapPowerSwitch from 'components/map/MapPowerSwitch.vue';
 import { useTranslation } from 'i18next-vue';
 import MapMarker from 'components/map/MapMarker.vue';
@@ -254,14 +254,6 @@ const { options: settings, } = useEndpointsByOptions(computed({
 //#endregion
 
 //#region Computed
-const cachedRadarTowerNodes = computed(() => {
-  return endpoints.radarTowers.data.reduce((acc, tower) => {
-    acc.push(...tower.ScannedResourceNodes);
-
-    return acc;
-  }, [] as TowerObject['ScannedResourceNodes']);
-});
-
 const cachedTrains = computed(() => {
   if (!endpoints.trains.data || endpoints.trains.data.length === 0) {
     return [];

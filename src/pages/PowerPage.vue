@@ -45,7 +45,7 @@
       <PowerCircuitInfo
         v-for="circuit of circuits"
         v-else
-        :key="circuit.CircuitID"
+        :key="circuit.CircuitGroupID"
         :circuit
       />
 
@@ -57,9 +57,7 @@
 </template>
 
 <script setup lang="ts">
-
-//#region Composable & Prepare
-import { useFRMEndpoint } from 'src/composables/frmEndpoint.ts';
+import { useFRMEndpoint } from 'src/composables/frmEndpoint';
 import type { GetPowerResponse } from '@derpierre65/ficsit-remote-monitoring';
 import AppAlert from 'components/AppAlert.vue';
 import PowerTotalProduction from 'components/widgets/power/PowerTotalProduction.vue';
@@ -71,6 +69,7 @@ import PowerBatteryFirstEmpty from 'components/widgets/power/PowerBatteryFirstEm
 import PowerCircuitInfo from 'components/widgets/power/PowerCircuitInfo.vue';
 import { computed, ref } from 'vue';
 
+//#region Composable & Prepare
 const powerData = useFRMEndpoint<GetPowerResponse>('getPower');
 //#endregion
 
