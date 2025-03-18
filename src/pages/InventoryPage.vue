@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-w-full tw-max-w-screen-xl tw-mx-auto">
+  <div class="tw-w-full tw-max-w-screen-xl tw-mx-auto tw-space-y-4">
     <div class="flex tw-justify-end tw-gap-4 q-mb-md">
       <q-toggle v-model="hideEmptyInventories" label="Hide empty inventories" />
       <q-select
@@ -26,6 +26,10 @@
         v-bind="inventory.props"
       />
     </div>
+
+    <AppAlert v-if="hiddenInventories" type="info" text>
+      {{ hiddenInventories }} Inventories hidden.
+    </AppAlert>
   </div>
 </template>
 
@@ -43,6 +47,7 @@ import {
 import StorageInventory from 'components/inventory/StorageInventory.vue';
 import { getEntityLocation } from 'src/utils/map';
 import useServerStore from 'stores/server';
+import AppAlert from 'components/AppAlert.vue';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
@@ -167,6 +172,10 @@ const filteredStorageInventories = computed(() => {
   return hideEmptyInventories.value ? inventories.value.filter((inventory) => {
     return inventory.props.inventory.length > 0;
   }) : inventories.value;
+});
+
+const hiddenInventories = computed(() => {
+  return inventories.value.length - filteredStorageInventories.value.length;
 });
 //#endregion
 
