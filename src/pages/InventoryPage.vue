@@ -36,8 +36,9 @@ import {
   GetCloudInvResponse,
   GetPlayerResponse,
   GetStorageInvResponse,
+  GetTrainStationResponse,
   PlayerObject,
-  StorageInvObject,
+  InventoryItemObject,
 } from '@derpierre65/ficsit-remote-monitoring';
 import StorageInventory from 'components/inventory/StorageInventory.vue';
 import { getEntityLocation } from 'src/utils/map';
@@ -49,6 +50,7 @@ const inventoryEndpoints = {
   storages: reactive(usePausableFRMEndpoint<GetStorageInvResponse>('getStorageInv')),
   players: reactive(usePausableFRMEndpoint<GetPlayerResponse>('getPlayer')),
   cloud: reactive(usePausableFRMEndpoint<GetCloudInvResponse>('getCloudInv')),
+  trainStations: reactive(usePausableFRMEndpoint<GetTrainStationResponse>('getTrainStation')),
 };
 //#endregion
 
@@ -58,6 +60,7 @@ const inventoryTypes = ref([
   'storages',
   'players',
   'cloud',
+  'trainStations',
 ]);
 const selectableInventoryTypes = [
   {
@@ -72,12 +75,16 @@ const selectableInventoryTypes = [
     label: 'Cloud Inventory',
     value: 'cloud',
   },
+  {
+    label: 'Train Stations',
+    value: 'trainStations',
+  },
 ];
 //#endregion
 
 //#region Computed
 const storageInventories = computed(() => {
-  return inventoryEndpoints.storages.data.map((storage: StorageInvObject) => {
+  return inventoryEndpoints.storages.data.map((storage) => {
     return {
       ID: storage.ID,
       props: {
@@ -88,6 +95,35 @@ const storageInventories = computed(() => {
       },
     };
   });
+});
+
+const trainStationInventories = computed(() => {
+  return inventoryEndpoints.trainStations.data
+    .map((trainStation) => {
+      return {
+        ID: trainStation.ID,
+        props: {
+          name: trainStation.Name,
+          image: serverStore.getItemUrl(trainStation.ClassName),
+          location: getEntityLocation(trainStation),
+          inventory: Object.values(trainStation.CargoInventory.reduce((items, cargoInventory) => {
+            for (const item of cargoInventory.Inventory) {
+              if (typeof items[item.ClassName] === 'undefined') {
+                items[item.ClassName] = {
+                  ...item,
+                };
+              }
+              else {
+                items[item.ClassName]!.Amount += item.Amount;
+              }
+            }
+
+            return items;
+          }, {} as Record<string, InventoryItemObject>)),
+        },
+      };
+    })
+    .filter(Boolean);
 });
 
 const playerInventories = computed(() => {
@@ -120,10 +156,17 @@ const cloudInventory = computed(() => {
   };
 });
 
+const inventories = computed(() => {
+  return [
+    ...storageInventories.value,
+    ...trainStationInventories.value,
+  ];
+});
+
 const filteredStorageInventories = computed(() => {
-  return hideEmptyInventories.value ? storageInventories.value.filter((inventory) => {
+  return hideEmptyInventories.value ? inventories.value.filter((inventory) => {
     return inventory.props.inventory.length > 0;
-  }) : storageInventories.value;
+  }) : inventories.value;
 });
 //#endregion
 
