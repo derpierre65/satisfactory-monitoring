@@ -76,6 +76,7 @@ import { getEntityLocation } from 'src/utils/map';
 import useServerStore from 'stores/server';
 import AppAlert from 'components/AppAlert.vue';
 import MapShowLocation from 'components/map/MapShowLocation.vue';
+import { formatNumber } from 'src/utils/helpers/number';
 
 //#region Composable & Prepare
 const factories = useFRMEndpoint<GetFactoryResponse>(Endpoint.GetFactory, {
@@ -164,7 +165,7 @@ const filteredFactories = computed(() => {
         ID: factory.ID,
         location: getEntityLocation(factory),
         image: serverStore.getItemUrl(factory.ClassName),
-        name: factory.Name,
+        name: factory.Name + ` (${formatNumber(factory.Productivity)}%)`,
       },
     };
   });
