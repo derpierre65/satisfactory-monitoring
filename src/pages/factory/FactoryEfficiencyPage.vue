@@ -1,31 +1,42 @@
 <template>
   <div class="q-gutter-y-md">
-    <q-select
-      v-model="factoryFilter"
-      :options="factoryTypes"
-      label="Factory Type"
-      hint="Empty for all types"
-      multiple
-      map-options
-      emit-value
-    />
+    <div class="tw-flex tw-gap-2 justify-end">
+      <q-toggle v-model="hideGreaterZero" label="Hide factories with productivity greater than 0" />
+      <q-select
+        v-model="factoryFilter"
+        :options="factoryTypes"
+        class="tw-flex-auto tw-max-w-[400px]"
+        label="Factory Type"
+        multiple
+        map-options
+        emit-value
+      />
+    </div>
 
-    <AppAlert type="warning" text>
+    <AppAlert v-if="filteredFactories.length" type="warning" text>
       Found {{ filteredFactories.length }} factories with productivity lower than 100%.
+    </AppAlert>
+    <AppAlert v-else type="info" text>
+      No factories found.
     </AppAlert>
 
     <div class="tw-grid tw-grid-cols-8 tw-gap-2">
-      <q-card v-for="factory in pagedFactories" :key="factory.ID" class="no-shadow">
-        <q-card-section class="tw-flex">
-          <q-img
+      <q-card v-for="factory in pagedFactories" :key="factory.ID" class="no-shadow tw-space-y-2 relative-position">
+        <MapShowLocation :entities="[factory.locationEntity]" class="absolute-top-right tw-top-2 tw-right-2" />
+        <div class="text-center">
+          <img
             :src="serverStore.getItemUrl(factory.ClassName)"
-            width="32px"
-            no-spinner
-          />
-          <span>{{ factory.Productivity.toFixed(2) }}%</span>
-          <q-space />
-          <MapShowLocation :entities="[factory.locationEntity]" />
-        </q-card-section>
+            :alt="factory.Name"
+            class="q-mx-auto"
+            width="64px"
+          >
+
+          <div class="flex items-center justify-center tw-gap-2">
+            <img src="/assets/images/efficiency.png" alt="" class="tw-max-h-4">
+            <span>{{ factory.Productivity.toFixed(2) }}%</span>
+            <i :class="factory.efficiencyIcon" />
+          </div>
+        </div>
         <div class="tw-flex tw-gap-2 justify-center items-center q-pb-md">
           <div class="tw-flex">
             <div v-for="ingredient in factory.ingredients" :key="ingredient.ClassName" class="tw-w-8 tw-h-8">
@@ -89,6 +100,9 @@ const serverStore = useServerStore();
 const factoryFilter = ref([]);
 const page = ref(1);
 const itemsPerPage = ref(50);
+const hideGreaterZero = ref(false);
+let lastProductivity: Record<string, number> = Object.create(null);
+let nextLastProductivity: Record<string, number> = Object.create(null);
 //#endregion
 
 //#region Computed
@@ -152,23 +166,42 @@ const pagedFactories = computed(() => {
   return filteredFactories.value.slice((page.value - 1) * itemsPerPage.value, page.value * itemsPerPage.value);
 });
 const filteredFactories = computed(() => {
-  const filtered = (factories.value || []).filter((factory) => {
-    if (factoryFilter.value.length && !factoryFilter.value.some((value) => value === factory.ClassName)) {
-      return false;
-    }
+  const filtered = (factories.value || [])
+    .filter((factory) => {
+      if (hideGreaterZero.value && factory.Productivity > 0) {
+        return false;
+      }
 
-    return factory.Productivity < 100 && factory.PowerInfo.PowerConsumed > 0;
-  }).map((factory) => {
-    return {
-      ...factory,
-      locationEntity: {
-        ID: factory.ID,
-        location: getEntityLocation(factory),
-        image: serverStore.getItemUrl(factory.ClassName),
-        name: factory.Name + ` (${formatNumber(factory.Productivity)}%)`,
-      },
-    };
-  });
+      if (factory.Productivity >= 100 || factory.PowerInfo.PowerConsumed === 0) {
+        return false;
+      }
+
+      return !factoryFilter.value.length || factoryFilter.value.some((value) => value === factory.ClassName);
+    })
+    .map((factory) => {
+      const difference = factory.Productivity - (lastProductivity[factory.ID] ?? factory.Productivity);
+      let efficiencyIcon;
+      if (difference < 0) {
+        efficiencyIcon = 'fas fa-chevron-down tw-text-red-600';
+      }
+      else if (difference > 0) {
+        efficiencyIcon = 'fas fa-chevron-up tw-text-green-600';
+      }
+      else {
+        efficiencyIcon = 'fas fa-minus';
+      }
+
+      return {
+        ...factory,
+        locationEntity: {
+          ID: factory.ID,
+          location: getEntityLocation(factory),
+          image: serverStore.getItemUrl(factory.ClassName),
+          name: `${factory.Name} (${formatNumber(factory.Productivity)}%)`,
+        },
+        efficiencyIcon: efficiencyIcon,
+      };
+    });
 
   filtered.sort((a, b) => a.Productivity - b.Productivity);
   return filtered;
@@ -179,6 +212,15 @@ const filteredFactories = computed(() => {
 watchEffect(() => {
   if (page.value > pages.value) {
     page.value = Math.max(1, pages.value - 1);
+  }
+});
+
+watchEffect(() => {
+  lastProductivity = nextLastProductivity;
+
+  nextLastProductivity = Object.create(null);
+  for (const factory of factories.value || []) {
+    nextLastProductivity[factory.ID] = factory.Productivity;
   }
 });
 //#endregion
