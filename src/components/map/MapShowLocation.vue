@@ -5,7 +5,7 @@
     </q-icon>
 
     <q-dialog v-model="showDialog">
-      <q-card class="tw-w-full !tw-max-w-[60vw] tw-h-[80vh] shadow-0">
+      <q-card class="tw-w-full !tw-max-w-[60vw] tw-h-[80vh] tw-flex tw-flex-col shadow-0">
         <q-card-section class="tw-flex">
           <q-img v-if="imgUrl" :src="imgUrl" width="32px" />
           <span>{{ title || entities[0].name }}</span>
@@ -15,7 +15,7 @@
 
           <q-toggle v-model="playerInfo.isActive" label="Show Players" />
         </q-card-section>
-        <SatisfactoryMap :center="entities[0].location" :zoom="-8">
+        <SatisfactoryMap class="tw-flex-auto" :center="entities[0].location" :zoom="-8">
           <MapMarker
             v-for="entity in allEntities"
             :key="entity.ID"
