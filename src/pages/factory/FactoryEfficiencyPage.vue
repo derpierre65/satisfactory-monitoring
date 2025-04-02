@@ -22,7 +22,9 @@
 
     <div class="tw-grid tw-grid-cols-8 tw-gap-2">
       <q-card v-for="factory in pagedFactories" :key="factory.ID" class="no-shadow tw-space-y-2 relative-position">
-        <MapShowLocation :entities="[factory.locationEntity]" class="absolute-top-right tw-top-2 tw-right-2" />
+        <div class="absolute-top-right tw-top-2 tw-right-2">
+          <MapShowLocation :entities="[factory.locationEntity]" />
+        </div>
         <div class="text-center">
           <img
             :src="serverStore.getItemUrl(factory.ClassName)"

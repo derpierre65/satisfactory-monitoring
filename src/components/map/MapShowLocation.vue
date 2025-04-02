@@ -1,5 +1,5 @@
 <template>
-  <div v-if="entities[0]">
+  <template v-if="entities[0]">
     <q-icon name="fas fa-location-dot" class="cursor-pointer" @click.stop="showDialog = true">
       <q-tooltip>Show Location</q-tooltip>
     </q-icon>
@@ -26,7 +26,7 @@
         </SatisfactoryMap>
       </q-card>
     </q-dialog>
-  </div>
+  </template>
 </template>
 
 <script setup lang="ts">
