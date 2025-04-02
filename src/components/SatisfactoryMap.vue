@@ -7,7 +7,7 @@
     :center
   >
     <LImageOverlay
-      url="assets/map/map.png"
+      url="/assets/map/map.png"
       :bounds="mapBounds"
       :z-index="-1"
     />
