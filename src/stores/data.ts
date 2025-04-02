@@ -18,7 +18,8 @@ const useDataStore = defineStore('data', () => {
   const fetchEndpoints = ref<EndpointFetchInfo[]>([]);
   const lastUpdate = ref<Record<string, number>>({});
   const apiData = ref<Record<string, object>>({});
-  const promises: Record<string, Promise<unknown>> = {};
+  const promises: Record<string, Promise<unknown>> = Object.create(null);
+  const promisesUpdated: Record<string, object | null> = Object.create(null);
 
   function addEndpoint(endpoint: string, fetchEvery = -1) {
     const id = uuidv4();
@@ -67,22 +68,36 @@ const useDataStore = defineStore('data', () => {
 
       lastUpdate.value[endpoint.endpoint] = Date.now();
       if (!promises[endpoint.endpoint]) {
+        console.debug(`Fetching data from endpoint ${endpoint.endpoint}`);
         promises[endpoint.endpoint] = FRM.fetch<object>(serverStore.currentServer.url, endpoint.endpoint)
           .then((data) => {
             serverStore.isConnected = true;
-            apiData.value[endpoint.endpoint] = data;
+            promisesUpdated[endpoint.endpoint] = data;
           })
           .catch((response) => {
             if (response.code === 'ERR_NETWORK') {
               serverStore.isConnected = false;
             }
-          })
-          .finally(() => {
-            delete promises[endpoint.endpoint];
+            promisesUpdated[endpoint.endpoint] = null;
           });
-        console.debug('updating', endpoint);
       }
     }
+
+    const keys = Object.keys(promisesUpdated);
+    if (keys.length === 0) {
+      return;
+    }
+
+    for (const key of keys) {
+      if (promisesUpdated[key]) {
+        apiData.value[key] = promisesUpdated[key];
+      }
+
+      delete promises[key];
+      delete promisesUpdated[key];
+    }
+
+    console.debug('Updated', keys);
   }
 
   setInterval(() => fetch(), 100, 'fetchInterval');
