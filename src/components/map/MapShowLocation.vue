@@ -5,8 +5,8 @@
     </q-icon>
 
     <q-dialog v-model="showDialog">
-      <q-card class="tw-w-full !tw-max-w-[60vw] tw-h-[80vh] tw-flex tw-flex-col shadow-0">
-        <q-card-section class="tw-flex">
+      <q-card class="tw-w-full !tw-max-w-[80vw] tw-h-[90vh] tw-flex tw-flex-col shadow-0">
+        <q-card-section class="tw-flex tw-bg-neutral-950">
           <q-img v-if="imgUrl" :src="imgUrl" width="32px" />
           <span>{{ title || entities[0].name }}</span>
           <span v-if="entities.length > 1"> ({{ entities.length }})</span>
