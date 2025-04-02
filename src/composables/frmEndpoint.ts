@@ -1,4 +1,4 @@
-import { computed, onScopeDispose, Reactive, ref, toValue, watchEffect, WritableComputedRef } from 'vue';
+import { computed, onScopeDispose, Reactive, ref, toValue, watch, watchEffect, WritableComputedRef } from 'vue';
 import useDataStore from 'stores/data';
 
 function useFRMEndpoint<T>(endpoint: string, { defaultValue, fetchEvery, }: {
@@ -19,43 +19,51 @@ function useFRMEndpoint<T>(endpoint: string, { defaultValue, fetchEvery, }: {
   return computed(() => (dataStore.apiData[endpoint] as T) || defaultValue);
 }
 
-function usePausableFRMEndpoint<T>(endpoint: string) {
+function usePausableFRMEndpoint<T>(endpoint: string, { fetchDuration = -1, startPaused = false, } = {}) {
   const dataStore = useDataStore();
   const isActive = ref(false);
+  const id = ref('');
+
+  const data = computed(() => {
+    return (dataStore.apiData?.[endpoint] || []) as T;
+  });
+
+  watch(isActive, (newValue) => {
+    if (newValue) {
+      resume();
+    }
+    else {
+      pause();
+    }
+  });
 
   function resume() {
-    if (isActive.value) {
+    if (id.value) {
       return;
     }
 
-    dataStore.addEndpoint(endpoint);
+    id.value = dataStore.addEndpoint(endpoint, fetchDuration);
     isActive.value = true;
   }
 
   function pause() {
-    if (!isActive.value) {
+    if (!id.value) {
       return;
     }
 
-    dataStore.removeEndpoint(endpoint);
+    dataStore.removeEndpoint(id.value);
     isActive.value = false;
   }
 
   onScopeDispose(() => {
-    if (isActive.value) {
-      dataStore.removeEndpoint(endpoint);
+    if (id.value) {
+      dataStore.removeEndpoint(id.value);
     }
   });
 
-  const data = computed(() => {
-    if (!isActive.value) {
-      return [] as T;
-    }
-
-    return (dataStore.apiData[endpoint] || []) as T;
-  });
-
-  resume();
+  if (!startPaused) {
+    resume();
+  }
 
   return {
     resume,
