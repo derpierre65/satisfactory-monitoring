@@ -41,23 +41,25 @@ const inventoryEndpoints = {
 
 //#region Computed
 const items = computed(() => {
-  const items = Object.create(null);
+  const finalItems = Object.create(null);
 
   for (const storage of inventoryEndpoints.storages.data) {
-    addItems(items, storage.Inventory);
+    addItems(finalItems, storage.Inventory);
   }
   for (const storage of inventoryEndpoints.players.data) {
-    addItems(items, storage.Inventory);
+    addItems(finalItems, storage.Inventory);
   }
   for (const station of inventoryEndpoints.trainStations.data) {
     for (const cargoInventory of station.CargoInventory) {
-      addItems(items, cargoInventory.Inventory);
+      addItems(finalItems, cargoInventory.Inventory);
     }
   }
 
-  addItems(items, inventoryEndpoints.cloud.data);
+  addItems(finalItems, inventoryEndpoints.cloud.data);
 
-  return items;
+  return Object.keys(finalItems)
+    .sort((a, b) => finalItems[b].Amount - finalItems[a].Amount)
+    .map((key) => finalItems[key]);
 });
 //#endregion
 
