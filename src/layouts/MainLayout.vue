@@ -51,31 +51,35 @@
       :width="leftDrawerOpen ? 250 : 50"
     >
       <q-list>
-        <q-item
-          v-for="menuItem in menuItems"
-          :to="menuItem.route"
-          :active="menuItem.route.name === $route.name"
-          clickable
-        >
-          <q-item-section side>
-            <q-icon
-              v-bind="menuItem.route.name === $route.name ? {color: 'primary'} : {}"
-              :name="menuItem.icon"
-              size="16px"
-            />
-          </q-item-section>
-          <q-item-section v-if="leftDrawerOpen">
-            <q-item-label>{{ menuItem.title }}</q-item-label>
-          </q-item-section>
-          <q-tooltip v-else anchor="center end" self="center left">
-            {{ menuItem.title }}
-          </q-tooltip>
-        </q-item>
+        <template v-for="menuItem in menuItems">
+          <q-separator v-if="menuItem.separator" />
+          <q-item
+            v-else
+            :key="menuItem.title"
+            :to="menuItem.route"
+            :active="menuItem.route.name === $route.name"
+            clickable
+          >
+            <q-item-section side>
+              <q-icon
+                v-bind="menuItem.route.name === $route.name ? {color: 'primary'} : {}"
+                :name="menuItem.icon"
+                size="16px"
+              />
+            </q-item-section>
+            <q-item-section v-if="leftDrawerOpen">
+              <q-item-label>{{ menuItem.title }}</q-item-label>
+            </q-item-section>
+            <q-tooltip v-else anchor="center end" self="center left">
+              {{ menuItem.title }}
+            </q-tooltip>
+          </q-item>
+        </template>
       </q-list>
     </q-drawer>
 
     <q-page-container>
-      <q-page class="q-pa-md tw-flex tw-flex-col">
+      <q-page class="tw-flex tw-flex-col" :class="{'q-pa-md': !route.meta.noPadding}">
         <AppAlert v-if="!serverStore.isConnected" type="warning" class="q-mb-md">
           Could not connect to the Satisfactory Ficsit Remote Monitoring Api.
         </AppAlert>
@@ -121,12 +125,22 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import useServerStore from 'stores/server.ts';
-import { useQuasar } from 'quasar';
-import useSettingsStore from 'stores/settings.ts';
+import useServerStore from 'stores/server';
+import useSettingsStore from 'stores/settings';
 import AppAlert from 'components/AppAlert.vue';
 import axios from 'axios';
 import { noop } from '@derpierre65/frontend-utils';
+import { useRoute } from 'vue-router';
+
+type MenuItem = {
+  separator: boolean;
+} | {
+  title: string;
+  icon: string;
+  route: {
+    name: string;
+  };
+};
 
 defineOptions({
   name: 'MainLayout',
@@ -135,7 +149,7 @@ defineOptions({
 //#region Composable & Prepare
 const serverStore = useServerStore();
 const settingsStore = useSettingsStore();
-const q = useQuasar();
+const route = useRoute();
 //#endregion
 
 //#region Data
@@ -153,7 +167,7 @@ const updateIntervals = [
   30,
   60,
 ];
-const menuItems = [
+const menuItems: MenuItem[] = [
   {
     title: 'Dashboard',
     icon: 'fas fa-dashboard',
@@ -169,6 +183,9 @@ const menuItems = [
     },
   },
   {
+    separator: true,
+  },
+  {
     title: 'Power',
     icon: 'fas fa-bolt-lightning',
     route: {
@@ -181,6 +198,19 @@ const menuItems = [
     route: {
       name: 'power-switches',
     },
+  },
+  {
+    separator: true,
+  },
+  {
+    title: 'Factory Efficiency',
+    icon: 'fas fa-industry',
+    route: {
+      name: 'factory-efficiency',
+    },
+  },
+  {
+    separator: true,
   },
   {
     title: 'AWESOME Sink',

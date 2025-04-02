@@ -31,6 +31,20 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/MapPage.vue'),
       },
       {
+        path: 'factory',
+        component: () => import('pages/factory/FactoryPage.vue'),
+        children: [
+          {
+            name: 'factory-efficiency',
+            path: 'efficiency',
+            component: () => import('pages/factory/FactoryEfficiencyPage.vue'),
+          },
+        ],
+        meta: {
+          noPadding: true,
+        },
+      },
+      {
         name: 'inventory',
         path: 'inventory',
         component: () => import('pages/InventoryPage.vue'),
