@@ -45,9 +45,23 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        name: 'inventory',
         path: 'inventory',
-        component: () => import('pages/InventoryPage.vue'),
+        component: () => import('pages/inventory/InventoryIndexPage.vue'),
+        children: [
+          {
+            name: 'inventory',
+            path: '',
+            component: () => import('pages/inventory/InventoryPage.vue'),
+          },
+          {
+            name: 'inventory-items',
+            path: 'items',
+            component: () => import('pages/inventory/InventoryItemsPage.vue'),
+          },
+        ],
+        meta: {
+          noPadding: true,
+        },
       },
       {
         name: 'power-switches',
