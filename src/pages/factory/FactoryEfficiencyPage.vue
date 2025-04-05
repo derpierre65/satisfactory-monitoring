@@ -1,5 +1,5 @@
 <template>
-  <div class="q-gutter-y-md">
+  <div class="tw-flex-auto tw-flex tw-flex-col tw-gap-4">
     <div class="tw-flex tw-gap-2 justify-end">
       <q-toggle v-model="hideGreaterZero" label="Hide factories with productivity greater than 0" />
       <q-select
@@ -20,53 +20,55 @@
       No factories found.
     </AppAlert>
 
-    <div class="tw-grid tw-grid-cols-8 tw-gap-2">
-      <q-card v-for="factory in pagedFactories" :key="factory.ID" class="no-shadow tw-space-y-2 relative-position">
-        <div class="absolute-top-right tw-top-2 tw-right-2">
-          <MapShowLocation :entities="[factory.locationEntity]" />
-        </div>
-        <div class="text-center">
-          <img
-            :src="serverStore.getItemUrl(factory.ClassName)"
-            :alt="factory.Name"
-            class="q-mx-auto"
-            width="64px"
-          >
+    <div class="tw-flex-auto">
+      <div class="tw-grid tw-grid-cols-8 tw-gap-2">
+        <q-card v-for="factory in pagedFactories" :key="factory.ID" class="no-shadow tw-space-y-2 relative-position">
+          <div class="absolute-top-right tw-top-2 tw-right-2">
+            <MapShowLocation :entities="[factory.locationEntity]" />
+          </div>
+          <div class="text-center">
+            <img
+              :src="serverStore.getItemUrl(factory.ClassName)"
+              :alt="factory.Name"
+              class="q-mx-auto"
+              width="64px"
+            >
 
-          <div class="flex items-center justify-center tw-gap-2">
-            <img src="/assets/images/efficiency.png" alt="" class="tw-max-h-4">
-            <span>{{ factory.Productivity.toFixed(2) }}%</span>
-            <i :class="factory.efficiencyIcon" />
-          </div>
-        </div>
-        <div class="tw-flex tw-gap-2 justify-center items-center q-pb-md">
-          <div class="tw-flex">
-            <div v-for="ingredient in factory.ingredients" :key="ingredient.ClassName" class="tw-w-8 tw-h-8">
-              <img
-                :src="serverStore.getItemUrl(ingredient.ClassName)"
-                :alt="ingredient.Name"
-                class="full-width full-height"
-              >
-              <q-tooltip>
-                <span>{{ ingredient.ConsPercent.toFixed(2) }}%</span>
-              </q-tooltip>
+            <div class="flex items-center justify-center tw-gap-2">
+              <img src="/assets/images/efficiency.png" alt="" class="tw-max-h-4">
+              <span>{{ factory.Productivity.toFixed(2) }}%</span>
+              <i :class="factory.efficiencyIcon" />
             </div>
           </div>
-          <i class="fas fa-arrow-right" />
-          <div class="tw-flex">
-            <div v-for="ingredient in factory.production" :key="ingredient.ClassName" class="tw-w-8 tw-h-8">
-              <img
-                :src="serverStore.getItemUrl(ingredient.ClassName)"
-                :alt="ingredient.Name"
-                class="full-width full-height"
-              >
-              <q-tooltip>
-                <span>{{ ingredient.ProdPercent.toFixed(2) }}%</span>
-              </q-tooltip>
+          <div class="tw-flex tw-gap-2 justify-center items-center q-pb-md">
+            <div class="tw-flex">
+              <div v-for="ingredient in factory.ingredients" :key="ingredient.ClassName" class="tw-w-8 tw-h-8">
+                <img
+                  :src="serverStore.getItemUrl(ingredient.ClassName)"
+                  :alt="ingredient.Name"
+                  class="full-width full-height"
+                >
+                <q-tooltip>
+                  <span>{{ ingredient.ConsPercent.toFixed(2) }}%</span>
+                </q-tooltip>
+              </div>
+            </div>
+            <i class="fas fa-arrow-right" />
+            <div class="tw-flex">
+              <div v-for="ingredient in factory.production" :key="ingredient.ClassName" class="tw-w-8 tw-h-8">
+                <img
+                  :src="serverStore.getItemUrl(ingredient.ClassName)"
+                  :alt="ingredient.Name"
+                  class="full-width full-height"
+                >
+                <q-tooltip>
+                  <span>{{ ingredient.ProdPercent.toFixed(2) }}%</span>
+                </q-tooltip>
+              </div>
             </div>
           </div>
-        </div>
-      </q-card>
+        </q-card>
+      </div>
     </div>
 
     <div v-if="pages > 1" class="flex justify-center">
