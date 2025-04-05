@@ -19,13 +19,13 @@
           <q-select
             v-model="updateInterval"
             :options="updateIntervals"
-            label="Update Rate"
+            :label="t('menu.update_rate')"
             class="tw-w-[120px]"
           />
           <q-select
             :model-value="serverStore.selected"
             :options="serverStore.selectableServer"
-            label="Server"
+            :label="t('menu.server')"
             class="tw-w-[120px]"
             emit-value
             map-options
@@ -33,12 +33,21 @@
           />
 
           <q-btn
+            :to="{name: 'settings'}"
+            icon="fas fa-cog"
+            flat
+            round
+          >
+            <q-tooltip>{{ t('menu.settings') }}</q-tooltip>
+          </q-btn>
+
+          <q-btn
             icon="fas fa-power-off"
             flat
             round
             @click="logout"
           >
-            <q-tooltip>Logout</q-tooltip>
+            <q-tooltip>{{ t('menu.logout') }}</q-tooltip>
           </q-btn>
         </div>
       </q-toolbar>
@@ -131,6 +140,7 @@ import AppAlert from 'components/AppAlert.vue';
 import axios from 'axios';
 import { noop } from '@derpierre65/frontend-utils';
 import { useRoute } from 'vue-router';
+import { useTranslation } from 'i18next-vue';
 
 type MenuItem = {
   separator: boolean;
@@ -150,6 +160,7 @@ defineOptions({
 const serverStore = useServerStore();
 const settingsStore = useSettingsStore();
 const route = useRoute();
+const { t, } = useTranslation();
 //#endregion
 
 //#region Data

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Dialog, Loading } from 'quasar';
 import router from 'src/router';
 import { GetModListResponse } from '@derpierre65/ficsit-remote-monitoring';
@@ -155,6 +155,12 @@ const useServerStore = defineStore('server', () => {
       value: index,
       label: `${server.name}`,
     }));
+  });
+
+  watch(servers, () => {
+    window.localStorage.setItem('sm_servers', JSON.stringify(servers.value));
+  }, {
+    deep: true,
   });
 
   return {

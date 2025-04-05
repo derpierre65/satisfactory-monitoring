@@ -17,21 +17,17 @@
               />
               <q-input
                 v-model="server.name"
-                label="Server Name"
+                :label="t('login.name')"
               />
               <q-input
                 v-model="server.url"
-                label="API Url"
+                :label="t('login.url')"
               />
               <q-input
                 v-model="server.authToken"
-                label="Authentication Token"
+                :label="t('login.token')"
                 type="password"
-              >
-                <!--                <template #append>-->
-                <!--                  <q-icon class="fas fa-eye" />-->
-                <!--                </template>-->
-              </q-input>
+              />
             </q-card-section>
             <q-card-actions align="right">
               <q-btn type="submit" label="Login" color="primary" />
@@ -47,10 +43,12 @@
 import { ref } from 'vue';
 import useServerStore, { type ServerInfo } from 'stores/server';
 import { useRouter } from 'vue-router';
+import { useTranslation } from 'i18next-vue';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
 const router = useRouter();
+const { t, } = useTranslation();
 //#endregion
 
 //#region Data
