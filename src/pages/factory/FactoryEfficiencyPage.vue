@@ -16,7 +16,7 @@
     <AppAlert v-if="filteredFactories.length" type="warning" text>
       Found {{ filteredFactories.length }} factories with productivity lower than 100%.
     </AppAlert>
-    <AppAlert v-else type="info" text>
+    <AppAlert v-else type="success" text>
       No factories found.
     </AppAlert>
 
