@@ -13,7 +13,8 @@
     "test": "echo \"No test specified\" && exit 0",
     "storybook": "storybook dev --no-open --port 4000",
     "storybook:build": "storybook build",
-    "postinstall": "patch-package && quasar prepare"
+    "postinstall": "patch-package && quasar prepare",
+    "release": "release-it"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.17",
@@ -28,6 +29,7 @@
     "@derpierre65/frontend-utils": "^0.3.13",
     "@noction/vue-draggable-grid": "^1.11.0",
     "@quasar/app-vite": "^2.1.4",
+    "@release-it/conventional-changelog": "^10.0.0",
     "@storybook/addon-essentials": "^8.3.5",
     "@storybook/addon-interactions": "^8.3.5",
     "@storybook/addon-links": "^8.3.5",
@@ -50,6 +52,7 @@
     "patch-package": "^8.0.0",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
+    "release-it": "^18.1.2",
     "sass-embedded": "npm:sass@^1.80.3",
     "storybook": "^8.3.5",
     "storybook-addon-vue-slots": "^0.9.30-next.2",

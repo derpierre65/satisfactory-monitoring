@@ -1,0 +1,24 @@
+{
+  "$schema": "https://unpkg.com/release-it@18/schema/release-it.json",
+  "git": {
+    "commitMessage": "chore: bump version v${version}"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          {
+            "type": "feat",
+            "section": "Features"
+          },
+          {
+            "type": "fix",
+            "section": "Bug Fixes"
+          }
+        ]
+      },
+      "infile": "CHANGELOG.md"
+    }
+  }
+}
