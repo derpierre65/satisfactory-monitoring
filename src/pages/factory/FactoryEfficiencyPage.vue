@@ -69,7 +69,7 @@
       </q-card>
     </div>
 
-    <div v-if="pages" class="flex justify-center">
+    <div v-if="pages > 1" class="flex justify-center">
       <q-pagination
         v-model="page"
         :max="pages"
