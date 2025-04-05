@@ -6,7 +6,7 @@
           <q-select
             v-if="configuration.type === 'select'"
             v-model="settings[configuration.id]"
-            :options="configuration.fromEndpoint ? endpointData[configuration.fromEndpoint] : configuration.options"
+            :options="configuration.fromEndpoint ? dataStore.apiData[configuration.fromEndpoint] : configuration.options"
             :label="t(configuration.label)"
             :option-label="configuration.optionLabel"
             :option-value="configuration.optionValue"
@@ -35,18 +35,21 @@
 
 <script setup lang="ts">
 import { useDialogPluginComponent } from 'quasar';
-import { Widget } from 'src/utils/dashboard/widgets.ts';
 import { ref } from 'vue';
 import { useTranslation } from 'i18next-vue';
+import type { Widget } from 'src/utils/dashboard/widgets';
+import useDataStore from 'stores/data';
 
 //#region Composable & Prepare
 const { widget, defaultSettings = null, } = defineProps<{
-  endpointData: Record<string, unknown[]>;
   widget: Widget;
   defaultSettings?: Record<string, unknown> | null;
 }>();
 
 defineEmits([ ...useDialogPluginComponent.emits, ]);
+
+const { t, } = useTranslation();
+const dataStore = useDataStore();
 
 const {
   dialogRef,
@@ -54,7 +57,6 @@ const {
   onDialogOK,
   onDialogCancel,
 } = useDialogPluginComponent();
-const { t, } = useTranslation();
 //#endregion
 
 //#region Data

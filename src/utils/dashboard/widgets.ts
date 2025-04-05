@@ -1,12 +1,11 @@
 import { Dialog, Loading, QSelectProps } from 'quasar';
 import DashboardWidgetDialogEdit from 'components/dashboard/DashboardWidgetDialogEdit.vue';
-import FRM from 'src/utils/FRM.ts';
-import useServerStore from 'stores/server.ts';
 import { ComputedRef } from 'vue';
-import registerSessionWidgets from 'src/utils/dashboard/widgets/session.ts';
-import registerPowerWidgets from 'src/utils/dashboard/widgets/power.ts';
-import registerSinkWidgets from 'src/utils/dashboard/widgets/sink.ts';
-import registerInventoryWidgets from 'src/utils/dashboard/widgets/inventory.ts';
+import registerSessionWidgets from 'src/utils/dashboard/widgets/session';
+import registerPowerWidgets from 'src/utils/dashboard/widgets/power';
+import registerSinkWidgets from 'src/utils/dashboard/widgets/sink';
+import registerInventoryWidgets from 'src/utils/dashboard/widgets/inventory';
+import useDataStore from 'stores/data';
 
 type WidgetConfiguration = {
   id: string;
@@ -63,24 +62,27 @@ async function openEditWidget(widget: Widget, settings: WidgetConfigurationData 
     };
   }
 
-  const serverStore = useServerStore();
+  const dataStore = useDataStore();
 
   Loading.show({
     group: 'openEditWidget',
   });
 
-  const endpointData = Object.create(null);
-
   try {
+    const fetchEndpoints: string[] = [];
     for (const configuration of widget.configuration) {
-      if (configuration.type === 'select' && configuration.fromEndpoint && !endpointData[configuration.fromEndpoint]) {
-        endpointData[configuration.fromEndpoint] = await FRM.fetch(serverStore.currentApiUrl, configuration.fromEndpoint);
+      if (configuration.type === 'select' && configuration.fromEndpoint) {
+        if (!fetchEndpoints.includes(configuration.fromEndpoint)) {
+          fetchEndpoints.push(configuration.fromEndpoint);
+        }
       }
 
       if (configuration.type === 'boolean' && typeof settings[configuration.id] === 'undefined') {
         settings[configuration.id] = false;
       }
     }
+
+    await dataStore.fetch(fetchEndpoints, true, true);
   }
   catch (error) {
     console.error(error);
@@ -97,7 +99,6 @@ async function openEditWidget(widget: Widget, settings: WidgetConfigurationData 
     component: DashboardWidgetDialogEdit,
     componentProps: {
       defaultSettings: settings,
-      endpointData,
       widget,
     },
   });

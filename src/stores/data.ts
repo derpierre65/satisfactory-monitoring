@@ -2,8 +2,8 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useInterval, uuidv4 } from '@derpierre65/frontend-utils';
 import useServerStore from 'stores/server';
-import FRM from 'src/utils/FRM';
 import useSettingsStore from 'stores/settings';
+import axios from 'axios';
 
 type EndpointFetchInfo = {
   id: string;
@@ -47,39 +47,51 @@ const useDataStore = defineStore('data', () => {
     return !lastEndpointUpdate || (Date.now() - lastEndpointUpdate) > updateInterval;
   }
 
-  function fetch(endpoint: string | null = null, force = false) {
+  async function fetch(endpoint: string | string[] | EndpointFetchInfo[] | null = null, force = false, wait = false) {
     const serverStore = useServerStore();
     if (!serverStore.currentServer) {
       return;
     }
 
-    const fetch = endpoint ? [
-      {
-        id: '',
-        fetchEvery: -1,
-        endpoint,
-      } as EndpointFetchInfo,
-    ] : fetchEndpoints.value;
+    let fetch;
+    if (endpoint) {
+      fetch = Array.isArray(endpoint) ? endpoint : [ endpoint, ];
+    }
+    else {
+      fetch = fetchEndpoints.value;
+    }
 
     for (const endpoint of fetch) {
-      if (!force && !needUpdate(endpoint)) {
+      if (!force && (typeof endpoint !== 'string' && !needUpdate(endpoint))) {
         continue;
       }
 
-      lastUpdate.value[endpoint.endpoint] = Date.now();
-      if (!promises[endpoint.endpoint]) {
-        console.debug(`Fetching data from endpoint ${endpoint.endpoint}`);
-        promises[endpoint.endpoint] = FRM.fetch<object>(serverStore.currentServer.url, endpoint.endpoint)
-          .then((data) => {
+      const endpointName = typeof endpoint === 'string' ? endpoint : endpoint.endpoint;
+
+      lastUpdate.value[endpointName] = Date.now();
+      if (!promises[endpointName]) {
+        console.debug(`Fetching data from endpoint ${endpointName}`);
+        promises[endpointName] = axios
+          .get<object>(endpointName, {
+            baseURL: serverStore.currentServer.url,
+            headers: {
+              Authorization: serverStore.currentServer.authToken,
+            },
+          })
+          .then(({ data, }) => {
             serverStore.isConnected = true;
-            promisesUpdated[endpoint.endpoint] = data;
+            promisesUpdated[endpointName] = data;
           })
           .catch((response) => {
             if (response.code === 'ERR_NETWORK') {
               serverStore.isConnected = false;
             }
-            promisesUpdated[endpoint.endpoint] = null;
+            promisesUpdated[endpointName] = null;
           });
+
+        if (wait) {
+          await promises[endpointName];
+        }
       }
     }
 

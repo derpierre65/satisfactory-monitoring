@@ -23,6 +23,15 @@
                 v-model="server.url"
                 label="API Url"
               />
+              <q-input
+                v-model="server.authToken"
+                label="Authentication Token"
+                type="password"
+              >
+                <!--                <template #append>-->
+                <!--                  <q-icon class="fas fa-eye" />-->
+                <!--                </template>-->
+              </q-input>
             </q-card-section>
             <q-card-actions align="right">
               <q-btn type="submit" label="Login" color="primary" />
@@ -36,7 +45,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import useServerStore from 'stores/server.ts';
+import useServerStore, { type ServerInfo } from 'stores/server';
 import { useRouter } from 'vue-router';
 
 //#region Composable & Prepare
@@ -45,9 +54,10 @@ const router = useRouter();
 //#endregion
 
 //#region Data
-const server = ref({
+const server = ref<ServerInfo>({
   name: 'Local',
   url: 'http://127.0.0.1:8080',
+  authToken: '',
 });
 //#endregion
 
@@ -76,7 +86,9 @@ async function login() {
 }
 
 function selectServer(option: { value: number; }) {
-  server.value = serverStore.servers[option.value];
+  if (serverStore.servers[option.value]) {
+    server.value = serverStore.servers[option.value]!;
+  }
 }
 //#endregion
 

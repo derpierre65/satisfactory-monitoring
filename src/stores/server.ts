@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import FRM from 'src/utils/FRM';
 import { Dialog, Loading } from 'quasar';
 import router from 'src/router';
 import { GetModListResponse } from '@derpierre65/ficsit-remote-monitoring';
@@ -10,6 +9,7 @@ import i18next from 'i18next';
 type ServerInfo = {
   name: string;
   url: string;
+  authToken: string;
 };
 
 const iconAliases: Record<string, string> = {
@@ -41,6 +41,9 @@ const useServerStore = defineStore('server', () => {
 
     if (index === -1) {
       index = servers.value.push(server) - 1;
+    }
+    else {
+      servers.value[index] = server;
     }
 
     window.localStorage.setItem('sm_servers', JSON.stringify(servers.value));
@@ -76,8 +79,10 @@ const useServerStore = defineStore('server', () => {
       message: 'Try to connect to the server...',
     });
 
-    return FRM.fetch<GetModListResponse>(server.url, 'getModList')
-      .then((data) => {
+    return axios.get<GetModListResponse>('getModList', {
+      baseURL: server.url,
+    })
+      .then(({ data, }) => {
         const frmMod = data.find((mod) => mod.SMRName === 'FicsitRemoteMonitoring')!;
         if (import.meta.env.DEV) {
           return true;
@@ -121,6 +126,9 @@ const useServerStore = defineStore('server', () => {
   function post(path: string, data: object) {
     return axios.post(path, data, {
       baseURL: currentServer.value!.url!,
+      headers: {
+        Authorization: currentServer.value!.authToken,
+      },
     }).then(({ data, }) => data);
   }
 
