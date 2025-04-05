@@ -3,6 +3,7 @@
     <q-route-tab :to="{name: 'inventory'}" label="Inventories" />
     <q-route-tab :to="{name: 'inventory-items'}" label="Items" />
   </q-tabs>
+  <q-separator />
 
   <div class="q-pa-md">
     <router-view v-slot="{ Component }">
