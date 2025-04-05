@@ -10,7 +10,9 @@
         <div class="tw-min-w-[30%]">
           <div class="q-ml-xs q-mr-md q-my-md">
             <q-input v-model="search" :label="t('global.search')">
-              <template #prepend />
+              <template #prepend>
+                <i class="fas fa-search tw-text-sm" />
+              </template>
             </q-input>
           </div>
 
