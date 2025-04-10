@@ -21,6 +21,17 @@
     "url": "API Url",
     "token": "Authentication Token"
   },
+  "vehicles": {
+    "cars": {
+      "title": "Cars"
+    },
+    "trains": {
+      "title": "Trains"
+    },
+    "drones": {
+      "title": "Drones"
+    }
+  },
   "buildings": {
     "space_elevator": "Space Elevator",
     "radar_tower": "Radar Tower"

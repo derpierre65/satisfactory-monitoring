@@ -24,17 +24,18 @@
 </template>
 
 <script setup lang="ts">
-import { InventoryItemObject } from '@derpierre65/ficsit-remote-monitoring';
+import { Coordinates, CoordinatesWithRotation, InventoryItemObject } from '@derpierre65/ficsit-remote-monitoring';
 import ItemBox from 'components/inventory/ItemBox.vue';
 import AppAlert from 'components/AppAlert.vue';
 import MapShowLocation from 'components/map/MapShowLocation.vue';
 import { computed } from 'vue';
+import { getEntityLocation } from 'src/utils/map';
 
 const props = withDefaults(defineProps<{
   inventory: InventoryItemObject[];
   name?: string;
   image?: string;
-  location?: [number, number] | null;
+  location?: Coordinates | CoordinatesWithRotation | null;
 }>(), {
   name: '',
   image: '',
@@ -46,6 +47,12 @@ const entity = computed(() => {
     ID: '1',
     name: props.name,
     location: props.location!,
+    mapLocation: (props.location ? getEntityLocation({
+      location: props.location,
+    }) : [
+      0,
+      0,
+    ]) as [number, number],
     image: props.image,
   };
 });

@@ -163,8 +163,8 @@ import AppAlert from 'components/AppAlert.vue';
 import { formatNumber } from 'src/utils/helpers/number';
 import MapShowLocation from 'components/map/MapShowLocation.vue';
 import { useFRMEndpoint } from 'src/composables/frmEndpoint';
-import { getEntityLocation } from 'src/utils/map';
 import useServerStore from 'stores/server';
+import { getEntityLocation } from 'src/utils/map';
 
 //#region Composable & Prepare
 const props = withDefaults(defineProps<{
@@ -233,7 +233,8 @@ const circuitFactories = computed(() => {
     return {
       ID: factory.ID,
       name: factory.Name,
-      location: getEntityLocation(factory),
+      location: factory.location,
+      mapLocation: getEntityLocation(factory),
       image: serverStore.getItemUrl(factory.ClassName),
     };
   });

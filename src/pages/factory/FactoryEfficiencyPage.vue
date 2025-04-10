@@ -199,7 +199,8 @@ const filteredFactories = computed(() => {
         ...factory,
         locationEntity: {
           ID: factory.ID,
-          location: getEntityLocation(factory),
+          mapLocation: getEntityLocation(factory),
+          location: factory.location,
           image: serverStore.getItemUrl(factory.ClassName),
           name: `${factory.Name} (${formatNumber(factory.Productivity)}%)`,
         },

@@ -13,7 +13,10 @@
       />
     </div>
     <div class="tw-grid md:tw-grid-cols-2 lg:tw-grid-cols-3 xl:tw-grid-cols-4 tw-gap-4">
-      <StorageInventory v-if="cloudInventory" v-bind="cloudInventory.props" />
+      <StorageInventory
+        v-if="cloudInventory"
+        v-bind="cloudInventory.props"
+      />
 
       <StorageInventory
         v-for="inventory in playerInventories"
@@ -45,7 +48,6 @@ import {
   InventoryItemObject,
 } from '@derpierre65/ficsit-remote-monitoring';
 import StorageInventory from 'components/inventory/StorageInventory.vue';
-import { getEntityLocation } from 'src/utils/map';
 import useServerStore from 'stores/server';
 import AppAlert from 'components/AppAlert.vue';
 
@@ -95,7 +97,7 @@ const storageInventories = computed(() => {
       props: {
         name: storage.Name,
         image: serverStore.getItemUrl(storage.ClassName),
-        location: getEntityLocation(storage),
+        location: storage.location,
         inventory: storage.Inventory,
       },
     };
@@ -110,7 +112,7 @@ const trainStationInventories = computed(() => {
         props: {
           name: trainStation.Name,
           image: serverStore.getItemUrl(trainStation.ClassName),
-          location: getEntityLocation(trainStation),
+          location: trainStation.location,
           inventory: Object.values(trainStation.CargoInventory.reduce((items, cargoInventory) => {
             for (const item of cargoInventory.Inventory) {
               if (typeof items[item.ClassName] === 'undefined') {
@@ -138,7 +140,7 @@ const playerInventories = computed(() => {
       props: {
         name: player.Name,
         image: serverStore.getItemUrl('Desc_Helmet_Default_C'),
-        location: getEntityLocation(player),
+        location: player.location,
         inventory: player.Inventory,
       },
     };

@@ -37,7 +37,8 @@ const name = computed(() => {
 const entity = computed(() => {
   return {
     ID: '1',
-    location: getEntityLocation(item),
+    location: item.location,
+    mapLocation: getEntityLocation(item),
     name: name.value,
     image: serverStore.getItemUrl('Desc_PriorityPowerSwitch_C'),
   };
