@@ -95,9 +95,13 @@ const imgUrl = computed(() => {
 });
 
 function createPing() {
-  serverStore.post('createPing', props.entities.map((entity) => ({
-    ...entity.location,
+  const entities = props.entities.map((entity) => ({
+    x: entity.location.x,
+    y: entity.location.y,
     z: entity.location.z + 200,
-  })));
+  }));
+  do {
+    serverStore.post('createPing', entities.splice(0, 500));
+  } while (entities.length);
 }
 </script>
