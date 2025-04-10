@@ -36,6 +36,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/MapPage.vue'),
       },
       {
+        name: 'notifications',
+        path: 'notifications',
+        component: () => import('pages/NotificationPage.vue'),
+      },
+      {
         path: 'factory',
         component: () => import('pages/factory/FactoryPage.vue'),
         children: [
