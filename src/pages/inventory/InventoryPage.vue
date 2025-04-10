@@ -14,15 +14,10 @@
     </div>
     <div class="tw-grid md:tw-grid-cols-2 lg:tw-grid-cols-3 xl:tw-grid-cols-4 tw-gap-4">
       <StorageInventory
-        v-if="cloudInventory"
+        v-if="inventoryTypes.includes('cloud') && cloudInventory"
         v-bind="cloudInventory.props"
       />
 
-      <StorageInventory
-        v-for="inventory in playerInventories"
-        :key="inventory.ID"
-        v-bind="inventory.props"
-      />
       <StorageInventory
         v-for="inventory in filteredStorageInventories"
         :key="inventory.ID"
@@ -62,13 +57,6 @@ const inventoryEndpoints = {
 //#endregion
 
 //#region Data
-const hideEmptyInventories = ref(false);
-const inventoryTypes = ref([
-  'storages',
-  'players',
-  'cloud',
-  'trainStations',
-]);
 const selectableInventoryTypes = [
   {
     label: 'Storages',
@@ -87,10 +75,16 @@ const selectableInventoryTypes = [
     value: 'trainStations',
   },
 ];
+const hideEmptyInventories = ref(false);
+const inventoryTypes = ref(selectableInventoryTypes.map((type) => type.value));
 //#endregion
 
 //#region Computed
 const storageInventories = computed(() => {
+  if (!inventoryTypes.value.includes('storages')) {
+    return [];
+  }
+
   return inventoryEndpoints.storages.data.map((storage) => {
     return {
       ID: storage.ID,
@@ -105,6 +99,10 @@ const storageInventories = computed(() => {
 });
 
 const trainStationInventories = computed(() => {
+  if (!inventoryTypes.value.includes('trainStations')) {
+    return [];
+  }
+
   return inventoryEndpoints.trainStations.data
     .map((trainStation) => {
       return {
@@ -134,6 +132,10 @@ const trainStationInventories = computed(() => {
 });
 
 const playerInventories = computed(() => {
+  if (!inventoryTypes.value.includes('players')) {
+    return [];
+  }
+
   return inventoryEndpoints.players.data.map((player: PlayerObject) => {
     return {
       ID: player.ID,
@@ -165,6 +167,7 @@ const cloudInventory = computed(() => {
 
 const inventories = computed(() => {
   return [
+    ...playerInventories.value,
     ...storageInventories.value,
     ...trainStationInventories.value,
   ];
