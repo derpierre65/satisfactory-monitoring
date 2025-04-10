@@ -23,7 +23,7 @@
     <div class="tw-flex-auto">
       <div class="tw-grid tw-grid-cols-8 tw-gap-2">
         <q-card v-for="factory in pagedFactories" :key="factory.ID" class="no-shadow tw-space-y-2 relative-position">
-          <div class="absolute-top-right tw-top-2 tw-right-2">
+          <div class="absolute-top-right tw-top-2 tw-right-2 tw-space-x-1">
             <MapShowLocation :entities="[factory.locationEntity]" />
           </div>
           <div class="text-center">
