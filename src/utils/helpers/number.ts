@@ -1,7 +1,7 @@
-function formatNumber(value: number) {
+function formatNumber(value: number, digits = 2) {
   return new Intl.NumberFormat(undefined, {
     style: 'decimal',
-    maximumFractionDigits: 2,
+    maximumFractionDigits: digits,
     useGrouping: true,
   }).format(value);
 }

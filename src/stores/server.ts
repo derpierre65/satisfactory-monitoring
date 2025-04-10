@@ -18,6 +18,13 @@ const iconAliases: Record<string, string> = {
   BP_Crystal_mk3_C: '/assets/map/power_slug_purple.png',
 };
 
+const iconRename = [
+  'BP_Explorer_C',
+  'BP_Truck_C',
+  'BP_Golfcart_C',
+  'BP_Tractor_C',
+];
+
 const useServerStore = defineStore('server', () => {
   const servers = ref<ServerInfo[]>([]);
   const isConnected = ref(false);
@@ -137,7 +144,12 @@ const useServerStore = defineStore('server', () => {
       return iconAliases[className];
     }
 
-    return `${currentServer.value?.url}/Icons/${className.replace('Build_', 'Desc_')}.png`;
+    let fileName = className.replace('Build_', 'Desc_');
+    if (iconRename.some((name) => name === className)) {
+      fileName = fileName.replace('BP_', 'Desc_');
+    }
+
+    return `${currentServer.value?.url}/Icons/${fileName}.png`;
   }
 
   const currentApiUrl = computed(() => currentServer.value?.url || '');

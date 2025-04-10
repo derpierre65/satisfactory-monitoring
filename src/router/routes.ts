@@ -50,6 +50,30 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'vehicle',
+        component: () => import('pages/vehicle/VehicleIndexPage.vue'),
+        children: [
+          {
+            name: 'vehicle-cars',
+            path: 'cars',
+            component: () => import('pages/vehicle/VehicleCarsPage.vue'),
+          },
+          {
+            name: 'vehicle-drones',
+            path: 'drones',
+            component: () => import('pages/vehicle/VehicleDronesPage.vue'),
+          },
+          {
+            name: 'vehicle-trains',
+            path: 'trains',
+            component: () => import('pages/vehicle/VehicleTrainsPage.vue'),
+          },
+        ],
+        meta: {
+          noPadding: true,
+        },
+      },
+      {
         path: 'inventory',
         component: () => import('pages/inventory/InventoryIndexPage.vue'),
         children: [

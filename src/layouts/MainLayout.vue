@@ -178,7 +178,10 @@ const updateIntervals = [
   30,
   60,
 ];
-const menuItems: MenuItem[] = [
+//#endregion
+
+//#region Computed
+const menuItems = computed<MenuItem[]>(() => [
   {
     title: 'Dashboard',
     icon: 'fas fa-dashboard',
@@ -224,6 +227,30 @@ const menuItems: MenuItem[] = [
     separator: true,
   },
   {
+    title: t('vehicles.cars.title'),
+    icon: 'fas fa-car',
+    route: {
+      name: 'vehicle-cars',
+    },
+  },
+  {
+    title: t('vehicles.trains.title'),
+    icon: 'fas fa-train',
+    route: {
+      name: 'vehicle-trains',
+    },
+  },
+  {
+    title: t('vehicles.drones.title'),
+    icon: 'fas fa-plane',
+    route: {
+      name: 'vehicle-drones',
+    },
+  },
+  {
+    separator: true,
+  },
+  {
     title: 'AWESOME Sink',
     icon: 'fas fa-ticket',
     route: {
@@ -237,10 +264,7 @@ const menuItems: MenuItem[] = [
       name: 'inventory',
     },
   },
-];
-//#endregion
-
-//#region Computed
+]);
 const updateInterval = computed({
   set: (newValue) => settingsStore.updateInterval = newValue * 1_000,
   get: () => settingsStore.updateInterval / 1_000,

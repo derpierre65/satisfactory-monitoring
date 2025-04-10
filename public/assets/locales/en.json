@@ -22,8 +22,20 @@
     "token": "Authentication Token"
   },
   "vehicles": {
+    "autopilot": "Autopilot",
+    "manual": "Manual",
+    "speed": "Speed",
+    "gear": "Gear",
+    "engine_rpm": "Engine RPM",
+    "energy": "Energy",
+    "fuel": "Fuel",
     "cars": {
-      "title": "Cars"
+      "title": "Cars",
+      "title_autopilot": "Autopilot Vehicles",
+      "title_manual": "Manual Vehicles",
+      "no_fuel": "No Fuel",
+      "not_enough_for_roundtrip": "Not enough fuel for a roundtrip",
+      "almost_empty": "Fuel is almost empty"
     },
     "trains": {
       "title": "Trains"
