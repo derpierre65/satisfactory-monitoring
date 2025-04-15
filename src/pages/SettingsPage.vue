@@ -63,8 +63,8 @@ const serverName = computed({
 //#endregion
 
 //#region Methods
-function updateServerUrl() {
-  serverStore.updateServerUrl(activeServer.value.url);
+function updateServerUrl(newUrl: string) {
+  activeServer.value.url = newUrl;
 }
 //#endregion
 
