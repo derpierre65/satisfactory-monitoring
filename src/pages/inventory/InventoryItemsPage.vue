@@ -90,7 +90,7 @@ const filteredItems = computed(() => {
 function addItems(items: Record<string, InventoryItemObject>, inventory: InventoryItemObject[]) {
   for (const item of inventory) {
     if (!items[item.ClassName]) {
-      items[item.ClassName] = item;
+      items[item.ClassName] = Object.assign({}, item);
     }
     else {
       items[item.ClassName].Amount += item.Amount;
