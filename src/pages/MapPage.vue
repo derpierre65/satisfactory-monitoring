@@ -284,20 +284,8 @@ const cachedTrains = computed(() => {
 //#region Methods
 function enableAllSettings() {
   settings.value = [
-    'players',
-    'doggos',
-    'spaceElevators',
-    'radarTowers',
     'radarTowerNodes',
-    'trainStations',
-    'droneStations',
-    'truckStations',
-    'powerSwitches',
-    'trains',
-    'drones',
-    'tractors',
-    'trucks',
-    'powerSlugs',
+    ...Object.keys(endpoints),
   ];
 }
 
