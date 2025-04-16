@@ -98,6 +98,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/PowerSwitchesPage.vue'),
       },
       {
+        name: 'elevators',
+        path: 'elevators',
+        component: () => import('pages/ElevatorPage.vue'),
+      },
+      {
         name: 'test',
         path: 'test',
         component: () => import('pages/TestPage.vue'),

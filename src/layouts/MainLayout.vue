@@ -251,6 +251,13 @@ const menuItems = computed<MenuItem[]>(() => [
     separator: true,
   },
   {
+    title: 'Elevators',
+    icon: 'fas fa-elevator',
+    route: {
+      name: 'elevators',
+    },
+  },
+  {
     title: 'AWESOME Sink',
     icon: 'fas fa-ticket',
     route: {
