@@ -51,6 +51,16 @@
             bg-color="white"
           />
         </template>
+        <template v-if="settings.includes('artifacts')">
+          <MapMarker
+            v-for="entity in endpoints.artifacts.data"
+            :key="entity.ID"
+            :lat-lng="getEntityLocation(entity)"
+            :image="serverStore.getItemUrl(entity.ClassName)"
+            :color="getPowerSlugColor(entity)"
+            bg-color="white"
+          />
+        </template>
 
         <!-- players -->
         <template v-if="settings.includes('players')">
@@ -183,6 +193,7 @@
 
           <strong>Collectibles</strong>
           <q-toggle v-model="settings" val="powerSlugs" label="Power Slugs" />
+          <q-toggle v-model="settings" val="artifacts" label="Artifacts" />
         </q-card-section>
       </q-card>
     </div>
@@ -238,6 +249,7 @@ const endpoints = {
   tractors: reactive(usePausableFRMEndpoint<GetTractorResponse>('getTractor')),
   doggos: reactive(usePausableFRMEndpoint<GetDoggoResponse>('getDoggo')),
   powerSwitches: reactive(usePausableFRMEndpoint<GetSwitchesResponse>('getSwitches')),
+  artifacts: reactive(usePausableFRMEndpoint('getArtifacts')), // TODO typing
 };
 
 const { options: settings, } = useEndpointsByOptions(computed({

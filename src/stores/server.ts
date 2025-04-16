@@ -23,6 +23,8 @@ const iconRename = [
   'BP_Truck_C',
   'BP_Golfcart_C',
   'BP_Tractor_C',
+  'BP_WAT1_C',
+  'BP_WAT2_C',
 ];
 
 const useServerStore = defineStore('server', () => {
@@ -149,6 +151,7 @@ const useServerStore = defineStore('server', () => {
       fileName = fileName.replace('BP_', 'Desc_');
     }
 
+    // TODO remove trailing slash
     return `${currentServer.value?.url}/Icons/${fileName}.png`;
   }
 
