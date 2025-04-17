@@ -1,7 +1,7 @@
 <template>
   <q-dialog>
     <q-card class="full-width" style="max-width: 800px;">
-      <q-card-section class="text-h6 tw-flex justify-between">
+      <q-card-section class="text-h6 tw-flex justify-between items-center">
         <span>{{ t(`dashboard.${type}.add`) }}</span>
         <q-icon name="fas fa-times" class="cursor-pointer" @click="dialog?.hide()" />
       </q-card-section>
