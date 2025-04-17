@@ -1,9 +1,9 @@
 <template>
-  <q-dialog>
+  <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="full-width" style="max-width: 800px;">
       <q-card-section class="text-h6 tw-flex justify-between items-center">
         <span>{{ t(`dashboard.${type}.add`) }}</span>
-        <q-icon name="fas fa-times" class="cursor-pointer" @click="dialog?.hide()" />
+        <q-icon name="fas fa-times" class="cursor-pointer" @click="dialogRef?.hide()" />
       </q-card-section>
       <q-separator />
       <div class="flex no-wrap items-start">
@@ -50,10 +50,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from 'vue';
+import { computed, ref } from 'vue';
 import { useTranslation } from 'i18next-vue';
 import AppAlert from 'components/AppAlert.vue';
-import type { QDialog } from 'quasar';
+import { useDialogPluginComponent } from 'quasar';
 
 //#region Composable & Prepare
 const props = defineProps<{
@@ -65,11 +65,13 @@ const props = defineProps<{
 }>();
 
 defineEmits<{
+  ok: [];
+  hide: [];
   added: [id: string];
 }>();
 
 const { t, } = useTranslation();
-const dialog = useTemplateRef<InstanceType<typeof QDialog>>('dialog');
+const { onDialogHide, dialogRef, } = useDialogPluginComponent();
 //#endregion
 
 //#region Data
