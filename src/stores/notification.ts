@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import type FRMNotification from 'src/utils/dashboard/notifications/FRMNotification';
-import { unique } from '@derpierre65/frontend-utils';
 
 type NotificationObject = {
   icon: string;
@@ -11,13 +10,9 @@ type NotificationObject = {
 };
 
 const useNotificationStore = defineStore('notification', () => {
-  const availableNotifications = ref<FRMNotification[]>([]);
+  const availableNotifications = ref<Record<string, FRMNotification>>({});
   const notifications = ref<NotificationObject[]>([]);
-  const settings = ref<Array<Record<string, unknown>>>([]); // TODO replace unknown
-
-  const categories = computed(() => {
-    return unique(availableNotifications.value.map((notification) => notification.category));
-  });
+  const settings = ref<Array<Record<string, Record<string, number | boolean | string>>>>([]);
 
   async function loadAvailableNotifications() {
     const modules = (import.meta.glob('src/utils/dashboard/notifications/*.ts')) as Record<string, () => Promise<{
@@ -32,8 +27,12 @@ const useNotificationStore = defineStore('notification', () => {
       const classObject = (await modules[path]()).default;
       const classInstance = new classObject();
       if (classInstance.id) {
+        if (availableNotifications.value[classInstance.id]) {
+          console.error(`[Dashboard:Notifications] Notification object with id ${classInstance.id} already exists.`, classObject);
+        }
+
         console.debug(`[Dashboard:Notifications] Loaded notification object ${classInstance.id}.`);
-        availableNotifications.value.push(classInstance);
+        availableNotifications.value[classInstance.id] = classInstance;
       }
       else {
         console.error('[Dashboard:Notifications] Notification object has no id.', classObject);
@@ -45,7 +44,6 @@ const useNotificationStore = defineStore('notification', () => {
     availableNotifications,
     settings,
     notifications,
-    categories,
     loadAvailableNotifications,
   };
 });

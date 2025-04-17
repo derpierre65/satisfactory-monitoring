@@ -1,8 +1,9 @@
-import { registerWidget, WidgetConfigurationData } from 'src/utils/dashboard/widgets.ts';
+import { registerWidget } from 'src/utils/dashboard/widgets';
 import { computed, defineAsyncComponent } from 'vue';
-import useDataStore from 'stores/data.ts';
+import useDataStore from 'stores/data';
 import { GetPlayerResponse } from '@derpierre65/ficsit-remote-monitoring';
 import i18next from 'i18next';
+import { ConfigurationData } from 'src/utils/dashboard/configuration';
 
 export default function registerInventoryWidgets() {
   registerWidget({
@@ -39,7 +40,7 @@ export default function registerInventoryWidgets() {
 
       return players.some((powerSwitch) => powerSwitch.ID === configuration.playerId);
     },
-    props(configuration: WidgetConfigurationData) {
+    props(configuration: ConfigurationData) {
       const dataStore = useDataStore();
 
       return computed(() => {

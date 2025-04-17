@@ -92,17 +92,13 @@ import { ComputedRef, onUnmounted, ref } from 'vue';
 import { GridLayout, GridItem } from '@noction/vue-draggable-grid';
 import CategoryDialogOverview from 'components/dashboard/CategoryDialogOverview.vue';
 import '@noction/vue-draggable-grid/styles';
-import {
-  GridLayoutEntry, openEditWidget,
-  Widget,
-  WidgetConfigurationData,
-  widgets,
-} from 'src/utils/dashboard/widgets';
+import { GridLayoutEntry, Widget, widgets } from 'src/utils/dashboard/widgets';
 import { deepClone, useInterval, uuidv4 } from '@derpierre65/frontend-utils';
 import useSettingsStore from 'stores/settings';
 import useDataStore from 'stores/data';
 import { useTranslation } from 'i18next-vue';
 import { Dialog } from 'quasar';
+import { ConfigurationData, openEditConfigurationDialog } from 'src/utils/dashboard/configuration';
 
 //#region Composable & Prepare
 defineOptions({
@@ -123,7 +119,7 @@ const invalidWidgets = ref<string[]>([]);
 const layout = ref<GridLayoutEntry[]>([]);
 const dashboardWidgets = ref<Record<string, {
   widgetId: string;
-  configuration: WidgetConfigurationData;
+  configuration: ConfigurationData;
   props: ComputedRef<Record<string, unknown> | null> | false;
   listenEndpoints: string[];
 }>>({});
@@ -230,12 +226,12 @@ function unloadWidget(widgetId: string) {
 }
 
 async function addOpenDialog(id: string) {
-  (await openEditWidget(widgets[id]!)).onOk((configurations: WidgetConfigurationData) => {
+  (await openEditConfigurationDialog(widgets[id]!.configuration)).onOk((configurations: ConfigurationData) => {
     addNewWidget(id, configurations);
   });
 }
 
-function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, gridOptions = {}) {
+function addNewWidget(widgetId: string, configuration: ConfigurationData, gridOptions = {}) {
   const widget = widgets[widgetId] || null;
 
   const id = uuidv4();
@@ -260,7 +256,7 @@ function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, 
   };
 }
 
-function getWidgetProps(widget: Widget, configuration: WidgetConfigurationData) {
+function getWidgetProps(widget: Widget, configuration: ConfigurationData) {
   if (!widget || !widget.props) {
     return false;
   }
@@ -274,13 +270,13 @@ function getWidgetProps(widget: Widget, configuration: WidgetConfigurationData) 
 
 async function editWidget(widgetId: string) {
   const dashboardWidget = dashboardWidgets.value[widgetId];
-  (await openEditWidget(widgets[dashboardWidget.widgetId], deepClone(dashboardWidget.configuration)))
-    .onOk((newConfiguration: WidgetConfigurationData) => {
-      const widget = widgets[dashboardWidget.widgetId];
   if (!dashboardWidget) {
     return;
   }
 
+  (await openEditConfigurationDialog(widgets[dashboardWidget.widgetId]?.configuration, deepClone(dashboardWidget.configuration)))
+    .onOk((newConfiguration: ConfigurationData) => {
+      const widget = widgets[dashboardWidget.widgetId]!;
 
       dashboardWidget.props = getWidgetProps(widget, newConfiguration);
       dashboardWidget.configuration = newConfiguration;

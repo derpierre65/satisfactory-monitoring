@@ -1,7 +1,8 @@
-import useDataStore from 'stores/data.ts';
+import useDataStore from 'stores/data';
 import { GetSwitchesResponse } from '@derpierre65/ficsit-remote-monitoring';
 import { computed, defineAsyncComponent } from 'vue';
-import { registerWidget, WidgetConfigurationData } from 'src/utils/dashboard/widgets.ts';
+import { registerWidget } from 'src/utils/dashboard/widgets';
+import type { ConfigurationData } from 'src/utils/dashboard/configuration';
 
 export default function registerPowerWidgets() {
   registerWidget({
@@ -33,7 +34,7 @@ export default function registerPowerWidgets() {
 
       return switches.some((powerSwitch) => powerSwitch.ID === configuration.switchId);
     },
-    props(configuration: WidgetConfigurationData) {
+    props(configuration: ConfigurationData) {
       const dataStore = useDataStore();
 
       return computed(() => {

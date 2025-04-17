@@ -1,5 +1,6 @@
 import { Endpoint } from '@derpierre65/ficsit-remote-monitoring';
 import useDataStore from 'stores/data';
+import { CustomConfigurationItem } from 'src/utils/dashboard/configuration';
 
 export default class FRMNotification {
   id = '';
@@ -8,9 +9,32 @@ export default class FRMNotification {
 
   requiredEndpoints: Endpoint[] = [];
 
+  configuration: CustomConfigurationItem[] = [];
+
   private _listen: string[] = [];
 
   private _isEnabled = false;
+
+  getConfigurations() {
+    return [
+      {
+        id: 'sendToChat',
+        label: 'dashboard.notification.configuration.send_to_chat',
+        type: 'boolean',
+      },
+      {
+        id: 'sendToChatMessage',
+        label: 'dashboard.notification.configuration.send_to_chat_message',
+        type: 'text',
+        defaultValue: '',
+        props: {
+          type: 'text',
+        },
+      },
+
+      ...this.configuration,
+    ] as CustomConfigurationItem[];
+  }
 
   enable() {
     this.listenEndpoints();

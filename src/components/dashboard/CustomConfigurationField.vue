@@ -7,14 +7,23 @@
     :option-label="configuration.optionLabel"
     :option-value="configuration.optionValue"
     :required="configuration.required"
+    :hint="configuration.hint ? t(configuration.hint) : ''"
     :error="!!errorMessage"
     :error-message="errorMessage"
     emit-value
     map-options
   />
-  <q-toggle
-    v-else-if="configuration.type === 'boolean'"
+  <div v-else-if="configuration.type === 'boolean'">
+    <q-toggle
+      v-model="currentValue"
+      :label="t(configuration.label)"
+    />
+  </div>
+  <q-input
+    v-else-if="configuration.type === 'text'"
     v-model="currentValue"
+    :hint="configuration.hint ? t(configuration.hint) : ''"
+    v-bind="configuration.props"
     :label="t(configuration.label)"
   />
 </template>

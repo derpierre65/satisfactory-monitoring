@@ -1,4 +1,4 @@
-import { registerWidget } from 'src/utils/dashboard/widgets.ts';
+import { registerWidget } from 'src/utils/dashboard/widgets';
 import { defineAsyncComponent } from 'vue';
 
 export default function registerSinkWidgets() {

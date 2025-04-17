@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { GridLayoutEntry, WidgetConfigurationData } from 'src/utils/dashboard/widgets.ts';
+import { GridLayoutEntry } from 'src/utils/dashboard/widgets';
+import type { ConfigurationData } from 'src/utils/dashboard/configuration';
 
 const useSettingsStore = defineStore('settings', () => {
   const updateInterval = ref(5_000);
@@ -23,7 +24,7 @@ const useSettingsStore = defineStore('settings', () => {
     grid: Omit<GridLayoutEntry, 'id' | 'minW' | 'minH' | 'maxW' | 'maxH'>;
     widget: {
       widgetId: string;
-      configuration: WidgetConfigurationData;
+      configuration: ConfigurationData;
     };
   }>>([]);
   const dashboardHideToolbars = ref(false);
