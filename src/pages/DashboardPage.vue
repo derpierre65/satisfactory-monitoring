@@ -63,9 +63,9 @@
                 <small>This widget is invalid, check the configuration or delete this widget.</small>
               </div>
               <component
-                :is="widgets[dashboardWidgets[item.id].widgetId].component"
-                v-else-if="dashboardWidgets[item.id].props !== null"
-                v-bind="dashboardWidgets[item.id].props"
+                :is="widgets[dashboardWidgets[item.id]!.widgetId]!.component"
+                v-else-if="dashboardWidgets[item.id]!.props !== null"
+                v-bind="dashboardWidgets[item.id]!.props"
               />
               <q-inner-loading v-else showing />
             </q-card-section>
@@ -78,7 +78,13 @@
     </GridLayout>
   </q-page>
 
-  <DashboardWidgetDialogOverview v-model="showAddWidget" @added="addNewWidget" />
+  <DashboardWidgetDialogOverview
+    v-model="showAddWidget"
+    :entries="widgets"
+    type="widget"
+    name-key="widgets"
+    @added="addOpenDialog"
+  />
 </template>
 
 <script setup lang="ts">
@@ -91,10 +97,10 @@ import {
   Widget,
   WidgetConfigurationData,
   widgets,
-} from 'src/utils/dashboard/widgets.ts';
+} from 'src/utils/dashboard/widgets';
 import { deepClone, useInterval, uuidv4 } from '@derpierre65/frontend-utils';
-import useSettingsStore from 'stores/settings.ts';
-import useDataStore from 'stores/data.ts';
+import useSettingsStore from 'stores/settings';
+import useDataStore from 'stores/data';
 import { useTranslation } from 'i18next-vue';
 import { Dialog } from 'quasar';
 
@@ -217,6 +223,12 @@ function unloadWidget(widgetId: string) {
   for (const endpoint of widget.endpoints) {
     dataStore.removeEndpoint(endpoint);
   }
+}
+
+async function addOpenDialog(id: string) {
+  (await openEditWidget(widgets[id]!)).onOk((configurations: WidgetConfigurationData) => {
+    addNewWidget(id, configurations);
+  });
 }
 
 function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, gridOptions = {}) {

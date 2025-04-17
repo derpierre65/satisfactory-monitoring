@@ -1,25 +1,12 @@
-import { Dialog, Loading, QSelectProps } from 'quasar';
-import DashboardWidgetDialogEdit from 'components/dashboard/DashboardWidgetDialogEdit.vue';
+import { Dialog, Loading } from 'quasar';
 import { ComputedRef } from 'vue';
 import registerSessionWidgets from 'src/utils/dashboard/widgets/session';
 import registerPowerWidgets from 'src/utils/dashboard/widgets/power';
 import registerSinkWidgets from 'src/utils/dashboard/widgets/sink';
 import registerInventoryWidgets from 'src/utils/dashboard/widgets/inventory';
 import useDataStore from 'stores/data';
-
-type WidgetConfiguration = {
-  id: string;
-  label: string;
-  required?: boolean;
-} & ({
-  type: 'select';
-  fromEndpoint: string;
-  optionValue: QSelectProps['optionValue'];
-  optionLabel: QSelectProps['optionLabel'];
-  options?: QSelectProps['options'];
-} | {
-  type: 'boolean';
-});
+import { CustomConfigurationItem } from 'src/utils/dashboard/configuration';
+import CustomConfigurationDialog from 'components/dashboard/CustomConfigurationDialog.vue';
 
 type GridLayoutEntry = {
   id: string;
@@ -46,7 +33,7 @@ type Widget = {
     maxH?: number;
   };
   endpoints?: string[];
-  configuration?: WidgetConfiguration[];
+  configuration?: CustomConfigurationItem[];
   props?: ((configuration: WidgetConfigurationData) => ComputedRef<Record<string, unknown> | null>) | object;
   isValid?: (configuration: WidgetConfigurationData) => boolean | null;
 };
@@ -96,10 +83,10 @@ async function openEditWidget(widget: Widget, settings: WidgetConfigurationData 
   }
 
   return Dialog.create({
-    component: DashboardWidgetDialogEdit,
+    component: CustomConfigurationDialog,
     componentProps: {
       defaultSettings: settings,
-      widget,
+      configurations: widget.configuration,
     },
   });
 }
@@ -119,7 +106,6 @@ export {
   openEditWidget,
   registerWidget,
   type Widget,
-  type WidgetConfiguration,
   type WidgetConfigurationData,
   type GridLayoutEntry,
 };

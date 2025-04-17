@@ -1,6 +1,6 @@
 import { boot } from 'quasar/wrappers';
-import useServerStore from 'stores/server.ts';
 import { Loading } from 'quasar';
+import useServerStore from 'stores/server';
 
 export default boot(async({ router, }) => {
   const serverStore = useServerStore();

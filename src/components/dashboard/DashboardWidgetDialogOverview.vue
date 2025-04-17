@@ -2,8 +2,8 @@
   <q-dialog>
     <q-card class="full-width" style="max-width: 800px;">
       <q-card-section class="text-h6 tw-flex justify-between">
-        <span>{{ t('dashboard.widget_add') }}</span>
-        <q-icon name="fas fa-times" class="cursor-pointer" @click="$emit('update:modelValue', false)" />
+        <span>{{ t(`dashboard.${type}.add`) }}</span>
+        <q-icon name="fas fa-times" class="cursor-pointer" @click="dialog?.hide()" />
       </q-card-section>
       <q-separator />
       <div class="flex no-wrap items-start">
@@ -24,8 +24,8 @@
               content-class="tw-w-full !tw-items-start q-pr-md"
             >
               <div class="full-width tw-flex tw-gap-4 tw-justify-between">
-                <span>{{ t(`dashboard.widget_categories.${category}`) }}</span>
-                <q-badge>{{ availableWidgets[category] ? availableWidgets[category].length : 0 }}</q-badge>
+                <span>{{ t(`dashboard.${type}.categories.${category}`) }}</span>
+                <q-badge>{{ available[category] ? available[category].length : 0 }}</q-badge>
               </div>
             </q-tab>
           </q-tabs>
@@ -33,15 +33,15 @@
         <q-separator vertical size="2px" class="!-tw-ml-0.5" />
 
         <div class="tw-flex-auto q-px-md q-gutter-xs q-pa-md">
-          <AppAlert v-if="!availableWidgets[selectedCategory]" type="info">
-            {{ t('dashboard.widget_category_empty') }}
+          <AppAlert v-if="!available[selectedCategory]" type="info">
+            {{ t('dashboard.category.category_empty') }}
           </AppAlert>
           <q-btn
-            v-for="widgetId in availableWidgets[selectedCategory]"
-            :key="widgetId"
-            :label="t(`dashboard.widgets.${widgetId}.title`)"
+            v-for="id in available[selectedCategory]"
+            :key="id"
+            :label="t(`dashboard.${nameKey}.${id}.title`)"
             color="primary"
-            @click="addWidget(widgets[widgetId])"
+            @click="$emit('added', id)"
           />
         </div>
       </div>
@@ -50,38 +50,42 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { openEditWidget, Widget, WidgetConfigurationData, widgets } from 'src/utils/dashboard/widgets.ts';
+import { computed, ref, useTemplateRef } from 'vue';
 import { useTranslation } from 'i18next-vue';
 import AppAlert from 'components/AppAlert.vue';
+import type { QDialog } from 'quasar';
 
 //#region Composable & Prepare
-const emit = defineEmits<{
-  added: [widget: string, configurations: WidgetConfigurationData];
+const props = defineProps<{
+  type: string;
+  nameKey: string;
+  entries: Record<string, {
+    category: string;
+  }>;
+}>();
+
+defineEmits<{
+  added: [id: string];
 }>();
 
 const { t, } = useTranslation();
+const dialog = useTemplateRef<InstanceType<typeof QDialog>>('dialog');
 //#endregion
 
 //#region Data
-const categories = [
-  'power',
-  'sink',
-  'session',
-  'inventory',
-];
+const categories = ref<string[]>([]);
 const selectedCategory = ref('');
 const search = ref('');
 //#endregion
 
 //#region Computed
-const filteredWidgets = computed(() => {
+const filtered = computed(() => {
   const searchTerm = search.value.toLowerCase();
 
-  return Object.keys(widgets).filter((id) => t(`dashboard.widgets.${id}.title`).toLowerCase().includes(searchTerm));
+  return Object.keys(props.entries).filter((id) => t(`dashboard.${props.nameKey}.${id}.title`).toLowerCase().includes(searchTerm));
 });
-const availableWidgets = computed(() => {
-  return Object.groupBy(filteredWidgets.value, (id) => widgets[id].category);
+const available = computed(() => {
+  return Object.groupBy(filtered.value, (id) => props.entries[id]?.category || '');
 });
 //#endregion
 
@@ -92,14 +96,12 @@ const availableWidgets = computed(() => {
 //#endregion
 
 //#region Methods
-async function addWidget(widget: Widget) {
-  (await openEditWidget(widget)).onOk((configurations: WidgetConfigurationData) => {
-    emit('added', widget.id, configurations);
-  });
-}
 //#endregion
 
 //#region Created
-selectedCategory.value = categories[0];
+categories.value = Object.keys(available.value);
+if (categories.value[0]) {
+  selectedCategory.value = categories.value[0];
+}
 //#endregion
 </script>

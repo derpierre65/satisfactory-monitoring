@@ -2,26 +2,13 @@
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="tw-max-w-[300px] tw-w-full">
       <q-card-section>
-        <template v-for="configuration in widget.configuration" :key="configuration.id">
-          <q-select
-            v-if="configuration.type === 'select'"
-            v-model="settings[configuration.id]"
-            :options="configuration.fromEndpoint ? dataStore.apiData[configuration.fromEndpoint] : configuration.options"
-            :label="t(configuration.label)"
-            :option-label="configuration.optionLabel"
-            :option-value="configuration.optionValue"
-            :required="configuration.required"
-            :error="!!errors[configuration.id]"
-            :error-message="errors[configuration.id]"
-            emit-value
-            map-options
-          />
-          <q-toggle
-            v-else-if="configuration.type === 'boolean'"
-            v-model="settings[configuration.id]"
-            :label="t(configuration.label)"
-          />
-        </template>
+        <CustomConfigurationField
+          v-for="configuration in configurations"
+          :key="configuration.id"
+          v-model="settings[configuration.id]!"
+          :error-message="errors[configuration.id] || ''"
+          :configuration
+        />
       </q-card-section>
 
       <q-card-actions align="right">
@@ -37,19 +24,18 @@
 import { useDialogPluginComponent } from 'quasar';
 import { ref } from 'vue';
 import { useTranslation } from 'i18next-vue';
-import type { Widget } from 'src/utils/dashboard/widgets';
-import useDataStore from 'stores/data';
+import CustomConfigurationField from 'components/dashboard/CustomConfigurationField.vue';
+import { CustomConfigurationItem } from 'src/utils/dashboard/configuration';
 
 //#region Composable & Prepare
-const { widget, defaultSettings = null, } = defineProps<{
-  widget: Widget;
-  defaultSettings?: Record<string, unknown> | null;
+const { configurations, defaultSettings = null, } = defineProps<{
+  configurations: CustomConfigurationItem[];
+  defaultSettings?: Record<string, string | number | boolean> | null;
 }>();
 
 defineEmits([ ...useDialogPluginComponent.emits, ]);
 
 const { t, } = useTranslation();
-const dataStore = useDataStore();
 
 const {
   dialogRef,
@@ -61,7 +47,7 @@ const {
 
 //#region Data
 const errors = ref<Record<string, string>>({});
-const settings = ref(defaultSettings || {});
+const settings = ref<Record<string, string | number | boolean>>(defaultSettings || {});
 //#endregion
 
 //#region Computed
@@ -77,7 +63,7 @@ const settings = ref(defaultSettings || {});
 function save() {
   let hasErrors = false;
   errors.value = {};
-  for (const configuration of widget.configuration || []) {
+  for (const configuration of configurations || []) {
     if (configuration.required && !settings.value[configuration.id]) {
       errors.value[configuration.id] = 'This field is required.';
       hasErrors = true;
