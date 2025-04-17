@@ -1,7 +1,7 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="tw-max-w-[300px] tw-w-full">
-      <q-card-section>
+      <q-card-section class="q-gutter-y-sm">
         <CustomConfigurationField
           v-for="configuration in configurations"
           :key="configuration.id"
