@@ -78,7 +78,7 @@
     </GridLayout>
   </q-page>
 
-  <DashboardWidgetDialogOverview
+  <CategoryDialogOverview
     v-model="showAddWidget"
     :entries="widgets"
     type="widget"
@@ -90,7 +90,7 @@
 <script setup lang="ts">
 import { ComputedRef, onUnmounted, ref } from 'vue';
 import { GridLayout, GridItem } from '@noction/vue-draggable-grid';
-import DashboardWidgetDialogOverview from 'components/dashboard/DashboardWidgetDialogOverview.vue';
+import CategoryDialogOverview from 'components/dashboard/CategoryDialogOverview.vue';
 import '@noction/vue-draggable-grid/styles';
 import {
   GridLayoutEntry, openEditWidget,
