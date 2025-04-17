@@ -24,7 +24,7 @@
               content-class="tw-w-full !tw-items-start q-pr-md"
             >
               <div class="full-width tw-flex tw-gap-4 tw-justify-between">
-                <span>{{ t(`dashboard.${type}.categories.${category}`) }}</span>
+                <span>{{ category === 'none' ? t('dashboard.category.none') : t(`dashboard.${type}.categories.${category}`) }}</span>
                 <q-badge>{{ available[category] ? available[category].length : 0 }}</q-badge>
               </div>
             </q-tab>
@@ -85,7 +85,7 @@ const filtered = computed(() => {
   return Object.keys(props.entries).filter((id) => t(`dashboard.${props.nameKey}.${id}.title`).toLowerCase().includes(searchTerm));
 });
 const available = computed(() => {
-  return Object.groupBy(filtered.value, (id) => props.entries[id]?.category || '');
+  return Object.groupBy(filtered.value, (id) => props.entries[id]?.category || 'none');
 });
 //#endregion
 
