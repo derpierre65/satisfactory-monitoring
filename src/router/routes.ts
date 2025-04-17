@@ -36,6 +36,25 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/MapPage.vue'),
       },
       {
+        path: 'notifications',
+        component: () => import('pages/notification/NotificationIndexPage.vue'),
+        children: [
+          {
+            name: 'notifications',
+            path: '',
+            component: () => import('pages/notification/NotificationPage.vue'),
+          },
+          {
+            name: 'notification-settings',
+            path: 'settings',
+            component: () => import('pages/notification/NotificationSettingsPage.vue'),
+          },
+        ],
+        meta: {
+          noPadding: true,
+        },
+      },
+      {
         path: 'factory',
         component: () => import('pages/factory/FactoryPage.vue'),
         children: [

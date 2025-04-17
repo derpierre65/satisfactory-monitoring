@@ -1,6 +1,7 @@
 import { Endpoint } from '@derpierre65/ficsit-remote-monitoring';
-import useDataStore from 'stores/data';
-import { CustomConfigurationItem } from 'src/utils/dashboard/configuration';
+import type { ConfigurationData, CustomConfigurationItem } from 'src/utils/dashboard/configuration';
+import useNotificationStore from 'stores/notification';
+import useServerStore from 'stores/server';
 
 export default class FRMNotification {
   id = '';
@@ -11,55 +12,39 @@ export default class FRMNotification {
 
   configuration: CustomConfigurationItem[] = [];
 
-  private _listen: string[] = [];
-
-  private _isEnabled = false;
+  state() {
+    return {};
+  }
 
   getConfigurations() {
-    return [
-      {
-        id: 'sendToChat',
-        label: 'dashboard.notification.configuration.send_to_chat',
-        type: 'boolean',
-      },
-      {
-        id: 'sendToChatMessage',
-        label: 'dashboard.notification.configuration.send_to_chat_message',
-        type: 'text',
-        defaultValue: '',
-        props: {
-          type: 'text',
-        },
-      },
-
-      ...this.configuration,
-    ] as CustomConfigurationItem[];
+    return this.configuration as CustomConfigurationItem[];
   }
 
-  enable() {
-    this.listenEndpoints();
-
-    this._isEnabled = true;
+  formatString(template: string, values: Record<string, string | number>) {
+    return template.replace(/{(.*?)}/g, (_, key) => values[key]?.toString() || `{${key}}`);
   }
 
-  disable() {
-    const dataStore = useDataStore();
-    for (const id of this._listen) {
-      dataStore.removeEndpoint(id);
-    }
-
-    this._isEnabled = false;
-    this._listen = [];
+  sendChatMessage(message: string, data: object = {}) {
+    useServerStore().post('sendChatMessage', {
+      message: this.formatString(message, data),
+    });
   }
 
-  private listenEndpoints() {
-    if (this.requiredEndpoints.length === 0) {
-      return;
+  createNotification(icon: string, message: string) {
+    // TODO send dashboard notification (Notify.create)
+    const notificationStore = useNotificationStore();
+    notificationStore.notifications.unshift({
+      time: Date.now(),
+      title: '',
+      message,
+      icon,
+    });
+    if (notificationStore.notifications.length > 100) {
+      notificationStore.notifications.splice(100);
     }
+  }
 
-    const dataStore = useDataStore();
-    for (const endpoint of this.requiredEndpoints) {
-      this._listen.push(dataStore.addEndpoint(endpoint, 1));
-    }
+  trigger(state: object, configuration: ConfigurationData) {
+    // do something here.
   }
 }

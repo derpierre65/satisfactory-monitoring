@@ -1,6 +1,8 @@
 {
   "global": {
     "ok": "OK",
+    "save": "Save",
+    "saved": "Saved.",
     "cancel": "Cancel",
     "search": "Search",
     "edit": "Edit",
@@ -69,16 +71,23 @@
       "add": "Add Notification",
       "empty": "Notifications aren't set up yet.",
       "configuration": {
-        "send_to_chat": "Send Notification to the Chat",
-        "send_to_chat_message": "Chat Message"
+        "send_chat_message": "Send Chat Message",
+        "send_notification": "Send Notification",
+        "chat_message_hint": "Empty = No chat message",
+        "notification_message_hint": "Empty = No notification"
       }
     },
     "notifications": {
       "doggo": {
-        "title": "Doggo Notification",
-        "repeat_time": "Repeat notification after seconds",
+        "title": "Doggo Item Found Notification",
+        "repeat_time": "Repeat notification after (seconds)",
         "repeat_time_hint": "0 = No repetitions",
-        "create_ping": "Create a Ping when Doggo has found an Item"
+        "create_ping": "Create a Ping when Doggo has found an Item",
+        "found_chat_message": "Message when a doggo found an item",
+        "found_chat_message_hint": "Empty = No notification/chat message",
+        "collected_notification_message": "Notification when all items from the doggos are collected",
+        "collected_chat_message": "Chat message when all items from the doggos are collected",
+        "collected_chat_message_hint": "Empty = No chat message"
       }
     },
     "widgets": {

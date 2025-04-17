@@ -7,7 +7,7 @@
     :option-label="configuration.optionLabel"
     :option-value="configuration.optionValue"
     :required="configuration.required"
-    :hint="configuration.hint ? t(configuration.hint) : ''"
+    :hint="configuration.hint ? t(configuration.hint) : undefined"
     :error="!!errorMessage"
     :error-message="errorMessage"
     emit-value
@@ -22,7 +22,7 @@
   <q-input
     v-else-if="configuration.type === 'text'"
     v-model="currentValue"
-    :hint="configuration.hint ? t(configuration.hint) : ''"
+    :hint="configuration.hint ? t(configuration.hint) : undefined"
     v-bind="configuration.props"
     :label="t(configuration.label)"
   />

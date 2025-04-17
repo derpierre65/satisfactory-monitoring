@@ -190,6 +190,13 @@ const menuItems = computed<MenuItem[]>(() => [
     },
   },
   {
+    title: 'Notifications',
+    icon: 'fas fa-bell',
+    route: {
+      name: 'notifications',
+    },
+  },
+  {
     title: 'Map',
     icon: 'fas fa-map',
     route: {
