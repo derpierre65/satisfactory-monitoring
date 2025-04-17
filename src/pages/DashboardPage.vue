@@ -3,7 +3,7 @@
     <div class="tw-flex tw-justify-end tw-gap-2">
       <q-toggle v-model="settingsStore.dashboardHideToolbars" label="Hide Toolbars" />
       <q-btn
-        :label="t('dashboard.widget_add')"
+        :label="t('dashboard.widget.add')"
         color="primary"
         icon="fas fa-plus"
         @click="showAddWidget = true"
@@ -60,7 +60,7 @@
 
             <q-card-section class="tw-flex-auto q-py-sm relative-position tw-flex tw-flex-col justify-center">
               <div v-if="invalidWidgets.includes(item.id)" class="flex flex-center full-height tw-text-red-500">
-                <small>This widget is invalid, check the configuration or delete this widget.</small>
+                <small>{{ t('dashboard.widget.invalid') }}</small>
               </div>
               <component
                 :is="widgets[dashboardWidgets[item.id]!.widgetId]!.component"
@@ -71,7 +71,7 @@
             </q-card-section>
           </q-card>
           <q-card v-else class="full-height no-shadow text-center flex flex-center q-pa-md tw-text-red-500">
-            <small>{{ t('dashboard.widget_not_found') }}</small>
+            <small>{{ t('dashboard.widget.not_found') }}</small>
           </q-card>
         </GridItem>
       </template>
@@ -279,7 +279,7 @@ async function editWidget(widgetId: string) {
 
 function deleteWidget(widgetId: string) {
   Dialog.create({
-    message: t('dashboard.widget_delete_confirm'),
+    message: t('dashboard.widget.delete_confirm'),
     ok: {
       color: 'primary',
     },
