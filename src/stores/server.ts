@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { Dialog, Loading } from 'quasar';
 import router from 'src/router';
 import { GetModListResponse } from '@derpierre65/ficsit-remote-monitoring';
@@ -37,9 +37,12 @@ const useServerStore = defineStore('server', () => {
     const lastSelectedServer = parseInt(window.localStorage.getItem('sm_selected_server') || '-1');
     if (typeof serverJson === 'string') {
       servers.value = JSON.parse(serverJson);
+      window.localStorage.removeItem('sm_servers');
     }
-
-    selected.value = lastSelectedServer;
+    if (lastSelectedServer >= 0) {
+      selected.value = lastSelectedServer;
+      window.localStorage.removeItem('sm_selected_server');
+    }
   })();
 
   function add(server: ServerInfo) {
@@ -54,8 +57,6 @@ const useServerStore = defineStore('server', () => {
     else {
       servers.value[index] = server;
     }
-
-    window.localStorage.setItem('sm_servers', JSON.stringify(servers.value));
 
     return index;
   }
@@ -172,12 +173,6 @@ const useServerStore = defineStore('server', () => {
     }));
   });
 
-  watch(servers, () => {
-    window.localStorage.setItem('sm_servers', JSON.stringify(servers.value));
-  }, {
-    deep: true,
-  });
-
   return {
     selectableServer,
     selected,
@@ -191,6 +186,13 @@ const useServerStore = defineStore('server', () => {
     select,
     tryConnect,
   };
+}, {
+  persist: {
+    pick: [
+      'servers',
+      'selected',
+    ],
+  },
 });
 
 export {
