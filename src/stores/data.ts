@@ -70,7 +70,6 @@ const useDataStore = defineStore('data', () => {
 
       lastUpdate.value[endpointName] = Date.now();
       if (!promises[endpointName]) {
-        console.debug(`Fetching data from endpoint ${endpointName}`);
         promises[endpointName] = axios
           .get<object>(endpointName, {
             baseURL: serverStore.currentServer.url,
@@ -108,8 +107,6 @@ const useDataStore = defineStore('data', () => {
       delete promises[key];
       delete promisesUpdated[key];
     }
-
-    console.debug('Updated', keys);
   }
 
   setInterval(() => fetch(), 100, 'fetchInterval');
