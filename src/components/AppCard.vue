@@ -1,9 +1,11 @@
 <template>
   <q-card class="no-shadow">
-    <q-card-section>
+    <q-card-section class="flex">
       <slot name="title">
         <span class="text-h6">{{ title }}</span>
       </slot>
+      <q-space />
+      <slot name="buttons" />
     </q-card-section>
     <q-separator />
 
@@ -26,6 +28,7 @@ withDefaults(defineProps<{
 defineSlots<{
   title: () => void;
   default: () => void;
+  buttons: () => void;
 }>();
 
 //#endregion
