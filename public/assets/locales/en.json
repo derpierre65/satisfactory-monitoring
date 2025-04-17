@@ -49,15 +49,37 @@
     "radar_tower": "Radar Tower"
   },
   "dashboard": {
-    "widget_add": "Add Widget",
-    "widget_not_found": "This widget is no longer available or not loaded.",
-    "widget_category_empty": "No widgets found in this category.",
-    "widget_delete_confirm": "Do you want do delete this widget? You can't undo this action.",
-    "widget_categories": {
-      "power": "Power",
-      "session": "Session",
-      "sink": "AWESOME Sink",
-      "inventory": "Inventories"
+    "category": {
+      "none": "None",
+      "category_empty": "Nothing available in this category."
+    },
+    "widget": {
+      "add": "Add Widget",
+      "not_found": "This widget is no longer available or not loaded.",
+      "invalid": "This widget is invalid, check the configuration or delete this widget.",
+      "delete_confirm": "Do you want do delete this widget? You can't undo this action.",
+      "categories": {
+        "power": "Power",
+        "session": "Session",
+        "sink": "AWESOME Sink",
+        "inventory": "Inventories"
+      }
+    },
+    "notification": {
+      "add": "Add Notification",
+      "empty": "Notifications aren't set up yet.",
+      "configuration": {
+        "send_to_chat": "Send Notification to the Chat",
+        "send_to_chat_message": "Chat Message"
+      }
+    },
+    "notifications": {
+      "doggo": {
+        "title": "Doggo Notification",
+        "repeat_time": "Repeat notification after seconds",
+        "repeat_time_hint": "0 = No repetitions",
+        "create_ping": "Create a Ping when Doggo has found an Item"
+      }
     },
     "widgets": {
       "awesome_sink_coupon_progress": {
