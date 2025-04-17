@@ -125,6 +125,7 @@ const dashboardWidgets = ref<Record<string, {
   widgetId: string;
   configuration: WidgetConfigurationData;
   props: ComputedRef<Record<string, unknown> | null> | false;
+  listenEndpoints: string[];
 }>>({});
 //#endregion
 
@@ -137,7 +138,7 @@ const dashboardWidgets = ref<Record<string, {
 //#region Lifecycle Events
 onUnmounted(() => {
   for (const widgetId of Object.keys(dashboardWidgets.value)) {
-    unloadWidget(dashboardWidgets.value[widgetId].widgetId);
+    unloadWidget(widgetId);
   }
 });
 //#endregion
@@ -148,6 +149,10 @@ function validateWidgets() {
 
   for (const widgetId of Object.keys(dashboardWidgets.value)) {
     const dashboardWidget = dashboardWidgets.value[widgetId];
+    if (!dashboardWidget) {
+      continue;
+    }
+
     const widget = widgets[dashboardWidget.widgetId];
     if (!widget) {
       invalidIds.push(widgetId);
@@ -215,12 +220,11 @@ function buildWidgetLayout(widget: Widget | null) {
 }
 
 function unloadWidget(widgetId: string) {
-  const widget = widgets[widgetId];
-  if (!widget || !widget.endpoints) {
+  if (!dashboardWidgets.value[widgetId]) {
     return;
   }
 
-  for (const endpoint of widget.endpoints) {
+  for (const endpoint of dashboardWidgets.value[widgetId].listenEndpoints || []) {
     dataStore.removeEndpoint(endpoint);
   }
 }
@@ -241,9 +245,10 @@ function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, 
     ...gridOptions,
   });
 
+  const listenEndpoints: string[] = [];
   if (widget && widget.endpoints) {
     for (const endpoint of widget.endpoints) {
-      dataStore.addEndpoint(endpoint);
+      listenEndpoints.push(dataStore.addEndpoint(endpoint));
     }
   }
 
@@ -251,6 +256,7 @@ function addNewWidget(widgetId: string, configuration: WidgetConfigurationData, 
     widgetId,
     props: getWidgetProps(widget, configuration),
     configuration,
+    listenEndpoints,
   };
 }
 
@@ -271,6 +277,10 @@ async function editWidget(widgetId: string) {
   (await openEditWidget(widgets[dashboardWidget.widgetId], deepClone(dashboardWidget.configuration)))
     .onOk((newConfiguration: WidgetConfigurationData) => {
       const widget = widgets[dashboardWidget.widgetId];
+  if (!dashboardWidget) {
+    return;
+  }
+
 
       dashboardWidget.props = getWidgetProps(widget, newConfiguration);
       dashboardWidget.configuration = newConfiguration;
@@ -289,7 +299,7 @@ function deleteWidget(widgetId: string) {
       layout.value.splice(index, 1);
     }
 
-    unloadWidget(dashboardWidgets.value[widgetId].widgetId);
+    unloadWidget(widgetId);
 
     delete dashboardWidgets.value[widgetId];
   });
