@@ -49,6 +49,7 @@
             :image="serverStore.getItemUrl(entity.ClassName)"
             :color="getPowerSlugColor(entity)"
             bg-color="white"
+            pingable-until-despawn
           />
         </template>
         <template v-if="settings.includes('artifacts')">
@@ -58,6 +59,7 @@
             :location="entity.location"
             :image="serverStore.getItemUrl(entity.ClassName)"
             bg-color="white"
+            pingable-until-despawn
           />
         </template>
 

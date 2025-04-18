@@ -1,23 +1,25 @@
 <template>
-  <LMarker :icon="icon" :lat-lng @click="test">
+  <LMarker :icon="icon" :lat-lng @click="onClick">
     <LTooltip v-if="$slots.tooltip || tooltip">
       <slot name="tooltip">
         {{ tooltip }}
       </slot>
     </LTooltip>
-    <LPopup v-if="$slots.popup">
+    <LPopup v-if="$slots.popup || pingableUntilDespawn">
+      <q-toggle v-if="pingableUntilDespawn" v-model="pingUntilDespawn" label="Ping until Despawn" />
       <slot name="popup" />
     </LPopup>
   </LMarker>
 </template>
 
 <script setup lang="ts">
-import { computed, useAttrs } from 'vue';
+import { computed, ref, useAttrs, watch } from 'vue';
 import { LMarker, LPopup, LTooltip } from '@vue-leaflet/vue-leaflet';
 import * as L from 'leaflet';
 import useServerStore from 'stores/server';
 import type { Coordinates, CoordinatesWithRotation } from '@derpierre65/ficsit-remote-monitoring';
 import { getEntityLocation } from 'src/utils/map';
+import { useInterval } from '@derpierre65/frontend-utils';
 
 const {
   image,
@@ -33,10 +35,14 @@ const {
   bgColor?: string;
   tooltip?: string;
   iconClass?: string;
+  pingableUntilDespawn?: boolean;
 }>();
 
 const attrs = useAttrs();
 const serverStore = useServerStore();
+const { setInterval, clearInterval, } = useInterval();
+
+const pingUntilDespawn = ref(false);
 
 const latLng = computed(() => {
   return getEntityLocation({
@@ -69,12 +75,25 @@ const icon = computed(() => L.divIcon({
   className: 'position-relative',
 }));
 
-function test(event: MouseEvent) {
+watch(pingUntilDespawn, () => {
+  if (pingUntilDespawn.value) {
+    setInterval(createPing, 5_000, 'pingTimer');
+  }
+  else {
+    clearInterval('pingTimer');
+  }
+});
+
+function createPing() {
+  serverStore.post('createPing', location);
+}
+
+function onClick(event: MouseEvent) {
   if (!event.originalEvent.ctrlKey) {
     return;
   }
 
-  serverStore.post('createPing', location);
+  createPing();
 }
 </script>
 
