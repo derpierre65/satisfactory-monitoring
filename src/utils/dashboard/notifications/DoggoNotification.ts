@@ -103,11 +103,11 @@ export default class DoggoNotification extends FRMNotification {
           itemName: doggo.Inventory[0].Name,
         };
 
-        if (configuration.foundChatMessage) {
-          this.sendChatMessage(configuration.sendMessage as string, data);
+        if (configuration.foundChatMessage && configuration.message) {
+          this.sendChatMessage(configuration.message as string, data);
         }
         if (configuration.foundNotification) {
-          this.createNotification('Desc_SpaceRabbit_C', this.formatString(configuration.sendMessage as string, data));
+          this.createNotification('Desc_SpaceRabbit_C', this.formatString(configuration.message as string, data));
         }
         if (configuration.createPing) {
           useServerStore().post('createPing', doggo.location);
