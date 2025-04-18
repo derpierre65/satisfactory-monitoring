@@ -57,7 +57,6 @@
             :key="entity.ID"
             :location="entity.location"
             :image="serverStore.getItemUrl(entity.ClassName)"
-            :color="getPowerSlugColor(entity)"
             bg-color="white"
           />
         </template>
