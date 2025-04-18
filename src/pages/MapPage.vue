@@ -29,7 +29,9 @@
             :tooltip="entity.Name"
           >
             <template #tooltip>
-              <span>{{ entity.Name }}</span>
+              <div class="text-center">
+                <span>{{ entity.Name }}</span>
+              </div>
               <ItemSlot
                 v-if="entity.Inventory[0]"
                 :item="entity.Inventory[0]"
@@ -60,6 +62,13 @@
             :image="serverStore.getItemUrl(entity.ClassName)"
             bg-color="white"
             pingable-until-despawn
+          />
+        </template>
+        <template v-if="settings.includes('dropPod')">
+          <MapDropPod
+            v-for="entity in endpoints.dropPod.data"
+            :key="entity.ID"
+            :entity
           />
         </template>
 
@@ -193,6 +202,7 @@
           <q-toggle v-model="settings" val="trucks" label="Trucks" />
 
           <strong>Collectibles</strong>
+          <q-toggle v-model="settings" val="dropPod" label="Drop Pods" />
           <q-toggle v-model="settings" val="powerSlugs" label="Power Slugs" />
           <q-toggle v-model="settings" val="artifacts" label="Artifacts" />
         </q-card-section>
@@ -207,9 +217,11 @@ import { computed, reactive } from 'vue';
 import useServerStore from 'stores/server';
 import { useEndpointsByOptions, usePausableFRMEndpoint } from 'src/composables/frmEndpoint';
 import {
+  Endpoint,
   GetDoggoResponse,
   GetDroneResponse,
   GetDroneStationResponse,
+  GetDropPodResponse,
   GetPlayerResponse,
   GetPowerSlugResponse,
   GetRadarTowerResponse,
@@ -230,6 +242,7 @@ import useSettingsStore from 'stores/settings';
 import MapPowerSwitch from 'components/map/MapPowerSwitch.vue';
 import { useTranslation } from 'i18next-vue';
 import MapMarker from 'components/map/MapMarker.vue';
+import MapDropPod from 'components/map/MapDropPod.vue';
 
 //#region Composable & Prepare
 const serverStore = useServerStore();
@@ -245,6 +258,7 @@ const endpoints = {
   drones: reactive(usePausableFRMEndpoint<GetDroneResponse>('getDrone')),
   droneStations: reactive(usePausableFRMEndpoint<GetDroneStationResponse>('getDroneStation')),
   truckStations: reactive(usePausableFRMEndpoint<GetTruckStationResponse>('getTruckStation')),
+  dropPod: reactive(usePausableFRMEndpoint<GetDropPodResponse>(Endpoint.GetDropPod)),
   trucks: reactive(usePausableFRMEndpoint<GetTruckResponse>('getTruck')),
   tractors: reactive(usePausableFRMEndpoint<GetTractorResponse>('getTractor')),
   doggos: reactive(usePausableFRMEndpoint<GetDoggoResponse>('getDoggo')),
