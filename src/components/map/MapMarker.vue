@@ -5,15 +5,15 @@
         {{ tooltip }}
       </slot>
     </LTooltip>
-    <LPopup v-if="$slots.popup || pingableUntilDespawn">
-      <q-toggle v-if="pingableUntilDespawn" v-model="pingUntilDespawn" label="Ping until Despawn" />
+    <LPopup v-if="$slots.popup || (pingableUntilDespawn && !isDespawned)">
+      <q-toggle v-if="pingableUntilDespawn && !isDespawned" v-model="pingUntilDespawn" label="Ping until Despawn" />
       <slot name="popup" />
     </LPopup>
   </LMarker>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useAttrs, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { LMarker, LPopup, LTooltip } from '@vue-leaflet/vue-leaflet';
 import * as L from 'leaflet';
 import useServerStore from 'stores/server';
@@ -24,6 +24,7 @@ import { useInterval } from '@derpierre65/frontend-utils';
 const {
   image,
   location,
+  isDespawned,
   color = '#fff',
   bgColor = '#b3b3b3',
   tooltip = '',
@@ -36,9 +37,9 @@ const {
   tooltip?: string;
   iconClass?: string;
   pingableUntilDespawn?: boolean;
+  isDespawned?: boolean;
 }>();
 
-const attrs = useAttrs();
 const serverStore = useServerStore();
 const { setInterval, clearInterval, } = useInterval();
 
@@ -76,8 +77,12 @@ const icon = computed(() => L.divIcon({
 }));
 
 watch(pingUntilDespawn, () => {
+  if (isDespawned) {
+    return;
+  }
+
   if (pingUntilDespawn.value) {
-    setInterval(createPing, 5_000, 'pingTimer');
+    setInterval(createPing, 5_000, 'pingTimer', true);
   }
   else {
     clearInterval('pingTimer');
@@ -86,6 +91,10 @@ watch(pingUntilDespawn, () => {
 
 function createPing() {
   serverStore.post('createPing', location);
+
+  if (isDespawned) {
+    clearInterval('pingTimer');
+  }
 }
 
 function onClick(event: MouseEvent) {

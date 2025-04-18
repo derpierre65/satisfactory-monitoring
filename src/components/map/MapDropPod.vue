@@ -4,6 +4,7 @@
     :location="entity.location"
     :image="serverStore.getItemUrl('Desc_HardDrive_C')"
     :icon-class="entity.Looted ? 'tw-opacity-50' : ''"
+    :is-despawned="entity.Looted"
     bg-color="white"
     pingable-until-despawn
   >
