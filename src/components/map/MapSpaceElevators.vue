@@ -2,7 +2,7 @@
   <MapMarker
     v-for="entity of entities"
     :key="entity.ID"
-    :lat-lng="getEntityLocation(entity)"
+    :location="entity.location"
     :tooltip="entity.Name"
     image="/assets/map/space_elevator.png"
   >
@@ -27,8 +27,7 @@
 
 <script setup lang="ts">
 import { SpaceElevatorObject } from '@derpierre65/ficsit-remote-monitoring';
-import { getEntityLocation } from 'src/utils/map.ts';
-import useServerStore from 'stores/server.ts';
+import useServerStore from 'stores/server';
 import MapMarker from 'components/map/MapMarker.vue';
 
 defineProps<{

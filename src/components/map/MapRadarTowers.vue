@@ -2,7 +2,7 @@
   <MapMarker
     v-for="entity of entities"
     :key="entity.ID"
-    :lat-lng="getEntityLocation(entity)"
+    :location="entity.location"
     :tooltip="entity.Name"
     image="/assets/map/radar_tower.png"
   >
@@ -45,7 +45,6 @@
 </template>
 
 <script setup lang="ts">
-import { getEntityLocation } from 'src/utils/map';
 import { TowerObject } from '@derpierre65/ficsit-remote-monitoring';
 import useServerStore from 'stores/server';
 import MapMarker from 'components/map/MapMarker.vue';

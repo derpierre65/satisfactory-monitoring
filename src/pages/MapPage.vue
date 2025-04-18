@@ -8,7 +8,7 @@
             v-for="entity in endpoints.trainStations.data"
             :key="entity.ID"
             :tooltip="entity.Name || 'Unknown'"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             image="/assets/map/train_station.png"
           />
         </template>
@@ -24,7 +24,7 @@
           <MapMarker
             v-for="entity in endpoints.doggos.data"
             :key="entity.ID"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             :image="serverStore.getItemUrl('Desc_SpaceRabbit_C')"
             :tooltip="entity.Name"
           >
@@ -45,7 +45,7 @@
           <MapMarker
             v-for="entity in endpoints.powerSlugs.data"
             :key="entity.ID"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             :image="serverStore.getItemUrl(entity.ClassName)"
             :color="getPowerSlugColor(entity)"
             bg-color="white"
@@ -55,7 +55,7 @@
           <MapMarker
             v-for="entity in endpoints.artifacts.data"
             :key="entity.ID"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             :image="serverStore.getItemUrl(entity.ClassName)"
             :color="getPowerSlugColor(entity)"
             bg-color="white"
@@ -67,7 +67,7 @@
           <MapMarker
             v-for="entity in endpoints.players.data"
             :key="entity.ID"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             :bg-color="entity.Online ? 'green' : 'rgba(179,179,179,0.5)'"
             :tooltip="entity.Name || t('dashboard.widgets.inventory_player.unknown_player')"
             :icon-class="entity.Online ? '' : 'tw-opacity-50'"
@@ -81,7 +81,7 @@
             v-for="entity in endpoints.droneStations.data"
             :key="entity.ID"
             :tooltip="entity.Name || 'Unknown'"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             image="/assets/map/drone_station.png"
           />
         </template>
@@ -92,7 +92,7 @@
             v-for="entity in endpoints.truckStations.data"
             :key="entity.ID"
             :tooltip="entity.Name || 'Unknown'"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             image="/assets/map/truck_station.png"
           />
         </template>
@@ -103,7 +103,7 @@
             v-for="entity in endpoints.drones.data"
             :key="entity.ID"
             :tooltip="entity.Name || 'Unknown'"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             bg-color="rgb(87, 87, 87)"
             image="/assets/map/drone.png"
           />
@@ -115,7 +115,7 @@
             v-for="entity in cachedTrains"
             :key="entity.ID"
             :tooltip="entity.Name"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             bg-color="rgb(63, 63, 63)"
             image="/assets/map/train.png"
           />
@@ -126,7 +126,7 @@
             v-for="entity in endpoints.trucks.data"
             :key="entity.ID"
             :tooltip="entity.Name"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             bg-color="rgb(63, 63, 63)"
             image="/assets/map/tractor.png"
           />
@@ -137,7 +137,7 @@
             v-for="entity in endpoints.tractors.data"
             :key="entity.ID"
             :tooltip="entity.Name"
-            :lat-lng="getEntityLocation(entity)"
+            :location="entity.location"
             bg-color="rgb(63, 63, 63)"
             image="/assets/map/tractor.png"
           />
@@ -221,7 +221,6 @@ import {
   GetTruckStationResponse,
   PowerSlugObject,
 } from '@derpierre65/ficsit-remote-monitoring';
-import { getEntityLocation } from 'src/utils/map';
 import ItemSlot from 'components/ItemSlot.vue';
 import MapSpaceElevators from 'components/map/MapSpaceElevators.vue';
 import MapRadarTowers from 'components/map/MapRadarTowers.vue';

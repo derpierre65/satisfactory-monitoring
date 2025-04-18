@@ -1,6 +1,6 @@
 <template>
   <MapMarker
-    :lat-lng="getEntityLocation(entity)"
+    :location="entity.location"
     :image="serverStore.getItemUrl(entity.ClassName)"
     :bg-color="entity.IsOn ? '#22c55e' : '#ef4444'"
     :tooltip="entity.Name"
@@ -36,7 +36,6 @@
 import useServerStore from 'stores/server';
 import { toggleSwitchStatus, updateSwitchName, updateSwitchPriority } from 'src/utils/api/switches';
 import { Building, SwitchObject } from '@derpierre65/ficsit-remote-monitoring';
-import { getEntityLocation } from 'src/utils/map';
 import MapMarker from 'components/map/MapMarker.vue';
 
 defineProps<{

@@ -23,7 +23,7 @@
           <MapMarker
             v-for="entity in allEntities"
             :key="entity.ID"
-            :lat-lng="entity.mapLocation"
+            :location="entity.location"
             :image="entity.image || ''"
             :tooltip="entity.name || ''"
           />

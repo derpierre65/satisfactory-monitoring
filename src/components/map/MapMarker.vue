@@ -1,5 +1,5 @@
 <template>
-  <LMarker :icon="icon">
+  <LMarker :icon="icon" :lat-lng @click="test">
     <LTooltip v-if="$slots.tooltip || tooltip">
       <slot name="tooltip">
         {{ tooltip }}
@@ -12,23 +12,37 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useAttrs } from 'vue';
 import { LMarker, LPopup, LTooltip } from '@vue-leaflet/vue-leaflet';
 import * as L from 'leaflet';
+import useServerStore from 'stores/server';
+import type { Coordinates, CoordinatesWithRotation } from '@derpierre65/ficsit-remote-monitoring';
+import { getEntityLocation } from 'src/utils/map';
 
 const {
   image,
+  location,
   color = '#fff',
   bgColor = '#b3b3b3',
   tooltip = '',
   iconClass = '',
 } = defineProps<{
   image: string;
+  location: Coordinates | CoordinatesWithRotation;
   color?: string;
   bgColor?: string;
   tooltip?: string;
   iconClass?: string;
 }>();
+
+const attrs = useAttrs();
+const serverStore = useServerStore();
+
+const latLng = computed(() => {
+  return getEntityLocation({
+    location,
+  });
+});
 
 const icon = computed(() => L.divIcon({
   html: `<div class="custom-marker ${iconClass}" style="background-color: ${bgColor}; border: 2px solid ${color};">
@@ -54,6 +68,14 @@ const icon = computed(() => L.divIcon({
   ],
   className: 'position-relative',
 }));
+
+function test(event: MouseEvent) {
+  if (!event.originalEvent.ctrlKey) {
+    return;
+  }
+
+  serverStore.post('createPing', location);
+}
 </script>
 
 <style lang="scss">

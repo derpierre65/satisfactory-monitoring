@@ -1,10 +1,10 @@
 <template>
   <MapMarker
-    v-for="node in cachedRadarTowerNodes"
-    :key="node.ID"
-    :lat-lng="node.location"
-    :image="node.image"
-    :bg-color="node.bgColor"
+    v-for="entity in cachedRadarTowerNodes"
+    :key="entity.ID"
+    :location="entity.location"
+    :image="entity.image"
+    :bg-color="entity.bgColor"
   >
     <template #tooltip>
       <table>
@@ -20,15 +20,15 @@
         <tbody>
           <tr>
             <th>Miner MK1</th>
-            <td v-for="value in node.values" :key="value" class="tw-min-w-[42px] text-right">{{ value }}</td>
+            <td v-for="value in entity.values" :key="value" class="tw-min-w-[42px] text-right">{{ value }}</td>
           </tr>
           <tr>
             <th>Miner MK2</th>
-            <td v-for="value in node.values" :key="value" class="tw-min-w-[42px] text-right">{{ value * 2 }}</td>
+            <td v-for="value in entity.values" :key="value" class="tw-min-w-[42px] text-right">{{ value * 2 }}</td>
           </tr>
           <tr>
             <th>Miner MK3</th>
-            <td v-for="value in node.values" :key="value" class="tw-min-w-[42px] text-right">{{ value * 4 }}</td>
+            <td v-for="value in entity.values" :key="value" class="tw-min-w-[42px] text-right">{{ value * 4 }}</td>
           </tr>
         </tbody>
       </table>
@@ -37,21 +37,22 @@
 </template>
 
 <script setup lang="ts">
-import {
+import type {
+  Coordinates,
+  CoordinatesWithRotation,
   GetRadarTowerResponse,
   ResourceNodePurity,
   TowerObject,
 } from '@derpierre65/ficsit-remote-monitoring';
 import useServerStore from 'stores/server';
 import MapMarker from 'components/map/MapMarker.vue';
-import { getEntityLocation } from 'src/utils/map';
 import { computed } from 'vue';
 
 type CachedRadarTowerNode = {
   ID: string;
   bgColor: string;
   image: string;
-  location: [number, number];
+  location: Coordinates | CoordinatesWithRotation;
   values: number[];
 };
 
@@ -67,7 +68,7 @@ const cachedRadarTowerNodes = computed(() => {
       return {
         ID: node.ID,
         image: serverStore.getItemUrl(node.ClassName),
-        location: getEntityLocation(node),
+        location: node.location,
         bgColor: getNodeBackground(node),
         values: getNodeValues(getNodeBaseValue(node)),
       };
