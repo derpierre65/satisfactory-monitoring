@@ -76,7 +76,7 @@ function usePausableFRMEndpoint<T>(endpoint: string, { fetchDuration = -1, start
 function useEndpointsByOptions<T extends Record<string, Reactive<ReturnType<typeof usePausableFRMEndpoint>>>, U extends Record<string, keyof T>>(
   options: WritableComputedRef<string[]>,
   endpoints: T,
-  aliases: U = {},
+  aliases: U = {} as U,
 ) {
   const aliasKeys = Object.keys(aliases);
 
@@ -84,9 +84,11 @@ function useEndpointsByOptions<T extends Record<string, Reactive<ReturnType<type
     const currentOptions = toValue(options) as Array<keyof typeof endpoints>;
     const availableEndpoints = Object.keys(endpoints) as Array<keyof typeof endpoints>;
     for (const endpoint of availableEndpoints) {
-      const resume = currentOptions.includes(endpoint) || aliasKeys.some((alias) => aliases[alias] === endpoint);
+      const resume = currentOptions.includes(endpoint) || aliasKeys.some((alias) => {
+        return aliases[alias] === endpoint && currentOptions.includes(alias);
+      });
 
-      endpoints[endpoint][resume ? 'resume' : 'pause']();
+      endpoints[endpoint]?.[resume ? 'resume' : 'pause']();
     }
   });
 
