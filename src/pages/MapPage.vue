@@ -54,6 +54,37 @@
             pingable-until-despawn
           />
         </template>
+        <template v-if="itemPickups.length">
+          <MapMarker
+            v-for="entity in itemPickups"
+            :key="entity.ID"
+            :location="entity.location"
+            :image="serverStore.getItemUrl(entity.Item.ClassName)"
+            bg-color="white"
+            pingable-until-despawn
+          />
+        </template>
+        <template v-if="settings.includes('itemPickupsItem')">
+          <MapMarker
+            v-for="entity in cachedItemPickups.others"
+            :key="entity.ID"
+            :location="entity.location"
+            :image="serverStore.getItemUrl(entity.Item.ClassName)"
+            bg-color="white"
+            pingable-until-despawn
+          >
+            <template #tooltip>
+              <div class="text-center">
+                <span>{{ entity.Item.Name }}</span>
+              </div>
+              <ItemSlot
+                :item="entity.Item"
+                :size="64"
+                class="q-mx-auto"
+              />
+            </template>
+          </MapMarker>
+        </template>
         <template v-if="settings.includes('artifacts')">
           <MapMarker
             v-for="entity in endpoints.artifacts.data"
@@ -205,6 +236,9 @@
           <q-toggle v-model="settings" val="dropPod" label="Drop Pods" />
           <q-toggle v-model="settings" val="powerSlugs" label="Power Slugs" />
           <q-toggle v-model="settings" val="artifacts" label="Artifacts" />
+          <q-toggle v-model="settings" val="itemPickupsBerry" label="Berries" />
+          <q-toggle v-model="settings" val="itemPickupsNut" label="Nuts" />
+          <q-toggle v-model="settings" val="itemPickupsItem" label="Items" />
         </q-card-section>
       </q-card>
     </div>
@@ -264,6 +298,7 @@ const endpoints = {
   doggos: reactive(usePausableFRMEndpoint<GetDoggoResponse>('getDoggo')),
   powerSwitches: reactive(usePausableFRMEndpoint<GetSwitchesResponse>('getSwitches')),
   artifacts: reactive(usePausableFRMEndpoint('getArtifacts')), // TODO typing
+  itemPickups: reactive(usePausableFRMEndpoint<object[]>('getItemPickups')), // TODO typing
 };
 
 const { options: settings, } = useEndpointsByOptions(computed({
@@ -273,6 +308,9 @@ const { options: settings, } = useEndpointsByOptions(computed({
   }),
 }), endpoints, {
   radarTowerNodes: 'radarTowers',
+  itemPickupsBerry: 'itemPickups',
+  itemPickupsNut: 'itemPickups',
+  itemPickupsItem: 'itemPickups',
 });
 //#endregion
 
@@ -286,6 +324,54 @@ const cachedTrains = computed(() => {
   }
 
   return endpoints.trains.data.filter((train) => train.location.y !== 0 && train.location.x !== 0 && train.location.z !== 0);
+});
+
+const itemPickups = computed(() => {
+  const items = [];
+  if (settings.value.includes('itemPickupsBerry')) {
+    items.push(...cachedItemPickups.value.berries);
+  }
+  if (settings.value.includes('itemPickupsNut')) {
+    items.push(...cachedItemPickups.value.nuts);
+  }
+  if (settings.value.includes('itemPickupsShroom')) {
+    items.push(...cachedItemPickups.value.shrooms);
+  }
+
+  return items;
+});
+
+const cachedItemPickups = computed(() => {
+  const berries = [];
+  const nuts = [];
+  const shrooms = [];
+  const others = [];
+
+  for (const entity of endpoints.itemPickups.data ?? []) {
+    if (entity.Item.ClassName.startsWith('Desc_Crystal') || entity.Item.ClassName.startsWith('Desc_WAT')) {
+      continue;
+    }
+
+    if (entity.Item.ClassName === 'Desc_Berry_C') {
+      berries.push(entity);
+    }
+    else if (entity.Item.ClassName === 'Desc_Nut_C') {
+      nuts.push(entity);
+    }
+    else if (entity.Item.ClassName === 'Desc_Shroom_C') {
+      shrooms.push(entity);
+    }
+    else {
+      others.push(entity);
+    }
+  }
+
+  return {
+    berries,
+    nuts,
+    shrooms,
+    others,
+  };
 });
 //#endregion
 
