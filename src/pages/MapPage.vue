@@ -301,17 +301,18 @@ const endpoints = {
   itemPickups: reactive(usePausableFRMEndpoint<object[]>('getItemPickups')), // TODO typing
 };
 
+const endpointAliases = {
+  radarTowerNodes: 'radarTowers',
+  itemPickupsBerry: 'itemPickups',
+  itemPickupsNut: 'itemPickups',
+  itemPickupsItem: 'itemPickups',
+};
 const { options: settings, } = useEndpointsByOptions(computed({
   get: () => settingsStore.mapSettings,
   set: (newValue) => settingsStore.$patch({
     mapSettings: newValue,
   }),
-}), endpoints, {
-  radarTowerNodes: 'radarTowers',
-  itemPickupsBerry: 'itemPickups',
-  itemPickupsNut: 'itemPickups',
-  itemPickupsItem: 'itemPickups',
-});
+}), endpoints, endpointAliases);
 //#endregion
 
 //#region Data
@@ -384,8 +385,8 @@ const cachedItemPickups = computed(() => {
 //#region Methods
 function enableAllSettings() {
   settings.value = [
-    'radarTowerNodes',
     ...Object.keys(endpoints),
+    ...Object.keys(endpointAliases),
   ];
 }
 
