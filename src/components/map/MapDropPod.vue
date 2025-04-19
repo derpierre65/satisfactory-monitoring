@@ -9,22 +9,18 @@
     pingable-until-despawn
   >
     <template #tooltip>
-      <div v-if="entity.RepairAmount" class="text-center">
+      <div v-if="entity.RequiredItem.ClassName" class="text-center">
         <q-badge v-if="entity.Opened" class="!tw-bg-green-600 tw-text-green-600 !tw-bg-opacity-10" rounded label="Opened" />
         <q-badge v-if="entity.Looted" class="!tw-bg-green-600 tw-text-green-600 !tw-bg-opacity-10" rounded label="Looted" />
-        <div>{{ entity.RepairItem }}</div>
+        <div>{{ entity.RequiredItem.Name }}</div>
         <ItemSlot
           :size="64"
           class="q-mx-auto"
-          :item="{
-            Amount: entity.RepairAmount,
-            Name: entity.RepairItem,
-            ClassName: entity.RepairItemClass
-          }"
+          :item="entity.RequiredItem"
         />
       </div>
-      <div v-if="entity.PowerRequired" class="text-center" :class="{'q-mt-md': entity.RepairAmount}">
-        Power: {{ entity.PowerRequired }}MW
+      <div v-if="entity.RequiredPower" class="text-center" :class="{'q-mt-md': entity.RequiredItem.ClassName}">
+        Power: {{ entity.RequiredPower }}MW
       </div>
     </template>
   </MapMarker>
