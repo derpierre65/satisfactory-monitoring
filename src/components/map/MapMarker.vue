@@ -1,5 +1,9 @@
 <template>
-  <LMarker :icon="icon" :lat-lng @click="onClick">
+  <LMarker
+    :icon="icon"
+    :lat-lng
+    @click="onClick"
+  >
     <LTooltip v-if="$slots.tooltip || tooltip">
       <slot name="tooltip">
         {{ tooltip }}
@@ -51,11 +55,19 @@ const latLng = computed(() => {
   });
 });
 
+const borderColor = computed(() => {
+  if (pingUntilDespawn.value) {
+    return 'rgba(255,0,0,0.87)';
+  }
+
+  return color;
+});
+
 const icon = computed(() => L.divIcon({
-  html: `<div class="custom-marker ${iconClass}" style="background-color: ${bgColor}; border: 2px solid ${color};">
+  html: `<div class="custom-marker ${iconClass}" style="background-color: ${bgColor}; border: 2px solid ${borderColor.value};">
     <img src="${image}" class="icon-image" />
-    <div class="line" style="background-color: ${color};"></div>
-    <div class="dot" style="background-color: ${color};"></div>
+    <div class="line" style="background-color: ${borderColor.value};"></div>
+    <div class="dot" style="background-color: ${borderColor.value};"></div>
   </div>`,
   iconSize: [
     40,
