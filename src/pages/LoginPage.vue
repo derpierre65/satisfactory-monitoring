@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-page-container>
       <q-page class="flex flex-center">
-        <q-card class="shadow-0">
+        <q-card class="shadow-0 tw-max-w-sm full-width">
           <form @submit.prevent="login">
             <q-toolbar class="bg-primary text-h6">
               FicsIt Remote Monitoring
@@ -28,6 +28,7 @@
                 :label="t('login.token')"
                 type="password"
               />
+              <q-toggle v-model="server.useDedicatedServerApi" label="Use Dedicated Server Api" />
             </q-card-section>
             <q-card-actions align="right">
               <q-btn type="submit" label="Login" color="primary" />
@@ -56,6 +57,7 @@ const server = ref<ServerInfo>({
   name: 'Local',
   url: 'http://127.0.0.1:8080',
   authToken: '',
+  useDedicatedServerApi: false,
 });
 //#endregion
 

@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import { useInterval, uuidv4 } from '@derpierre65/frontend-utils';
 import useServerStore from 'stores/server';
 import useSettingsStore from 'stores/settings';
-import axios from 'axios';
 
 type EndpointFetchInfo = {
   id: string;
@@ -70,13 +69,7 @@ const useDataStore = defineStore('data', () => {
 
       lastUpdate.value[endpointName] = Date.now();
       if (!promises[endpointName]) {
-        promises[endpointName] = axios
-          .get<object>(endpointName, {
-            baseURL: serverStore.currentServer.url,
-            headers: {
-              Authorization: serverStore.currentServer.authToken,
-            },
-          })
+        promises[endpointName] = serverStore.requestEndpoint(serverStore.currentServer, endpointName)
           .then(({ data, }) => {
             serverStore.isConnected = true;
             promisesUpdated[endpointName] = data;

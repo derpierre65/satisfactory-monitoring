@@ -3,13 +3,14 @@ import { computed, ref } from 'vue';
 import { Dialog, Loading } from 'quasar';
 import router from 'src/router';
 import { GetModListResponse } from '@derpierre65/ficsit-remote-monitoring';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import i18next from 'i18next';
 
 type ServerInfo = {
   name: string;
   url: string;
   authToken: string;
+  useDedicatedServerApi: boolean;
 };
 
 const iconAliases: Record<string, string> = {
@@ -89,9 +90,7 @@ const useServerStore = defineStore('server', () => {
       message: 'Try to connect to the server...',
     });
 
-    return axios.get<GetModListResponse>('getModList', {
-      baseURL: server.url,
-    })
+    return requestEndpoint<GetModListResponse>(server, 'getModList')
       .then(({ data, }) => {
         const frmMod = data.find((mod) => mod.SMRName === 'FicsitRemoteMonitoring')!;
         if (import.meta.env.DEV) {
@@ -133,11 +132,41 @@ const useServerStore = defineStore('server', () => {
       });
   }
 
+  function requestEndpoint<T = object>(server: ServerInfo, endpoint: string, config: Partial<AxiosRequestConfig> = {}) {
+    config.headers ||= {};
+    if (server.authToken) {
+      config.headers.Authorization = server.authToken;
+      config.headers['X-FRM-Authorization'] = server.authToken;
+    }
+    config.baseURL ||= server.url;
+
+    if (server.useDedicatedServerApi) {
+      return axios.post<T>('api/v1', {
+        function: 'frm',
+        endpoint,
+      }, config);
+    }
+
+    return axios.get<T>(endpoint, config);
+  }
+
   function post(path: string, data: object) {
-    return axios.post(path, data, {
+    const authToken = currentServer.value!.authToken;
+    let requestData = data;
+    if (currentServer.value!.useDedicatedServerApi) {
+      requestData = {
+        function: 'frm',
+        endpoint: path,
+        data,
+      };
+      path = 'api/v1';
+    }
+
+    return axios.post(path, requestData, {
       baseURL: currentServer.value!.url!,
       headers: {
-        Authorization: currentServer.value!.authToken,
+        Authorization: authToken,
+        'X-FRM-Authorization': authToken,
       },
     }).then(({ data, }) => data);
   }
@@ -185,6 +214,7 @@ const useServerStore = defineStore('server', () => {
     post,
     select,
     tryConnect,
+    requestEndpoint,
   };
 }, {
   persist: {
