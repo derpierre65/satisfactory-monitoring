@@ -135,7 +135,6 @@ const useServerStore = defineStore('server', () => {
   function requestEndpoint<T = object>(server: ServerInfo, endpoint: string, config: Partial<AxiosRequestConfig> = {}) {
     config.headers ||= {};
     if (server.authToken) {
-      config.headers.Authorization = server.authToken;
       config.headers['X-FRM-Authorization'] = server.authToken;
     }
     config.baseURL ||= server.url;
@@ -165,7 +164,6 @@ const useServerStore = defineStore('server', () => {
     return axios.post(path, requestData, {
       baseURL: currentServer.value!.url!,
       headers: {
-        Authorization: authToken,
         'X-FRM-Authorization': authToken,
       },
     }).then(({ data, }) => data);
