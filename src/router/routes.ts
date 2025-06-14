@@ -63,6 +63,11 @@ const routes: RouteRecordRaw[] = [
             path: 'efficiency',
             component: () => import('pages/factory/FactoryEfficiencyPage.vue'),
           },
+          {
+            name: 'factory-overclocked',
+            path: 'overclocked',
+            component: () => import('pages/factory/FactoryOverclockedPage.vue'),
+          },
         ],
         meta: {
           noPadding: true,

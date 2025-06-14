@@ -231,6 +231,13 @@ const menuItems = computed<MenuItem[]>(() => [
     },
   },
   {
+    title: 'Overclocked Machines',
+    icon: 'fas fa-industry',
+    route: {
+      name: 'factory-overclocked',
+    },
+  },
+  {
     separator: true,
   },
   {
